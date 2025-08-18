@@ -29,8 +29,7 @@ namespace DevStats.Editor
 
         public CliArguments AddKey()
         {
-            string key = "waka_somenumber";
-            return AddArgument("--key", key);
+            return AddArgument("--key", DevStatsSettings.Get().APIKey);
         }
         public CliArguments AddFile(string file) => AddArgument("--entity", file);
         public CliArguments AddTimestamp(decimal timestamp) => AddArgument("--time", timestamp.ToString(CultureInfo.InvariantCulture));

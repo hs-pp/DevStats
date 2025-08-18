@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
-using UnityEngine;
 
 namespace DevStats.Editor
 {
@@ -29,8 +28,12 @@ namespace DevStats.Editor
         {
             return SEND_INTERVAL - ((float)EditorApplication.timeSinceStartup - m_lastHeartbeatSendTime);
         }
+        
         private static void OnBeforeAssemblyReload()
         {
+            // Send any unsent heartbeats first.
+            SendHeartbeat();
+            
             CleanupHeartbeatProviders();
             EditorApplication.update -= OnEditorUpdate;
         }
@@ -80,12 +83,21 @@ namespace DevStats.Editor
 
         private static void OnHeartbeatTriggered(Heartbeat heartbeat)
         {
-            Debug.Log($"Queued heartbeat \n{heartbeat.ToString()}");
+            if (!DevStatsSettings.Get().IsRunning())
+            {
+                return;
+            }
+            
             m_queuedHeartbeats.Add(heartbeat);
         }
 
         private static void OnEditorUpdate()
         {
+            if (!DevStatsSettings.Get().IsRunning())
+            {
+                return;
+            }
+            
             float timeSinceStartup = (float)EditorApplication.timeSinceStartup;
             if (m_wakatimeCli != null && m_queuedHeartbeats.Count > 0 && timeSinceStartup > m_lastHeartbeatSendTime + SEND_INTERVAL)
             {
@@ -96,6 +108,11 @@ namespace DevStats.Editor
 
         private static void SendHeartbeat()
         {
+            if (m_queuedHeartbeats.Count == 0)
+            {
+                return;
+            }
+            
             m_wakatimeCli.SendHeartbeats(m_queuedHeartbeats);
             m_queuedHeartbeats.Clear();
         }

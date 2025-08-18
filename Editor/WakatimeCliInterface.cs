@@ -11,7 +11,7 @@ using Debug = UnityEngine.Debug;
 
 namespace DevStats.Editor
 {
-    public struct CliResult
+    internal struct CliResult
     {
         public bool Success;
         public string Output;
@@ -26,19 +26,27 @@ namespace DevStats.Editor
     /// <summary>
     /// Dont forget to add the Wakatime plugin to your IDE to get full coverage!
     /// </summary>
-    public class WakatimeCliInterface
+    internal class WakatimeCliInterface
     {
+        private const string WINDOWS_CLI_NAME = "wakatime-cli-windows-amd64";
+        private const string MAC_CLI_NAME = "wakatime-cli-darwin-arm64";
         private const int MAX_PROCESS_WAIT_TIME = 600; // in frames.
+        
         private string m_cliPath;
-
+        
         public WakatimeCliInterface(string cliPath)
         {
             m_cliPath = cliPath;
         }
         
-#region Send Heartbeat
+        #region Send Heartbeat
         public async void SendHeartbeats(List<Heartbeat> heartbeats)
         {
+            if (heartbeats == null || heartbeats.Count == 0)
+            {
+                return;
+            }
+            
             Heartbeat heartbeat = heartbeats[0];
             
             CliArguments args = new CliArguments();
@@ -59,10 +67,17 @@ namespace DevStats.Editor
                 stdin = GetSerializedExtraHeartbeats(heartbeats);
                 args.AddExtraHeartbeats();
             }
-            
-            Debug.Log("Sending Heartbeat.");
+
+            if (DevStatsSettings.Get().IsDebugMode)
+            {
+                Debug.Log("Sending Heartbeat to CLI.");
+            }
             CliResult result = await CallCLI(args, stdin);
-            Debug.Log($"Send Heartbeat result: {result.ToString()}");
+            
+            if (DevStatsSettings.Get().IsDebugMode)
+            {
+                Debug.Log($"Send Heartbeat result: {result.ToString()}");
+            }
         }
 
         private string GetSerializedExtraHeartbeats(List<Heartbeat> heartbeats)
@@ -81,6 +96,10 @@ namespace DevStats.Editor
             return stringBuilder.ToString();
         }
         
+        /// <summary>
+        /// Extra heartbeats have differently named fields on them???
+        /// So we gotta handle these differently.
+        /// </summary>
         private string GetSerializedExtraHeartbeat(Heartbeat heartbeat)
         {
             string value = $"{{\"entity\":\"{heartbeat.File.Replace("\\", "\\\\").Replace("\"", "\\\"")}\", " +
@@ -141,21 +160,7 @@ namespace DevStats.Editor
         {
             return "file";
         }
-        
-#endregion
-
-        public async Awaitable Help()
-        {
-            CliResult result = await CallCLI(CliArguments.Help());
-            Debug.Log(result.ToString());
-            Debug.Log(CliArguments.Help().ToString());
-        }
-        
-        public async Awaitable Version()
-        {
-            CliResult result = await CallCLI(CliArguments.Version());
-            Debug.Log(result.ToString());
-        }
+        #endregion
 
         private async Awaitable<CliResult> CallCLI(CliArguments arguments, string stdin = null)
         {
@@ -164,14 +169,19 @@ namespace DevStats.Editor
         
         private static async Awaitable<CliResult> RunCommand(string command, string args, string stdin = null)
         {
-            Debug.Log($"Running Command\ncommand: {command}\nargs: {args}\nstdin: {stdin}");
+            if (DevStatsSettings.Get().IsDebugMode)
+            {
+                // This will log your API Key. Only uncomment if you really need to see it.
+                // Debug.Log($"Running Command\ncommand: {command}\nargs: {args}\nstdin: {stdin}");
+            }
+            
             ProcessStartInfo psi = new ProcessStartInfo()
             {
                 FileName = command,
                 Arguments = args,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
-                RedirectStandardInput = true,
+                RedirectStandardInput = !string.IsNullOrEmpty(stdin),
                 RedirectStandardError = true,
                 CreateNoWindow = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
@@ -245,11 +255,21 @@ namespace DevStats.Editor
                 NumFramesWaited = numFramesWaited,
             };
         }
-        
-#region Loading CLI
-        private static string WINDOWS_CLI_NAME = "wakatime-cli-windows-amd64";
-        private static string MAC_CLI_NAME = "wakatime-cli-darwin-arm64";
 
+        public async Awaitable Help()
+        {
+            CliResult result = await CallCLI(CliArguments.Help());
+            Debug.Log(result.ToString());
+            Debug.Log(CliArguments.Help().ToString());
+        }
+
+        public async Awaitable Version()
+        {
+            CliResult result = await CallCLI(CliArguments.Version());
+            Debug.Log(result.ToString());
+        }
+        
+        #region Loading CLI
         public static async Awaitable<WakatimeCliInterface> Get()
         {
             string cliPath = await LoadCli();
@@ -317,6 +337,6 @@ namespace DevStats.Editor
                 return true;
             }
         }
-#endregion
+        #endregion
     }
 }

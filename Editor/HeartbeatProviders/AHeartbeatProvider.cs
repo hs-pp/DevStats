@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace DevStats.Editor
 {
@@ -10,13 +11,20 @@ namespace DevStats.Editor
 
         protected void SendHeartbeat(string file, bool isSaveAction, string category = null)
         {
-            TriggerHeartbeat?.Invoke(new Heartbeat()
+            Heartbeat heartbeat = new Heartbeat()
             {
                 File = file,
                 Timestamp = (decimal)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000,
                 IsWrite = isSaveAction,
                 Category = category,
-            });
+            };
+            
+            if (DevStatsSettings.Get().IsDebugMode)
+            {
+                Debug.Log($"HEARTBEAT ({GetType().Name})\n{heartbeat.ToString()}");
+            }
+            
+            TriggerHeartbeat?.Invoke(heartbeat);
         }
     }
 }
