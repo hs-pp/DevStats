@@ -13,7 +13,7 @@ namespace DevStats.Editor
             TriggerHeartbeat?.Invoke(new Heartbeat()
             {
                 File = file,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000f,
+                Timestamp = (decimal)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000,
                 IsWrite = isSaveAction,
                 Category = category,
             });

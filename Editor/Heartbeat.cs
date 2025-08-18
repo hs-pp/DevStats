@@ -3,7 +3,7 @@ namespace DevStats.Editor
     public struct Heartbeat
     {
         public string File;
-        public float Timestamp;
+        public decimal Timestamp;
         public bool IsWrite; // Basically "IsSaved"
         public string Category;
 

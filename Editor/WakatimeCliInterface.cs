@@ -37,22 +37,32 @@ namespace DevStats.Editor
         }
         
 #region Send Heartbeat
-        public void SendHeartbeats(List<Heartbeat> heartbeats)
+        public async void SendHeartbeats(List<Heartbeat> heartbeats)
         {
-            Debug.Log("RECEIEVED HEARTBEATS");
-            Debug.Log(heartbeats[0].ToString());
+            Heartbeat heartbeat = heartbeats[0];
+            
+            CliArguments args = new CliArguments();
+            args.AddKey()
+                .AddFile(heartbeat.File)
+                .AddEntityType(GetEntityType())
+                .AddProject(GetProjectName())
+                .AddBranch(GetGitBranchName(heartbeat.File))
+                .AddTimestamp(heartbeat.Timestamp)
+                .AddIsWrite(heartbeat.IsWrite)
+                .AddCategory(heartbeat.Category)
+                .AddPlugin();
 
-            // foreach (Heartbeat heartbeat in heartbeats)
-            // {
-            //     Debug.Log(heartbeat.ToString());
-            // }
-
+            string stdin = null;
             heartbeats.RemoveAt(0);
             if (heartbeats.Count > 0)
             {
-                string extraHeartbeats = GetSerializedExtraHeartbeats(heartbeats);
-                Debug.Log(extraHeartbeats);
+                stdin = GetSerializedExtraHeartbeats(heartbeats);
+                args.AddExtraHeartbeats();
             }
+            
+            Debug.Log("Sending Heartbeat.");
+            CliResult result = await CallCLI(args, stdin);
+            Debug.Log($"Send Heartbeat result: {result.ToString()}");
         }
 
         private string GetSerializedExtraHeartbeats(List<Heartbeat> heartbeats)
@@ -119,11 +129,11 @@ namespace DevStats.Editor
                 
                 return process.StandardOutput.ReadLine();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // something went wrong :(
                 // Don't throw error because dumb people who dont have git would be getting this error non-stop.
-                return "";
+                return null;
             }
         }
 
@@ -136,30 +146,32 @@ namespace DevStats.Editor
 
         public async Awaitable Help()
         {
-            CliResult result = await CallCLI(CliArgs.Help());
+            CliResult result = await CallCLI(CliArguments.Help());
             Debug.Log(result.ToString());
-            Debug.Log(CliArgs.Help().ToString());
+            Debug.Log(CliArguments.Help().ToString());
         }
         
         public async Awaitable Version()
         {
-            CliResult result = await CallCLI(CliArgs.Version());
+            CliResult result = await CallCLI(CliArguments.Version());
             Debug.Log(result.ToString());
         }
 
-        private async Awaitable<CliResult> CallCLI(CliArgs args)
+        private async Awaitable<CliResult> CallCLI(CliArguments arguments, string stdin = null)
         {
-            return await RunCommand(m_cliPath, args.ToArgs());
+            return await RunCommand(m_cliPath, arguments.ToArgs(false), stdin);
         }
         
         private static async Awaitable<CliResult> RunCommand(string command, string args, string stdin = null)
         {
+            Debug.Log($"Running Command\ncommand: {command}\nargs: {args}\nstdin: {stdin}");
             ProcessStartInfo psi = new ProcessStartInfo()
             {
                 FileName = command,
                 Arguments = args,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
+                RedirectStandardInput = true,
                 RedirectStandardError = true,
                 CreateNoWindow = true,
                 WindowStyle = ProcessWindowStyle.Hidden,

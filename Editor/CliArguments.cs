@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using UnityEngine;
 
@@ -22,17 +23,45 @@ namespace DevStats.Editor
         }
     }
     
-    public class CliArgs
+    public class CliArguments
     {
         private List<Argument> m_args = new();
 
-        public CliArgs AddKey(string key) => AddArgument("--key", key);
-        public CliArgs AddFile(string file) => AddArgument("--file", file);
+        public CliArguments AddKey()
+        {
+            string key = "waka_somenumber";
+            return AddArgument("--key", key);
+        }
+        public CliArguments AddFile(string file) => AddArgument("--entity", file);
+        public CliArguments AddTimestamp(decimal timestamp) => AddArgument("--time", timestamp.ToString(CultureInfo.InvariantCulture));
+        public CliArguments AddIsWrite(bool isWrite) => AddArgument("--write", isWrite.ToString().ToLower());
+        public CliArguments AddProject(string project) => AddArgument("--project", project);
+        public CliArguments AddPlugin() => AddArgument("--plugin", "DevStats");
+        public CliArguments AddEntityType(string entityType) => AddArgument("--entity-type", entityType);
+        public CliArguments AddExtraHeartbeats() => AddArgument("--extra-heartbeats");
+        public CliArguments AddCategory(string category)
+        {
+            if (!string.IsNullOrEmpty(category))
+            {
+                return AddArgument("--category", category);
+            }
+
+            return this;
+        }
+        public CliArguments AddBranch(string branchName)
+        {
+            if (!string.IsNullOrEmpty(branchName))
+            {
+                return AddArgument("--branch", branchName);
+            }
+
+            return this;
+        }
 
         /// <summary>
         /// Functional programming lfg
         /// </summary>
-        private CliArgs AddArgument(string option, string value = null)
+        private CliArguments AddArgument(string option, string value = null)
         {
             TryAddArgument(new Argument()
             {
@@ -82,7 +111,7 @@ namespace DevStats.Editor
             return ToArgs(true);
         }
 
-        public static CliArgs Help() => new CliArgs().AddArgument("--help");
-        public static CliArgs Version() => new CliArgs().AddArgument("--version");
+        public static CliArguments Help() => new CliArguments().AddArgument("--help");
+        public static CliArguments Version() => new CliArguments().AddArgument("--version");
     }
 }

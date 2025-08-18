@@ -8,7 +8,7 @@ namespace DevStats.Editor
 {
     public static class DevStatsController
     {
-        private const int SEND_INTERVAL = 20; //120; // Should be every 2 minutes.
+        private const int SEND_INTERVAL = 120; // Should be every 2 minutes.
         
         private static WakatimeCliInterface m_wakatimeCli;
         private static List<AHeartbeatProvider> m_heartbeatProviders = new();
@@ -25,6 +25,10 @@ namespace DevStats.Editor
             AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
         }
 
+        public static float GetTimeRemainingDebug()
+        {
+            return SEND_INTERVAL - ((float)EditorApplication.timeSinceStartup - m_lastHeartbeatSendTime);
+        }
         private static void OnBeforeAssemblyReload()
         {
             CleanupHeartbeatProviders();
@@ -57,7 +61,6 @@ namespace DevStats.Editor
                             provider.Initialize();
                             provider.TriggerHeartbeat += OnHeartbeatTriggered;
                             m_heartbeatProviders.Add(provider);
-                            Debug.Log("Found heartbeatProvider " + provider.GetType().Name);
                         }
                     }
                 }
@@ -77,6 +80,7 @@ namespace DevStats.Editor
 
         private static void OnHeartbeatTriggered(Heartbeat heartbeat)
         {
+            Debug.Log($"Queued heartbeat \n{heartbeat.ToString()}");
             m_queuedHeartbeats.Add(heartbeat);
         }
 

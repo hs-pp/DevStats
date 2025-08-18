@@ -1,3 +1,5 @@
+using System;
+using System.Globalization;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -36,7 +38,7 @@ namespace DevStats.Editor
 
         private void TestButtonClicked()
         {
-            //IrlStatsController.SendHeartbeat();
+            Debug.Log(DevStatsController.GetTimeRemainingDebug());
         }
     }
 }
