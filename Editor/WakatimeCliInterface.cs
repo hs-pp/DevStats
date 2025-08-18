@@ -52,12 +52,12 @@ namespace DevStats.Editor
             CliArguments args = new CliArguments();
             args.AddKey()
                 .AddFile(heartbeat.File)
-                .AddEntityType(GetEntityType())
-                .AddProject(GetProjectName())
-                .AddBranch(GetGitBranchName(heartbeat.File))
                 .AddTimestamp(heartbeat.Timestamp)
                 .AddIsWrite(heartbeat.IsWrite)
                 .AddCategory(heartbeat.Category)
+                .AddEntityType(GetEntityType())
+                .AddProject(GetProjectName())
+                .AddBranch(GetGitBranchName(heartbeat.File))
                 .AddPlugin();
 
             string stdin = null;
@@ -104,9 +104,9 @@ namespace DevStats.Editor
         {
             string value = $"{{\"entity\":\"{heartbeat.File.Replace("\\", "\\\\").Replace("\"", "\\\"")}\", " +
                            $"\"timestamp\":{heartbeat.Timestamp.ToString(CultureInfo.InvariantCulture)}, " +
-                           $"\"project\":\"{GetProjectName().Replace("\"", "\\\"")}\", " +
                            $"\"is_write\":{heartbeat.IsWrite.ToString().ToLower()}, " +
-                           $"\"entity_type\":\"{GetEntityType()}\"";
+                           $"\"entity_type\":\"{GetEntityType()}\", " +
+                           $"\"project\":\"{GetProjectName().Replace("\"", "\\\"")}\"";
             if (!string.IsNullOrEmpty(heartbeat.Category))
             {
                 value += $", \"category\":\"{heartbeat.Category}\"";

@@ -1,7 +1,7 @@
 {
-    "name": "DevStats",
+    "name": "Unity.InternalAPIEngineBridge.004",
     "rootNamespace": "",
-    "references": ["GUID:6b23fe5d19e62456f88152a2961159e4"],
+    "references": [],
     "includePlatforms": [
         "Editor"
     ],
