@@ -47,15 +47,6 @@ namespace DevStats.Editor
 
             return this;
         }
-        public CliArguments AddBranch(string branchName)
-        {
-            if (!string.IsNullOrEmpty(branchName))
-            {
-                return AddArgument("--branch", branchName);
-            }
-
-            return this;
-        }
 
         /// <summary>
         /// Functional programming lfg

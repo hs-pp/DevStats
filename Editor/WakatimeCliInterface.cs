@@ -33,10 +33,14 @@ namespace DevStats.Editor
         private const int MAX_PROCESS_WAIT_TIME = 600; // in frames.
         
         private string m_cliPath;
+        private string m_gitBranch;
         
         public WakatimeCliInterface(string cliPath)
         {
             m_cliPath = cliPath;
+            
+            // There's no chance the git branch will change without triggering a full recompile so we can just fetch it once.
+            m_gitBranch = FetchGitBranchName();
         }
         
         #region Send Heartbeat
@@ -57,7 +61,6 @@ namespace DevStats.Editor
                 .AddCategory(heartbeat.Category)
                 .AddEntityType(GetEntityType())
                 .AddProject(GetProjectName())
-                .AddBranch(GetGitBranchName(heartbeat.File))
                 .AddPlugin();
 
             string stdin = null;
@@ -72,11 +75,11 @@ namespace DevStats.Editor
             {
                 Debug.Log("Sending Heartbeat to CLI.");
             }
-            CliResult result = await CallCLI(args, stdin);
             
+            CliResult result = await CallCLI(args, stdin);
             if (DevStatsSettings.Get().IsDebugMode)
             {
-                Debug.Log($"Send Heartbeat result: {result.ToString()}");
+                Debug.Log($"Send Heartbeat Success: {result.ToString()}");
             }
         }
 
@@ -111,10 +114,9 @@ namespace DevStats.Editor
             {
                 value += $", \"category\":\"{heartbeat.Category}\"";
             }
-            string gitBranch = GetGitBranchName(heartbeat.File);
-            if (!string.IsNullOrEmpty(gitBranch))
+            if (!string.IsNullOrEmpty(m_gitBranch)) // For some reason Wakatime auto-finds the branch for the main heartbeat but not the extras???
             {
-                value += $", \"branch_name\":\"{gitBranch}\"";
+                value += $", \"branch_name\":\"{m_gitBranch}\"";
             }
             value += "}";
 
@@ -125,10 +127,15 @@ namespace DevStats.Editor
         {
             return Application.productName;
         }
-        
-        private string GetGitBranchName(string filePath)
+
+        private string GetEntityType()
         {
-            string directory = Path.GetDirectoryName(filePath);
+            return "file";
+        }
+        
+        private string FetchGitBranchName()
+        {
+            string directory = Application.dataPath;
             try
             {
                 ProcessStartInfo psi = new ProcessStartInfo()
@@ -155,11 +162,6 @@ namespace DevStats.Editor
                 return null;
             }
         }
-
-        private string GetEntityType()
-        {
-            return "file";
-        }
         #endregion
 
         private async Awaitable<CliResult> CallCLI(CliArguments arguments, string stdin = null)
@@ -169,12 +171,6 @@ namespace DevStats.Editor
         
         private static async Awaitable<CliResult> RunCommand(string command, string args, string stdin = null)
         {
-            if (DevStatsSettings.Get().IsDebugMode)
-            {
-                // This will log your API Key. Only uncomment if you really need to see it.
-                // Debug.Log($"Running Command\ncommand: {command}\nargs: {args}\nstdin: {stdin}");
-            }
-            
             ProcessStartInfo psi = new ProcessStartInfo()
             {
                 FileName = command,
