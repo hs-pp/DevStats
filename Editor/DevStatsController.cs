@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEditor;
-using UnityEngine;
 
 namespace DevStats.Editor
 {
@@ -43,11 +40,14 @@ namespace DevStats.Editor
         {
             m_wakatimeCli = await WakatimeCliInterface.Get();
             m_heartbeatProvider = new();
-            m_heartbeatProvider.Initialize(OnHeartbeatTriggered);
+            m_heartbeatProvider.Initialize(TriggerHeartbeat);
             EditorApplication.update += OnEditorUpdate;
         }
         
-        private static void OnHeartbeatTriggered(Heartbeat heartbeat)
+        /// <summary>
+        /// Anyone can call this.
+        /// </summary>
+        public static void TriggerHeartbeat(Heartbeat heartbeat)
         {
             if (!DevStatsSettings.Get().IsRunning())
             {

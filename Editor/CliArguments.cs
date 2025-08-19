@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace DevStats.Editor
 {
-    public struct Argument
+    internal struct Argument
     {
         public string Option;
         public string Value;
@@ -23,7 +23,7 @@ namespace DevStats.Editor
         }
     }
     
-    public class CliArguments
+    internal class CliArguments
     {
         private List<Argument> m_args = new();
 

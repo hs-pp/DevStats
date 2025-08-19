@@ -155,10 +155,8 @@ namespace DevStats.Editor
                 
                 return process.StandardOutput.ReadLine();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // something went wrong :(
-                // Don't throw error because dumb people who dont have git would be getting this error non-stop.
                 return null;
             }
         }

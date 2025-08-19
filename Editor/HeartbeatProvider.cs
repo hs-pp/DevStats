@@ -7,6 +7,14 @@ using Object = UnityEngine.Object;
 
 namespace DevStats.Editor
 {
+    public struct Heartbeat
+    {
+        public string File;
+        public decimal Timestamp;
+        public bool IsWrite; // Basically "IsSaved"
+        public string Category;
+    }
+    
     /// <summary>
     /// This provider captures a number of in-editor actions:
     /// Scenes - Open, Close, Save, Change
@@ -157,7 +165,7 @@ namespace DevStats.Editor
     public class AssetSaveDetector : UnityEditor.AssetModificationProcessor
     {
         public static Action<Object> OnAssetSaved;
-        public static void OnWillSaveAssets(string[] paths)
+        public static string[] OnWillSaveAssets(string[] paths)
         {
             foreach (var path in paths)
             {
@@ -167,6 +175,8 @@ namespace DevStats.Editor
                     OnAssetSaved?.Invoke(asset);
                 }
             }
+
+            return paths;
         }
     }
 }
