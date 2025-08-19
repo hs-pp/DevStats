@@ -6,13 +6,5 @@ namespace DevStats.Editor
         public decimal Timestamp;
         public bool IsWrite; // Basically "IsSaved"
         public string Category;
-
-        public override string ToString()
-        {
-            return @$"[Heartbeat] {File}
-Timestamp: {Timestamp}
-IsWrite: {IsWrite}
-Category: {Category}";
-        }
     }
 }

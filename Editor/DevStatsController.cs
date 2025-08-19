@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
+using UnityEngine;
 
 namespace DevStats.Editor
 {
@@ -10,7 +11,7 @@ namespace DevStats.Editor
         private const int SEND_INTERVAL = 120; // Should be every 2 minutes.
         
         private static WakatimeCliInterface m_wakatimeCli;
-        private static List<AHeartbeatProvider> m_heartbeatProviders = new();
+        private static HeartbeatProvider m_heartbeatProvider;
         private static List<Heartbeat> m_queuedHeartbeats = new();
         private static float m_lastHeartbeatSendTime = 0;
         
@@ -34,53 +35,18 @@ namespace DevStats.Editor
             // Send any unsent heartbeats first.
             SendHeartbeat();
             
-            CleanupHeartbeatProviders();
+            m_heartbeatProvider.Deinitialize();
             EditorApplication.update -= OnEditorUpdate;
         }
         
         private static async void OnAfterAssemblyReload()
         {
             m_wakatimeCli = await WakatimeCliInterface.Get();
-            CreateHeartbeatProviders();
+            m_heartbeatProvider = new();
+            m_heartbeatProvider.Initialize(OnHeartbeatTriggered);
             EditorApplication.update += OnEditorUpdate;
         }
         
-        private static void CreateHeartbeatProviders()
-        {
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                foreach (Type type in assembly.GetTypes())
-                {
-                    if (!type.IsClass || type.IsAbstract || type.IsGenericType)
-                    {
-                        continue;
-                    }
-
-                    if (typeof(AHeartbeatProvider).IsAssignableFrom(type))
-                    {
-                        AHeartbeatProvider provider = Activator.CreateInstance(type) as AHeartbeatProvider;
-                        if (provider != null)
-                        {
-                            provider.Initialize();
-                            provider.TriggerHeartbeat += OnHeartbeatTriggered;
-                            m_heartbeatProviders.Add(provider);
-                        }
-                    }
-                }
-            }
-        }
-
-        private static void CleanupHeartbeatProviders()
-        {
-            foreach (AHeartbeatProvider provider in m_heartbeatProviders)
-            {
-                provider.Deinitialize();
-                provider.TriggerHeartbeat -= OnHeartbeatTriggered;
-            }
-
-            m_heartbeatProviders.Clear();
-        }
-
         private static void OnHeartbeatTriggered(Heartbeat heartbeat)
         {
             if (!DevStatsSettings.Get().IsRunning())
