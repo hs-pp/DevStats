@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using Application = UnityEngine.Device.Application;
@@ -15,11 +16,11 @@ namespace DevStatsSystem.Editor.Core
     {
         public bool Success;
         public string Output;
-        public int NumFramesWaited;
+        public int MillisecondsWaited;
         
         public override string ToString()
         {
-            return $"[{Success}] {Output}\nFinished in {NumFramesWaited} frame(s).";
+            return $"[{Success}] {Output}\nFinished in {MillisecondsWaited} millisecond(s).";
         }
     }
     
@@ -30,7 +31,8 @@ namespace DevStatsSystem.Editor.Core
     {
         private const string WINDOWS_CLI_NAME = "wakatime-cli-windows-amd64";
         private const string MAC_CLI_NAME = "wakatime-cli-darwin-arm64";
-        private const int MAX_PROCESS_WAIT_TIME = 600; // in frames.
+        private const int MILLISECONDS_PER_WAIT = 16;
+        private const int MAX_PROCESS_WAIT_TIME = MILLISECONDS_PER_WAIT * 1000;
         
         private string m_cliPath;
         private string m_gitBranch;
@@ -163,12 +165,12 @@ namespace DevStatsSystem.Editor.Core
         }
         #endregion
 
-        private async Awaitable<CliResult> CallCli(WakatimeCliArguments arguments, string stdin = null)
+        private async Task<CliResult> CallCli(WakatimeCliArguments arguments, string stdin = null)
         {
             return await RunCommand(m_cliPath, arguments.ToArgs(false), stdin);
         }
         
-        private static async Awaitable<CliResult> RunCommand(string command, string args, string stdin = null)
+        private static async Task<CliResult> RunCommand(string command, string args, string stdin = null)
         {
             ProcessStartInfo psi = new ProcessStartInfo()
             {
@@ -217,12 +219,12 @@ namespace DevStatsSystem.Editor.Core
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
 
-            int numFramesWaited = 0;
+            int millisecondsWaited = 0;
             while (!process.HasExited)
             {
-                await Awaitable.NextFrameAsync();
-                numFramesWaited++;
-                if (numFramesWaited > MAX_PROCESS_WAIT_TIME) // Process took too long.
+                await Task.Delay(MILLISECONDS_PER_WAIT);
+                millisecondsWaited += MILLISECONDS_PER_WAIT;
+                if (millisecondsWaited > MAX_PROCESS_WAIT_TIME) // Process took too long.
                 {
                     process.Kill();
                     return new CliResult()
@@ -239,7 +241,7 @@ namespace DevStatsSystem.Editor.Core
                 {
                     Success = false,
                     Output = errorStr.ToString(),
-                    NumFramesWaited = numFramesWaited,
+                    MillisecondsWaited = millisecondsWaited,
                 };
             }
             
@@ -247,25 +249,24 @@ namespace DevStatsSystem.Editor.Core
             {
                 Success = true,
                 Output = outputStr.ToString(),
-                NumFramesWaited = numFramesWaited,
+                MillisecondsWaited = millisecondsWaited,
             };
         }
 
-        public async Awaitable Help()
+        public async Task Help()
         {
             CliResult result = await CallCli(WakatimeCliArguments.Help());
             Debug.Log(result.ToString());
-            Debug.Log(WakatimeCliArguments.Help().ToString());
         }
 
-        public async Awaitable Version()
+        public async Task Version()
         {
             CliResult result = await CallCli(WakatimeCliArguments.Version());
             Debug.Log(result.ToString());
         }
         
         #region Loading CLI
-        public static async Awaitable<WakatimeCliController> Get()
+        public static async Task<WakatimeCliController> Get()
         {
             string cliPath = await LoadCli();
             if (string.IsNullOrEmpty(cliPath))
@@ -277,7 +278,7 @@ namespace DevStatsSystem.Editor.Core
             return new WakatimeCliController(cliPath);
         }
         
-        private static async Awaitable<string> LoadCli()
+        private static async Task<string> LoadCli()
         {
             string cliPath = "";
             switch (Application.platform)
@@ -318,7 +319,7 @@ namespace DevStatsSystem.Editor.Core
             return null;
         }
         
-        private static async Awaitable<bool> MakeExecutable(string filePath)
+        private static async Task<bool> MakeExecutable(string filePath)
         {
             if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.LinuxEditor)
             {
