@@ -56,15 +56,15 @@ namespace DevStatsSystem.Editor.Core
             
             Heartbeat heartbeat = heartbeats[0];
             
-            CliArguments args = new CliArguments();
+            WakatimeCliArguments args = new WakatimeCliArguments();
             args.AddKey()
                 .AddFile(heartbeat.FilePath)
                 .AddTimestamp(heartbeat.Timestamp)
-                .AddIsWrite(heartbeat.IsWrite)
                 .AddCategory(GetCategory())
                 .AddEntityType(GetEntityType())
                 .AddProject(GetProjectName())
-                .AddPlugin();
+                .AddPlugin()
+                .AddIsWrite(heartbeat.IsWrite);
 
             string stdin = null;
             heartbeats.RemoveAt(0);
@@ -160,7 +160,7 @@ namespace DevStatsSystem.Editor.Core
         }
         #endregion
 
-        private async Awaitable<CliResult> CallCLI(CliArguments arguments, string stdin = null)
+        private async Awaitable<CliResult> CallCLI(WakatimeCliArguments arguments, string stdin = null)
         {
             return await RunCommand(m_cliPath, arguments.ToArgs(false), stdin);
         }
@@ -250,14 +250,14 @@ namespace DevStatsSystem.Editor.Core
 
         public async Awaitable Help()
         {
-            CliResult result = await CallCLI(CliArguments.Help());
+            CliResult result = await CallCLI(WakatimeCliArguments.Help());
             Debug.Log(result.ToString());
-            Debug.Log(CliArguments.Help().ToString());
+            Debug.Log(WakatimeCliArguments.Help().ToString());
         }
 
         public async Awaitable Version()
         {
-            CliResult result = await CallCLI(CliArguments.Version());
+            CliResult result = await CallCLI(WakatimeCliArguments.Version());
             Debug.Log(result.ToString());
         }
         

@@ -39,7 +39,14 @@ namespace DevStatsSystem.Editor.Core
         
         private static async void OnAfterAssemblyReload()
         {
-            Log("Started DevStats.");
+            if (DevStatsSettings.Get().IsEnabled && string.IsNullOrEmpty(DevStatsSettings.Get().APIKey))
+            {
+                LogError("DevStats is enabled but API key is missing. Open the DevStats window from \"Window/DevStats\" and set the API key!");
+            }
+            else
+            {
+                Log("Started DevStats.");
+            }
 
             m_wakatimeCli = await WakatimeCliController.Get();
             m_heartbeatProvider = new();

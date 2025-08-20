@@ -22,27 +22,34 @@ namespace DevStatsSystem.Editor.Core
         }
     }
     
-    internal class CliArguments
+    internal class WakatimeCliArguments
     {
         private List<Argument> m_args = new();
 
-        public CliArguments AddKey()
+        public WakatimeCliArguments AddKey()
         {
             return AddArgument("--key", DevStatsSettings.Get().APIKey);
         }
-        public CliArguments AddFile(string file) => AddArgument("--entity", file);
-        public CliArguments AddTimestamp(decimal timestamp) => AddArgument("--time", timestamp.ToString(CultureInfo.InvariantCulture));
-        public CliArguments AddIsWrite(bool isWrite) => AddArgument("--write", isWrite.ToString().ToLower());
-        public CliArguments AddProject(string project) => AddArgument("--project", project);
-        public CliArguments AddPlugin() => AddArgument("--plugin", "DevStats");
-        public CliArguments AddEntityType(string entityType) => AddArgument("--entity-type", entityType);
-        public CliArguments AddExtraHeartbeats() => AddArgument("--extra-heartbeats");
-        public CliArguments AddCategory(string category) => AddArgument("--category", category);
-
+        public WakatimeCliArguments AddFile(string file) => AddArgument("--entity", file);
+        public WakatimeCliArguments AddTimestamp(decimal timestamp) => AddArgument("--time", timestamp.ToString(CultureInfo.InvariantCulture));
+        public WakatimeCliArguments AddProject(string project) => AddArgument("--project", project);
+        public WakatimeCliArguments AddPlugin() => AddArgument("--plugin", "DevStats");
+        public WakatimeCliArguments AddEntityType(string entityType) => AddArgument("--entity-type", entityType);
+        public WakatimeCliArguments AddExtraHeartbeats() => AddArgument("--extra-heartbeats");
+        public WakatimeCliArguments AddCategory(string category) => AddArgument("--category", category);
+        public WakatimeCliArguments AddIsWrite(bool isWrite)
+        {
+            if (isWrite)
+            {
+                return AddArgument("--write");
+            }
+            return this;
+        }
+        
         /// <summary>
         /// Functional programming lfg
         /// </summary>
-        private CliArguments AddArgument(string option, string value = null)
+        private WakatimeCliArguments AddArgument(string option, string value = null)
         {
             TryAddArgument(new Argument()
             {
@@ -69,7 +76,7 @@ namespace DevStatsSystem.Editor.Core
             m_args.Add(newArg);
         }
 
-        public string ToArgs(bool isSanitized = false)
+        public string ToArgs(bool isSanitized = true)
         {
             StringBuilder strBuilder = new();
             foreach (Argument arg in m_args)
@@ -89,10 +96,10 @@ namespace DevStatsSystem.Editor.Core
 
         public override string ToString()
         {
-            return ToArgs(true);
+            return ToArgs();
         }
 
-        public static CliArguments Help() => new CliArguments().AddArgument("--help");
-        public static CliArguments Version() => new CliArguments().AddArgument("--version");
+        public static WakatimeCliArguments Help() => new WakatimeCliArguments().AddArgument("--help");
+        public static WakatimeCliArguments Version() => new WakatimeCliArguments().AddArgument("--version");
     }
 }

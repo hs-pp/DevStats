@@ -7,21 +7,18 @@ namespace DevStatsSystem.Editor
     [Serializable]
     internal class DevStatsSettings
     {
-        private static string SAVE_KEY = "IRLStatsSettings";
+        private static string SAVE_KEY = "DevStatsSettings";
 
         [SerializeField]
         private string m_apiKey;
-
         public string APIKey => m_apiKey;
 
         [SerializeField]
         private bool m_isEnabled = true;
-
         public bool IsEnabled => m_isEnabled;
 
         [SerializeField]
         private bool m_debugMode = false;
-
         public bool IsDebugMode => m_debugMode;
 
         // Singleton so it's easy to access.
@@ -72,7 +69,6 @@ namespace DevStatsSystem.Editor
 
         public void Save()
         {
-            Debug.Log("Saved settings");
             EditorPrefs.SetString(SAVE_KEY, JsonUtility.ToJson(this));
         }
     }

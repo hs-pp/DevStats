@@ -7,7 +7,7 @@ namespace DevStatsSystem.Editor.UI
 {
     public class DevStatsWindow : EditorWindow
     {
-        private static string UXML_PATH = "DevStats/IRLStatsWindow";
+        private static string UXML_PATH = "DevStats/DevStatsWindow";
 
         private static string TEST_BUTTON_TAG = "test-button";
         private static string APIKEY_FIELD_TAG = "api-key-field";
@@ -19,7 +19,7 @@ namespace DevStatsSystem.Editor.UI
         private Toggle m_isEnabledToggle;
         private Toggle m_debugModeToggle;
 
-        [MenuItem("Window/IRLStats")]
+        [MenuItem("Window/DevStats")]
         public static void OpenWindow()
         {
             GetWindow<DevStatsWindow>().Show();
