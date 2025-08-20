@@ -9,7 +9,7 @@ using UnityEngine;
 using Application = UnityEngine.Device.Application;
 using Debug = UnityEngine.Debug;
 
-namespace DevStatsSystem.Editor
+namespace DevStatsSystem.Editor.Core
 {
     internal struct CliResult
     {
@@ -26,7 +26,7 @@ namespace DevStatsSystem.Editor
     /// <summary>
     /// Dont forget to add the Wakatime plugin to your IDE to get full coverage!
     /// </summary>
-    internal class WakatimeCliInterface
+    internal class WakatimeCliController
     {
         private const string WINDOWS_CLI_NAME = "wakatime-cli-windows-amd64";
         private const string MAC_CLI_NAME = "wakatime-cli-darwin-arm64";
@@ -35,7 +35,7 @@ namespace DevStatsSystem.Editor
         private string m_cliPath;
         private string m_gitBranch;
         
-        private WakatimeCliInterface(string cliPath)
+        private WakatimeCliController(string cliPath)
         {
             m_cliPath = cliPath;
             
@@ -43,7 +43,7 @@ namespace DevStatsSystem.Editor
             m_gitBranch = FetchGitBranchName();
             
             string gitBranchDisplay = string.IsNullOrEmpty(m_gitBranch) ? "N/A" : m_gitBranch;
-            DevStats.Log($"Git branch: {gitBranchDisplay}");
+            DevStats.Log($"WakatimeCliController Created.\nCLI: {m_cliPath.Replace(Application.dataPath, "Assets")}\nGit branch: {gitBranchDisplay}");
         }
         
         #region Send Heartbeat
@@ -262,7 +262,7 @@ namespace DevStatsSystem.Editor
         }
         
         #region Loading CLI
-        public static async Awaitable<WakatimeCliInterface> Get()
+        public static async Awaitable<WakatimeCliController> Get()
         {
             string cliPath = await LoadCli();
             if (string.IsNullOrEmpty(cliPath))
@@ -271,7 +271,7 @@ namespace DevStatsSystem.Editor
                 return null;
             }
 
-            return new WakatimeCliInterface(cliPath);
+            return new WakatimeCliController(cliPath);
         }
         
         private static async Awaitable<string> LoadCli()

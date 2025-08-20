@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
-namespace DevStatsSystem.Editor
+namespace DevStatsSystem.Editor.Core
 {
     public struct Heartbeat
     {
@@ -80,14 +80,7 @@ namespace DevStatsSystem.Editor
             {
                 SendHeartbeat(SceneToSceneAsset(EditorSceneManager.GetActiveScene()), false);
             }
-            else if (EditorWindow.focusedWindow.GetType() == InternalBridgeHelper.GetUIBuilderWindowType())
-            {
-                // ignore it.
-            }
-            else // Default to scene hierarchy change.
-            {
-                DevStats.LogWarning($"Unknown hierarchy changed ({EditorWindow.focusedWindow.GetType().Name}). Should DevStats track it? ");
-            }
+            // We don't care for any other scenario... for now.
         }
         
         private void OnChangesPublished(ref ObjectChangeEventStream stream)

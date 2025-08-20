@@ -1,8 +1,9 @@
+using DevStatsSystem.Editor.Core;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DevStatsSystem.Editor
+namespace DevStatsSystem.Editor.UI
 {
     public class DevStatsWindow : EditorWindow
     {

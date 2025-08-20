@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using UnityEngine;
 
-namespace DevStatsSystem.Editor
+namespace DevStatsSystem.Editor.Core
 {
     internal struct Argument
     {

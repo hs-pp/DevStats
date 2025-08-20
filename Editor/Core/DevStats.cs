@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace DevStatsSystem.Editor
+namespace DevStatsSystem.Editor.Core
 {
     public static class DevStats
     {
         private const int SEND_INTERVAL = 120; // Should be every 2 minutes.
         
-        private static WakatimeCliInterface m_wakatimeCli;
+        private static WakatimeCliController m_wakatimeCli;
         private static HeartbeatProvider m_heartbeatProvider;
         private static List<Heartbeat> m_queuedHeartbeats = new();
         private static float m_lastHeartbeatSendTime = 0;
@@ -41,7 +41,7 @@ namespace DevStatsSystem.Editor
         {
             Log("Started DevStats.");
 
-            m_wakatimeCli = await WakatimeCliInterface.Get();
+            m_wakatimeCli = await WakatimeCliController.Get();
             m_heartbeatProvider = new();
             m_heartbeatProvider.Initialize(TriggerHeartbeat);
             EditorApplication.update += OnEditorUpdate;

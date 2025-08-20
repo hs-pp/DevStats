@@ -2,7 +2,7 @@ using System;
 using Unity.UI.Builder;
 using UnityEditor;
 
-namespace DevStatsSystem.Editor
+namespace DevStatsSystem.Editor.Core
 {
     public static class InternalBridgeHelper
     {
