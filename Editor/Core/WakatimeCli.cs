@@ -12,32 +12,39 @@ using Debug = UnityEngine.Debug;
 
 namespace DevStatsSystem.Editor.Core
 {
+    internal enum CliResultType
+    {
+        Success,
+        Failure,
+        Timeout,
+    }
     internal struct CliResult
     {
-        public bool Success;
+        public CliResultType Result;
         public string Output;
         public int MillisecondsWaited;
         
         public override string ToString()
         {
-            return $"[{Success}] {Output}\nFinished in {MillisecondsWaited} millisecond(s).";
+            return $"[{Result.ToString()}] {Output}\nFinished in {MillisecondsWaited} milliseconds.";
         }
     }
     
     /// <summary>
     /// Dont forget to add the Wakatime plugin to your IDE to get full coverage!
     /// </summary>
-    internal class WakatimeCliController
+    internal class WakatimeCli
     {
         private const string WINDOWS_CLI_NAME = "wakatime-cli-windows-amd64";
         private const string MAC_CLI_NAME = "wakatime-cli-darwin-arm64";
         private const int MILLISECONDS_PER_WAIT = 16;
         private const int MAX_PROCESS_WAIT_TIME = MILLISECONDS_PER_WAIT * 1000;
+        private const int CALLCLI_TIMEOUT_ATTEMPTS = 3;
         
         private string m_cliPath;
         private string m_gitBranch;
         
-        private WakatimeCliController(string cliPath)
+        private WakatimeCli(string cliPath)
         {
             m_cliPath = cliPath;
             
@@ -45,11 +52,11 @@ namespace DevStatsSystem.Editor.Core
             m_gitBranch = FetchGitBranchName();
             
             string gitBranchDisplay = string.IsNullOrEmpty(m_gitBranch) ? "N/A" : m_gitBranch;
-            DevStats.Log($"WakatimeCliController Created.\nCLI: {m_cliPath.Replace(Application.dataPath, "Assets")}\nGit branch: {gitBranchDisplay}");
+            DevStats.Log($"{nameof(WakatimeCli)} Created.\nCLI: {m_cliPath.Replace(Application.dataPath, "Assets")}\nGit branch: {gitBranchDisplay}");
         }
         
         #region Send Heartbeat
-        public async void SendHeartbeats(List<Heartbeat> heartbeats)
+        public async Task SendHeartbeats(List<Heartbeat> heartbeats)
         {
             if (heartbeats == null || heartbeats.Count == 0)
             {
@@ -75,9 +82,9 @@ namespace DevStatsSystem.Editor.Core
                 args.AddExtraHeartbeats();
             }
 
-            DevStats.Log($"Sending Heartbeats({heartbeats.Count + 1}) to Wakatime.");
+            DevStats.Log($"Sending {heartbeats.Count + 1} Heartbeats to Wakatime.");
             CliResult result = await CallCli(args, stdin);
-            DevStats.Log($"Sent Heartbeat Success: {result.ToString()}");
+            DevStats.Log($"Send Heartbeats Result: {result.ToString()}");
         }
 
         private string GetSerializedExtraHeartbeats(List<Heartbeat> heartbeats)
@@ -167,7 +174,26 @@ namespace DevStatsSystem.Editor.Core
 
         private async Task<CliResult> CallCli(WakatimeCliArguments arguments, string stdin = null)
         {
-            return await RunCommand(m_cliPath, arguments.ToArgs(false), stdin);
+            // Put in the effort to try at least 3 times. Otherwise we lose the whole command and any heartbeats.
+            int numAttempts = 0;
+            while (numAttempts < CALLCLI_TIMEOUT_ATTEMPTS)
+            {
+                CliResult result = await RunCommand(m_cliPath, arguments.ToArgs(false), stdin);
+                if (result.Result == CliResultType.Timeout)
+                {
+                    numAttempts++;
+                    continue;
+                }
+                
+                return result;
+            }
+
+            return new CliResult()
+            {
+                Result = CliResultType.Failure,
+                Output = $"Failure due to timeouts. Failed all {CALLCLI_TIMEOUT_ATTEMPTS} attempts.",
+                MillisecondsWaited = MAX_PROCESS_WAIT_TIME * CALLCLI_TIMEOUT_ATTEMPTS,
+            };
         }
         
         private static async Task<CliResult> RunCommand(string command, string args, string stdin = null)
@@ -189,8 +215,8 @@ namespace DevStatsSystem.Editor.Core
             {
                 return new CliResult()
                 {
-                    Success = false,
-                    Output = "Error! Could not start process!",
+                    Result = CliResultType.Failure,
+                    Output = "Could not start process!",
                 };
             }
             
@@ -229,8 +255,9 @@ namespace DevStatsSystem.Editor.Core
                     process.Kill();
                     return new CliResult()
                     {
-                        Success = false,
-                        Output = "Error! Process timed out!",
+                        Result = CliResultType.Timeout,
+                        Output = "Process timed out!",
+                        MillisecondsWaited = millisecondsWaited,
                     };
                 }
             }
@@ -239,7 +266,7 @@ namespace DevStatsSystem.Editor.Core
             {
                 return new CliResult()
                 {
-                    Success = false,
+                    Result = CliResultType.Failure,
                     Output = errorStr.ToString(),
                     MillisecondsWaited = millisecondsWaited,
                 };
@@ -247,7 +274,7 @@ namespace DevStatsSystem.Editor.Core
             
             return new CliResult()
             {
-                Success = true,
+                Result = CliResultType.Success,
                 Output = outputStr.ToString(),
                 MillisecondsWaited = millisecondsWaited,
             };
@@ -266,16 +293,16 @@ namespace DevStatsSystem.Editor.Core
         }
         
         #region Loading CLI
-        public static async Task<WakatimeCliController> Get()
+        public static async Task<WakatimeCli> Get()
         {
             string cliPath = await LoadCli();
             if (string.IsNullOrEmpty(cliPath))
             {
-                DevStats.LogError($"Failed to get {nameof(WakatimeCliController)}.");
+                DevStats.LogError($"Failed to get {nameof(WakatimeCli)}.");
                 return null;
             }
 
-            return new WakatimeCliController(cliPath);
+            return new WakatimeCli(cliPath);
         }
         
         private static async Task<string> LoadCli()
@@ -324,7 +351,7 @@ namespace DevStatsSystem.Editor.Core
             if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.LinuxEditor)
             {
                 CliResult result = await RunCommand("/bin/chmod", $"+x \"{filePath}\"");
-                return result.Success;
+                return result.Result == CliResultType.Success;
             }
             else
             {

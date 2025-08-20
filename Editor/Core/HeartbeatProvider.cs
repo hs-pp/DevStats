@@ -23,7 +23,7 @@ namespace DevStatsSystem.Editor.Core
     /// This provider captures a number of in-editor actions:
     /// Scenes - Open, Close, Save, Change
     /// Prefabs - Save, Change
-    /// ScriptableObjects - Create, Destroy, Save, Change (Including UXMLs and UIBuilder)
+    /// ScriptableObjects - Create, Destroy, Save, Change (Including UXMLs from UIBuilder)
     /// </summary>
     internal class HeartbeatProvider
     {
