@@ -31,9 +31,13 @@ namespace DevStatsSystem.Editor.Core
         private string m_projectPath = Application.dataPath.Replace("Assets", "");
         private Heartbeat m_previousHeartbeat;
 
-        public void Initialize(Action<Heartbeat> triggerHeartbeatCallback)
+        public HeartbeatProvider(Action<Heartbeat> triggerHeartbeatCallback)
         {
             TriggerHeartbeat = triggerHeartbeatCallback;
+        }
+        
+        public void Initialize()
+        {
             EditorSceneManager.sceneOpened += OnSceneOpened;
             EditorSceneManager.sceneClosing += OnSceneClosing;
             EditorApplication.hierarchyChanged += OnHierarchyChanged;

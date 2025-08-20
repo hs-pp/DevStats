@@ -19,7 +19,7 @@ namespace DevStatsSystem.Editor.Core
         
         public override string ToString()
         {
-            return $"[{Success}] {Output}\n Finished in {NumFramesWaited} frame(s).\n";
+            return $"[{Success}] {Output}\nFinished in {NumFramesWaited} frame(s).";
         }
     }
     
@@ -55,16 +55,15 @@ namespace DevStatsSystem.Editor.Core
             }
             
             Heartbeat heartbeat = heartbeats[0];
-            
             WakatimeCliArguments args = new WakatimeCliArguments();
             args.AddKey()
                 .AddFile(heartbeat.FilePath)
                 .AddTimestamp(heartbeat.Timestamp)
+                .AddIsWrite(heartbeat.IsWrite)
                 .AddCategory(GetCategory())
                 .AddEntityType(GetEntityType())
                 .AddProject(GetProjectName())
-                .AddPlugin()
-                .AddIsWrite(heartbeat.IsWrite);
+                .AddPlugin();
 
             string stdin = null;
             heartbeats.RemoveAt(0);
@@ -74,8 +73,8 @@ namespace DevStatsSystem.Editor.Core
                 args.AddExtraHeartbeats();
             }
 
-            DevStats.Log($"Sending Heartbeats({heartbeats.Count + 1}) to CLI.");
-            CliResult result = await CallCLI(args, stdin);
+            DevStats.Log($"Sending Heartbeats({heartbeats.Count + 1}) to Wakatime.");
+            CliResult result = await CallCli(args, stdin);
             DevStats.Log($"Sent Heartbeat Success: {result.ToString()}");
         }
 
@@ -149,6 +148,10 @@ namespace DevStatsSystem.Editor.Core
                 };
                 
                 Process process = Process.Start(psi);
+                if (process == null)
+                {
+                    return null;
+                }
                 process.WaitForExit();
                 
                 return process.StandardOutput.ReadLine();
@@ -160,7 +163,7 @@ namespace DevStatsSystem.Editor.Core
         }
         #endregion
 
-        private async Awaitable<CliResult> CallCLI(WakatimeCliArguments arguments, string stdin = null)
+        private async Awaitable<CliResult> CallCli(WakatimeCliArguments arguments, string stdin = null)
         {
             return await RunCommand(m_cliPath, arguments.ToArgs(false), stdin);
         }
@@ -250,14 +253,14 @@ namespace DevStatsSystem.Editor.Core
 
         public async Awaitable Help()
         {
-            CliResult result = await CallCLI(WakatimeCliArguments.Help());
+            CliResult result = await CallCli(WakatimeCliArguments.Help());
             Debug.Log(result.ToString());
             Debug.Log(WakatimeCliArguments.Help().ToString());
         }
 
         public async Awaitable Version()
         {
-            CliResult result = await CallCLI(WakatimeCliArguments.Version());
+            CliResult result = await CallCli(WakatimeCliArguments.Version());
             Debug.Log(result.ToString());
         }
         
@@ -267,7 +270,7 @@ namespace DevStatsSystem.Editor.Core
             string cliPath = await LoadCli();
             if (string.IsNullOrEmpty(cliPath))
             {
-                DevStats.LogError("Failed to get WakatimeCliInterface.");
+                DevStats.LogError($"Failed to get {nameof(WakatimeCliController)}.");
                 return null;
             }
 
@@ -317,15 +320,14 @@ namespace DevStatsSystem.Editor.Core
         
         private static async Awaitable<bool> MakeExecutable(string filePath)
         {
-            if (Application.platform == RuntimePlatform.OSXEditor ||
-                Application.platform == RuntimePlatform.LinuxEditor)
+            if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.LinuxEditor)
             {
                 CliResult result = await RunCommand("/bin/chmod", $"+x \"{filePath}\"");
                 return result.Success;
             }
             else
             {
-                //Debug.Log("Skipping chmod +x.");
+                // Skipping chmod +x
                 return true;
             }
         }

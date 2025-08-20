@@ -20,10 +20,12 @@ namespace DevStatsSystem.Editor
         [SerializeField]
         private bool m_debugMode = false;
         public bool IsDebugMode => m_debugMode;
+        
+        [NonSerialized]
+        public static Action<bool, bool> OnEnabledChanged;
 
         // Singleton so it's easy to access.
         private static DevStatsSettings m_instance;
-
         public static DevStatsSettings Get()
         {
             if (m_instance == null)
@@ -42,8 +44,16 @@ namespace DevStatsSystem.Editor
 
         public void SetIsEnabled(bool isEnabled)
         {
+            if (isEnabled == m_isEnabled)
+            {
+                return;
+            }
+            
+            bool previousValue = m_isEnabled;
             m_isEnabled = isEnabled;
             Save();
+            
+            OnEnabledChanged?.Invoke(isEnabled, previousValue);
         }
 
         public void SetDebugMode(bool debugMode)

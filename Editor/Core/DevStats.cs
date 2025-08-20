@@ -16,28 +16,40 @@ namespace DevStatsSystem.Editor.Core
         [InitializeOnLoadMethod]
         static void RegisterAssemblyReloadEvents()
         {
-            AssemblyReloadEvents.beforeAssemblyReload -= OnBeforeAssemblyReload;
-            AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
-
-            AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
-            AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
-        }
-
-        public static float GetTimeRemainingDebug()
-        {
-            return SEND_INTERVAL - ((float)EditorApplication.timeSinceStartup - m_lastHeartbeatSendTime);
-        }
-        
-        private static void OnBeforeAssemblyReload()
-        {
-            // Send any unsent heartbeats first.
-            SendHeartbeat();
+            DevStatsSettings.OnEnabledChanged += OnDevStatsEnabledChanged;
+            AssemblyReloadEvents.afterAssemblyReload -= Initialize;
+            AssemblyReloadEvents.beforeAssemblyReload -= Deinitialize;
             
-            m_heartbeatProvider.Deinitialize();
-            EditorApplication.update -= OnEditorUpdate;
+            if (DevStatsSettings.Get().IsEnabled)
+            {
+                AssemblyReloadEvents.afterAssemblyReload += Initialize;
+                AssemblyReloadEvents.beforeAssemblyReload += Deinitialize;
+            }
+        }
+
+        private static void OnDevStatsEnabledChanged(bool newValue, bool prevValue)
+        {
+            if (newValue == prevValue)
+            {
+                return;
+            }
+            
+            if (newValue)
+            {
+                AssemblyReloadEvents.afterAssemblyReload += Initialize;
+                AssemblyReloadEvents.beforeAssemblyReload += Deinitialize;
+                Initialize();
+            }
+            else
+            {
+                AssemblyReloadEvents.afterAssemblyReload -= Initialize;
+                AssemblyReloadEvents.beforeAssemblyReload -= Deinitialize;
+                Deinitialize();
+            }
+            
         }
         
-        private static async void OnAfterAssemblyReload()
+        private static async void Initialize()
         {
             if (DevStatsSettings.Get().IsEnabled && string.IsNullOrEmpty(DevStatsSettings.Get().APIKey))
             {
@@ -45,13 +57,24 @@ namespace DevStatsSystem.Editor.Core
             }
             else
             {
-                Log("Started DevStats.");
+                Log("Initialized DevStats.");
             }
 
             m_wakatimeCli = await WakatimeCliController.Get();
-            m_heartbeatProvider = new();
-            m_heartbeatProvider.Initialize(TriggerHeartbeat);
+            m_heartbeatProvider = new(TriggerHeartbeat);
+            m_heartbeatProvider.Initialize();
             EditorApplication.update += OnEditorUpdate;
+        }
+        
+        private static void Deinitialize()
+        {
+            // Send any unsent heartbeats first.
+            SendHeartbeat();
+            
+            m_heartbeatProvider.Deinitialize();
+            EditorApplication.update -= OnEditorUpdate;
+            
+            Log("Deinitialized DevStats");
         }
         
         /// <summary>
@@ -84,6 +107,11 @@ namespace DevStatsSystem.Editor.Core
 
         private static void SendHeartbeat()
         {
+            if (m_wakatimeCli == null)
+            {
+                return;
+            }
+            
             if (m_queuedHeartbeats.Count == 0)
             {
                 return;
@@ -121,6 +149,11 @@ namespace DevStatsSystem.Editor.Core
         private static string GetLogHeader()
         {
             return "<b><color=#F37828>[DevStats]</color></b>";
+        }
+        
+        public static float GetTimeRemainingDebug()
+        {
+            return SEND_INTERVAL - ((float)EditorApplication.timeSinceStartup - m_lastHeartbeatSendTime);
         }
     }
 }
