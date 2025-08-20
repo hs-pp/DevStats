@@ -9,7 +9,7 @@ using UnityEngine;
 using Application = UnityEngine.Device.Application;
 using Debug = UnityEngine.Debug;
 
-namespace DevStats.Editor
+namespace DevStatsSystem.Editor
 {
     internal struct CliResult
     {
@@ -19,7 +19,7 @@ namespace DevStats.Editor
         
         public override string ToString()
         {
-            return $"[{Success}] {Output}\n NumFramesWaited: {NumFramesWaited} \n";
+            return $"[{Success}] {Output}\n Finished in {NumFramesWaited} frame(s).\n";
         }
     }
     
@@ -35,12 +35,15 @@ namespace DevStats.Editor
         private string m_cliPath;
         private string m_gitBranch;
         
-        public WakatimeCliInterface(string cliPath)
+        private WakatimeCliInterface(string cliPath)
         {
             m_cliPath = cliPath;
             
             // There's no chance the git branch will change without triggering a full recompile so we can just fetch it once.
             m_gitBranch = FetchGitBranchName();
+            
+            string gitBranchDisplay = string.IsNullOrEmpty(m_gitBranch) ? "N/A" : m_gitBranch;
+            DevStats.Log($"Git branch: {gitBranchDisplay}");
         }
         
         #region Send Heartbeat
@@ -55,10 +58,10 @@ namespace DevStats.Editor
             
             CliArguments args = new CliArguments();
             args.AddKey()
-                .AddFile(heartbeat.File)
+                .AddFile(heartbeat.FilePath)
                 .AddTimestamp(heartbeat.Timestamp)
                 .AddIsWrite(heartbeat.IsWrite)
-                .AddCategory(heartbeat.Category)
+                .AddCategory(GetCategory())
                 .AddEntityType(GetEntityType())
                 .AddProject(GetProjectName())
                 .AddPlugin();
@@ -71,16 +74,9 @@ namespace DevStats.Editor
                 args.AddExtraHeartbeats();
             }
 
-            if (DevStatsSettings.Get().IsDebugMode)
-            {
-                Debug.Log("Sending Heartbeat to CLI.");
-            }
-            
+            DevStats.Log($"Sending Heartbeats({heartbeats.Count + 1}) to CLI.");
             CliResult result = await CallCLI(args, stdin);
-            if (DevStatsSettings.Get().IsDebugMode)
-            {
-                Debug.Log($"Send Heartbeat Success: {result.ToString()}");
-            }
+            DevStats.Log($"Sent Heartbeat Success: {result.ToString()}");
         }
 
         private string GetSerializedExtraHeartbeats(List<Heartbeat> heartbeats)
@@ -105,15 +101,12 @@ namespace DevStats.Editor
         /// </summary>
         private string GetSerializedExtraHeartbeat(Heartbeat heartbeat)
         {
-            string value = $"{{\"entity\":\"{heartbeat.File.Replace("\\", "\\\\").Replace("\"", "\\\"")}\", " +
+            string value = $"{{\"entity\":\"{heartbeat.FilePath.Replace("\\", "\\\\").Replace("\"", "\\\"")}\", " +
                            $"\"timestamp\":{heartbeat.Timestamp.ToString(CultureInfo.InvariantCulture)}, " +
                            $"\"is_write\":{heartbeat.IsWrite.ToString().ToLower()}, " +
+                           $"\"category\":\"{GetCategory()}\", " +
                            $"\"entity_type\":\"{GetEntityType()}\", " +
                            $"\"project\":\"{GetProjectName().Replace("\"", "\\\"")}\"";
-            if (!string.IsNullOrEmpty(heartbeat.Category))
-            {
-                value += $", \"category\":\"{heartbeat.Category}\"";
-            }
             if (!string.IsNullOrEmpty(m_gitBranch)) // For some reason Wakatime auto-finds the branch for the main heartbeat but not the extras???
             {
                 value += $", \"branch_name\":\"{m_gitBranch}\"";
@@ -128,6 +121,11 @@ namespace DevStats.Editor
             return Application.productName;
         }
 
+        private string GetCategory()
+        {
+            return "coding";
+        }
+        
         private string GetEntityType()
         {
             return "file";
@@ -155,7 +153,7 @@ namespace DevStats.Editor
                 
                 return process.StandardOutput.ReadLine();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -269,7 +267,7 @@ namespace DevStats.Editor
             string cliPath = await LoadCli();
             if (string.IsNullOrEmpty(cliPath))
             {
-                Debug.LogError("Failed to get WakatimeCliInterface.");
+                DevStats.LogError("Failed to get WakatimeCliInterface.");
                 return null;
             }
 
@@ -288,7 +286,7 @@ namespace DevStats.Editor
                     cliPath = FindCliPath(MAC_CLI_NAME);
                     break;
                 default:
-                    Debug.LogError("Failed to determine application platform.");
+                    DevStats.LogError("Failed to determine application platform.");
                     break;
             }
 
@@ -313,7 +311,7 @@ namespace DevStats.Editor
                 }
             }
 
-            Debug.LogError($"Failed to find CLI {filename}.");
+            DevStats.LogError($"Failed to find CLI {filename}.");
             return null;
         }
         

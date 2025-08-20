@@ -2,5 +2,5 @@
     <ui:Button text="Button" name="test-button" />
     <ui:TextField label="API Key" placeholder-text="filler text" name="api-key-field" password="true" />
     <ui:Toggle label="IsEnabled" name="isenabled-toggle" />
-    <ui:Toggle label="DebugMode1" name="debugmode-toggle" enabled="true" />
+    <ui:Toggle label="DebugMode" name="debugmode-toggle" enabled="true" />
 </ui:UXML>

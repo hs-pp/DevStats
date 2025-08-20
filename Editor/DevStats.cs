@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 
-namespace DevStats.Editor
+namespace DevStatsSystem.Editor
 {
-    public static class DevStatsController
+    public static class DevStats
     {
         private const int SEND_INTERVAL = 120; // Should be every 2 minutes.
         
@@ -38,6 +39,8 @@ namespace DevStats.Editor
         
         private static async void OnAfterAssemblyReload()
         {
+            Log("Started DevStats.");
+
             m_wakatimeCli = await WakatimeCliInterface.Get();
             m_heartbeatProvider = new();
             m_heartbeatProvider.Initialize(TriggerHeartbeat);
@@ -81,6 +84,36 @@ namespace DevStats.Editor
             
             m_wakatimeCli.SendHeartbeats(m_queuedHeartbeats);
             m_queuedHeartbeats.Clear();
+        }
+
+        public static void Log(string log)
+        {
+            if (!DevStatsSettings.Get().IsDebugMode)
+            {
+                return;
+            }
+            
+            Debug.Log($"{GetLogHeader()} {log}");
+        }
+
+        public static void LogWarning(string warning)
+        {
+            if (!DevStatsSettings.Get().IsDebugMode)
+            {
+                return;
+            }
+            
+            Debug.LogWarning($"{GetLogHeader()} {warning}");
+        }
+
+        public static void LogError(string error)
+        {
+            Debug.LogError($"{GetLogHeader()} {error}");
+        }
+
+        private static string GetLogHeader()
+        {
+            return "<b><color=#F37828>[DevStats]</color></b>";
         }
     }
 }

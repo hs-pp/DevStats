@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text;
 using UnityEngine;
 
-namespace DevStats.Editor
+namespace DevStatsSystem.Editor
 {
     internal struct Argument
     {
@@ -38,15 +38,7 @@ namespace DevStats.Editor
         public CliArguments AddPlugin() => AddArgument("--plugin", "DevStats");
         public CliArguments AddEntityType(string entityType) => AddArgument("--entity-type", entityType);
         public CliArguments AddExtraHeartbeats() => AddArgument("--extra-heartbeats");
-        public CliArguments AddCategory(string category)
-        {
-            if (!string.IsNullOrEmpty(category))
-            {
-                return AddArgument("--category", category);
-            }
-
-            return this;
-        }
+        public CliArguments AddCategory(string category) => AddArgument("--category", category);
 
         /// <summary>
         /// Functional programming lfg
@@ -65,13 +57,13 @@ namespace DevStats.Editor
         {
             if (string.IsNullOrEmpty(newArg.Option))
             {
-                Debug.LogError($"Error! Tried to add an arg with no Option!");
+                DevStats.LogError("Tried to add an arg with no Option!");
                 return;
             }
             
             if (m_args.Exists(x => x.Option == newArg.Option))
             {
-                Debug.LogError($"Error! Tried to add an existing arg! {newArg.Option}");
+                DevStats.LogError($"Tried to add an existing arg! {newArg.Option}");
                 return;
             }
             

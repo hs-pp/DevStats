@@ -5,14 +5,18 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
-namespace DevStats.Editor
+namespace DevStatsSystem.Editor
 {
     public struct Heartbeat
     {
-        public string File;
-        public decimal Timestamp;
-        public bool IsWrite; // Basically "IsSaved"
-        public string Category;
+        public string FilePath;
+        public decimal Timestamp; // Unix epoch timestamp
+        public bool IsWrite; // Basically "was saved to disk"
+
+        public override string ToString()
+        {
+            return $"<color=red>[HEARTBEAT]</color> {FilePath.Replace(Application.dataPath, "Assets")}, {IsWrite}, {Timestamp}";
+        }
     }
     
     /// <summary>
@@ -48,11 +52,21 @@ namespace DevStats.Editor
         
         private void OnSceneOpened(Scene scene, OpenSceneMode mode)
         {
+            if (!scene.IsValid())
+            {
+                return;
+            }
+            
             SendHeartbeat(SceneToSceneAsset(scene), false);
         }
         
         private void OnSceneClosing(Scene scene, bool removingScene)
         {
+            if (!scene.IsValid())
+            {
+                return;
+            }
+            
             SendHeartbeat(SceneToSceneAsset(scene), false);
         }
         
@@ -66,9 +80,13 @@ namespace DevStats.Editor
             {
                 SendHeartbeat(SceneToSceneAsset(EditorSceneManager.GetActiveScene()), false);
             }
+            else if (EditorWindow.focusedWindow.GetType() == InternalBridgeHelper.GetUIBuilderWindowType())
+            {
+                // ignore it.
+            }
             else // Default to scene hierarchy change.
             {
-                Debug.LogWarning($"Unknown hierarchy changed ({EditorWindow.focusedWindow.GetType().Name}). Do we want DevStats to track it? ");
+                DevStats.LogWarning($"Unknown hierarchy changed ({EditorWindow.focusedWindow.GetType().Name}). Should DevStats track it? ");
             }
         }
         
@@ -115,7 +133,7 @@ namespace DevStats.Editor
             }
             else
             {
-                Debug.LogWarning($"Unknown Object saved ({asset.name}). Do we want DevStats to track it?");
+                DevStats.LogWarning($"Unknown Object saved ({asset.name}). Should DevStats track it?");
             }
         }
 
@@ -124,35 +142,31 @@ namespace DevStats.Editor
             return AssetDatabase.LoadAssetAtPath<SceneAsset>(scene.path);
         }
         
-        private void SendHeartbeat(Object asset, bool isSaveAction, string category = null)
+        private void SendHeartbeat(Object asset, bool isSaveAction)
         {
             if (asset == null)
             {
-                Debug.LogError("Cannot send heartbeat for null asset!");
+                DevStats.LogError("Cannot send heartbeat for null asset!");
                 return;
             }
 
-            string file = $"{m_projectPath}{AssetDatabase.GetAssetPath(asset)}";
+            string filePath = $"{m_projectPath}{AssetDatabase.GetAssetPath(asset)}";
             Heartbeat heartbeat = new Heartbeat()
             {
-                File = file,
+                FilePath = filePath,
                 Timestamp = (decimal)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000,
                 IsWrite = isSaveAction,
-                Category = category,
             };
             
             // Don't add this heartbeat if this one is not a write and is the same file as the last heartbeat and
             // within 1 second of the last one. This will let us skip asset changed triggers that happen right after
             // an asset saved is triggered.
-            if (!heartbeat.IsWrite && m_previousHeartbeat.File == heartbeat.File && heartbeat.Timestamp - m_previousHeartbeat.Timestamp < 1)
+            if (!heartbeat.IsWrite && m_previousHeartbeat.FilePath == heartbeat.FilePath && heartbeat.Timestamp - m_previousHeartbeat.Timestamp < 1)
             {
                 return;
             }
-            
-            if (DevStatsSettings.Get().IsDebugMode)
-            {
-                Debug.Log($"[HEARTBEAT] {heartbeat.File}, {heartbeat.IsWrite}, {heartbeat.Timestamp}, {heartbeat.Category}");
-            }
+
+            DevStats.Log(heartbeat.ToString());
             
             TriggerHeartbeat?.Invoke(heartbeat);
             m_previousHeartbeat = heartbeat;

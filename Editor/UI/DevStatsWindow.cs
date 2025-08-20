@@ -1,10 +1,8 @@
-using System;
-using System.Globalization;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DevStats.Editor
+namespace DevStatsSystem.Editor
 {
     public class DevStatsWindow : EditorWindow
     {
@@ -54,7 +52,7 @@ namespace DevStats.Editor
 
         private void TestButtonClicked()
         {
-            Debug.Log(DevStatsController.GetTimeRemainingDebug());
+            Debug.Log(DevStats.GetTimeRemainingDebug());
         }
     }
 }
