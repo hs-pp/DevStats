@@ -9,7 +9,7 @@ namespace DevStatsSystem.Editor.Core
         public string Option;
         public string Value;
 
-        public override string ToString()
+        public string ToFormattedString()
         {
             if (string.IsNullOrEmpty(Value))
             {
@@ -26,25 +26,15 @@ namespace DevStatsSystem.Editor.Core
     {
         private List<Argument> m_args = new();
 
-        public WakatimeCliArguments AddKey()
-        {
-            return AddArgument("--key", DevStatsSettings.Get().APIKey);
-        }
+        public WakatimeCliArguments AddKey() => AddArgument("--key", DevStatsSettings.Instance.APIKey);
         public WakatimeCliArguments AddFile(string file) => AddArgument("--entity", file);
         public WakatimeCliArguments AddTimestamp(decimal timestamp) => AddArgument("--time", timestamp.ToString(CultureInfo.InvariantCulture));
+        public WakatimeCliArguments AddIsWrite() => AddArgument("--write");
+        public WakatimeCliArguments AddCategory(string category) => AddArgument("--category", category);
+        public WakatimeCliArguments AddEntityType(string entityType) => AddArgument("--entity-type", entityType);
         public WakatimeCliArguments AddProject(string project) => AddArgument("--project", project);
         public WakatimeCliArguments AddPlugin() => AddArgument("--plugin", "DevStats");
-        public WakatimeCliArguments AddEntityType(string entityType) => AddArgument("--entity-type", entityType);
         public WakatimeCliArguments AddExtraHeartbeats() => AddArgument("--extra-heartbeats");
-        public WakatimeCliArguments AddCategory(string category) => AddArgument("--category", category);
-        public WakatimeCliArguments AddIsWrite(bool isWrite)
-        {
-            if (isWrite)
-            {
-                return AddArgument("--write");
-            }
-            return this;
-        }
         
         /// <summary>
         /// Functional programming lfg
@@ -87,7 +77,7 @@ namespace DevStatsSystem.Editor.Core
                 }
                 else
                 {
-                    strBuilder.Append(arg.ToString());
+                    strBuilder.Append(arg.ToFormattedString());
                 }
             }
             

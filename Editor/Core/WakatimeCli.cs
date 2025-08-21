@@ -38,7 +38,7 @@ namespace DevStatsSystem.Editor.Core
         private const string WINDOWS_CLI_NAME = "wakatime-cli-windows-amd64";
         private const string MAC_CLI_NAME = "wakatime-cli-darwin-arm64";
         private const int MILLISECONDS_PER_WAIT = 16;
-        private const int MAX_PROCESS_WAIT_TIME = MILLISECONDS_PER_WAIT * 1000;
+        private const int MAX_PROCESS_WAIT_TIME = 10000; // 10 seconds
         private const int CALLCLI_TIMEOUT_ATTEMPTS = 3;
         
         private string m_cliPath;
@@ -68,11 +68,14 @@ namespace DevStatsSystem.Editor.Core
             args.AddKey()
                 .AddFile(heartbeat.FilePath)
                 .AddTimestamp(heartbeat.Timestamp)
-                .AddIsWrite(heartbeat.IsWrite)
                 .AddCategory(GetCategory())
                 .AddEntityType(GetEntityType())
                 .AddProject(GetProjectName())
                 .AddPlugin();
+            if (heartbeat.IsWrite)
+            {
+                args.AddIsWrite();
+            }
 
             string stdin = null;
             heartbeats.RemoveAt(0);
@@ -348,7 +351,7 @@ namespace DevStatsSystem.Editor.Core
         
         private static async Task<bool> MakeExecutable(string filePath)
         {
-            if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.LinuxEditor)
+            if (Application.platform == RuntimePlatform.OSXEditor)
             {
                 CliResult result = await RunCommand("/bin/chmod", $"+x \"{filePath}\"");
                 return result.Result == CliResultType.Success;

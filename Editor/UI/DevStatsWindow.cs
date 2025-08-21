@@ -43,12 +43,12 @@ namespace DevStatsSystem.Editor.UI
             m_debugModeToggle = rootVisualElement.Q<Toggle>(DEBUGMODE_TOGGLE_TAG);
             
             m_testButton.clicked += TestButtonClicked;
-            m_apiKeyField.value = DevStatsSettings.Get().APIKey;
-            m_apiKeyField.RegisterValueChangedCallback(evt => DevStatsSettings.Get().SetAPIKey(evt.newValue));
-            m_isEnabledToggle.value = DevStatsSettings.Get().IsEnabled;
-            m_isEnabledToggle.RegisterValueChangedCallback(evt => DevStatsSettings.Get().SetIsEnabled(evt.newValue));
-            m_debugModeToggle.value = DevStatsSettings.Get().IsDebugMode;
-            m_debugModeToggle.RegisterValueChangedCallback(evt => DevStatsSettings.Get().SetDebugMode(evt.newValue));
+            m_apiKeyField.value = DevStatsSettings.Instance.APIKey;
+            m_apiKeyField.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.SetAPIKey(evt.newValue));
+            m_isEnabledToggle.value = DevStatsSettings.Instance.IsEnabled;
+            m_isEnabledToggle.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.SetIsEnabled(evt.newValue));
+            m_debugModeToggle.value = DevStatsSettings.Instance.IsDebugMode;
+            m_debugModeToggle.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.SetIsDebugMode(evt.newValue));
         }
 
         private void TestButtonClicked()

@@ -80,7 +80,7 @@ namespace DevStatsSystem.Editor.Core
             {
                 SendHeartbeat(AssetDatabase.LoadAssetAtPath<Object>(prefabStage.assetPath), false);
             }
-            else if (EditorWindow.focusedWindow.GetType() == InternalBridgeHelper.GetSceneHierarchyWindowType())
+            else if (EditorWindow.mouseOverWindow.GetType() == InternalBridgeHelper.GetSceneHierarchyWindowType())
             {
                 SendHeartbeat(SceneToSceneAsset(EditorSceneManager.GetActiveScene()), false);
             }
@@ -101,13 +101,21 @@ namespace DevStatsSystem.Editor.Core
                         {
                             SendHeartbeat(changeObject, false);
                         }
+                        else
+                        {
+                            DevStats.LogWarning($"Object change of type {changeObject.GetType()} detected but not converted to heartbeat. Should we?");
+                        }
                         break;
                     case ObjectChangeKind.CreateAssetObject:
                         stream.GetCreateAssetObjectEvent(i, out CreateAssetObjectEventArgs createChange);
                         Object createObject = EditorUtility.InstanceIDToObject(createChange.instanceId);
                         if (createObject is ScriptableObject)
                         {
-                            SendHeartbeat(createObject, false);
+                            SendHeartbeat(createObject, true);
+                        }
+                        else
+                        {
+                            DevStats.LogWarning($"Object create of type {createObject.GetType()} detected but not converted to heartbeat. Should we?");
                         }
                         break;
                     case ObjectChangeKind.DestroyAssetObject:
@@ -115,7 +123,11 @@ namespace DevStatsSystem.Editor.Core
                         Object destroyObject = EditorUtility.InstanceIDToObject(destroyChange.instanceId);
                         if (destroyObject is ScriptableObject)
                         {
-                            SendHeartbeat(destroyObject, false);
+                            SendHeartbeat(destroyObject, true);
+                        }
+                        else
+                        {
+                            DevStats.LogWarning($"Object destroy of type {destroyObject.GetType()} detected but not converted to heartbeat. Should we?");
                         }
                         break;
                 }
@@ -130,7 +142,7 @@ namespace DevStatsSystem.Editor.Core
             }
             else
             {
-                DevStats.LogWarning($"Unknown Object saved ({asset.name}). Should DevStats track it?");
+                DevStats.LogWarning($"Non-tracked Object saved ({asset.name}). Should DevStats track it?");
             }
         }
 
@@ -143,11 +155,18 @@ namespace DevStatsSystem.Editor.Core
         {
             if (asset == null)
             {
-                DevStats.LogError("Cannot send heartbeat for null asset!");
+                DevStats.LogWarning("Cannot send heartbeat for null asset!");
                 return;
             }
 
-            string filePath = $"{m_projectPath}{AssetDatabase.GetAssetPath(asset)}";
+            string assetPath = AssetDatabase.GetAssetPath(asset);
+            if (string.IsNullOrEmpty(assetPath))
+            {
+                //DevStats.LogWarning($"Change asset doesn't have a file path. Not sending heartbeat. \n {asset.name}({asset.GetType().Name})");
+                return;
+            }
+            
+            string filePath = $"{m_projectPath}{assetPath}";
             Heartbeat heartbeat = new Heartbeat()
             {
                 FilePath = filePath,
@@ -155,7 +174,7 @@ namespace DevStatsSystem.Editor.Core
                 IsWrite = isSaveAction,
             };
             
-            // Don't add this heartbeat if this one is not a write and is the same file as the last heartbeat and
+            // Don't add this heartbeat if it is not a write and is the same file as the last heartbeat and
             // within 1 second of the last one. This will let us skip asset changed triggers that happen right after
             // an asset saved is triggered.
             if (!heartbeat.IsWrite && m_previousHeartbeat.FilePath == heartbeat.FilePath && heartbeat.Timestamp - m_previousHeartbeat.Timestamp < 1)

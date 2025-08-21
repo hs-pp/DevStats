@@ -20,7 +20,7 @@ namespace DevStatsSystem.Editor.Core
             AssemblyReloadEvents.afterAssemblyReload -= Initialize;
             AssemblyReloadEvents.beforeAssemblyReload -= Deinitialize;
             
-            if (DevStatsSettings.Get().IsEnabled)
+            if (DevStatsSettings.Instance.IsEnabled)
             {
                 AssemblyReloadEvents.afterAssemblyReload += Initialize;
                 AssemblyReloadEvents.beforeAssemblyReload += Deinitialize;
@@ -51,7 +51,7 @@ namespace DevStatsSystem.Editor.Core
         
         private static async void Initialize()
         {
-            if (DevStatsSettings.Get().IsEnabled && string.IsNullOrEmpty(DevStatsSettings.Get().APIKey))
+            if (DevStatsSettings.Instance.IsEnabled && string.IsNullOrEmpty(DevStatsSettings.Instance.APIKey))
             {
                 LogError("DevStats is enabled but API key is missing. Open the DevStats window from \"Window/DevStats\" and set the API key!");
             }
@@ -61,6 +61,10 @@ namespace DevStatsSystem.Editor.Core
             }
 
             m_wakatimeCli = await WakatimeCli.Get();
+            if (m_wakatimeCli == null)
+            {
+                return;
+            }
             m_heartbeatProvider = new(TriggerHeartbeat);
             m_heartbeatProvider.Initialize();
             EditorApplication.update += OnEditorUpdate;
@@ -82,7 +86,7 @@ namespace DevStatsSystem.Editor.Core
         /// </summary>
         public static void TriggerHeartbeat(Heartbeat heartbeat)
         {
-            if (!DevStatsSettings.Get().IsRunning())
+            if (!DevStatsSettings.Instance.IsRunning())
             {
                 return;
             }
@@ -92,13 +96,13 @@ namespace DevStatsSystem.Editor.Core
 
         private static void OnEditorUpdate()
         {
-            if (!DevStatsSettings.Get().IsRunning())
+            if (!DevStatsSettings.Instance.IsRunning())
             {
                 return;
             }
             
             float timeSinceStartup = (float)EditorApplication.timeSinceStartup;
-            if (m_wakatimeCli != null && m_queuedHeartbeats.Count > 0 && timeSinceStartup > m_lastHeartbeatSendTime + SEND_INTERVAL)
+            if (m_queuedHeartbeats.Count > 0 && timeSinceStartup > m_lastHeartbeatSendTime + SEND_INTERVAL)
             {
                 SendHeartbeat();
                 m_lastHeartbeatSendTime = timeSinceStartup;
@@ -123,7 +127,7 @@ namespace DevStatsSystem.Editor.Core
 
         public static void Log(string log)
         {
-            if (!DevStatsSettings.Get().IsDebugMode)
+            if (!DevStatsSettings.Instance.IsDebugMode)
             {
                 return;
             }
@@ -133,7 +137,7 @@ namespace DevStatsSystem.Editor.Core
 
         public static void LogWarning(string warning)
         {
-            if (!DevStatsSettings.Get().IsDebugMode)
+            if (!DevStatsSettings.Instance.IsDebugMode)
             {
                 return;
             }

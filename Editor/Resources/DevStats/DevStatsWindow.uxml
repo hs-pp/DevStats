@@ -1,6 +1,26 @@
-<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Button text="Button" name="test-button" />
-    <ui:TextField label="API Key" placeholder-text="filler text" name="api-key-field" password="true" />
-    <ui:Toggle label="IsEnabled" name="isenabled-toggle" />
-    <ui:Toggle label="DebugMode" name="debugmode-toggle" enabled="true" />
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="container" style="flex-grow: 1; flex-direction: row; background-color: rgb(20, 20, 20);">
+        <ui:VisualElement name="content-area" style="flex-grow: 1; background-color: rgb(60, 60, 60); margin-left: 24px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-top: 0;">
+            <ui:Button text="Button" name="test-button" />
+            <ui:TextField label="API Key" placeholder-text="filler text" name="api-key-field" password="true" />
+            <ui:Toggle label="IsEnabled" name="isenabled-toggle" />
+            <ui:Toggle label="DebugMode" name="debugmode-toggle" enabled="true" />
+        </ui:VisualElement>
+        <ui:VisualElement name="tabs-area" style="flex-grow: 1; position: absolute; left: 0; top: 0; bottom: 0; margin-left: 4px; margin-top: 1px;">
+            <ui:ScrollView vertical-scroller-visibility="Hidden" horizontal-scroller-visibility="Hidden" touch-scroll-type="Clamped">
+                <ui:VisualElement name="tab" style="flex-grow: 0; width: 20px; height: 30px; background-color: rgb(60, 60, 60); flex-shrink: 1; margin-top: 1px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; align-items: center; justify-content: center;">
+                    <ui:VisualElement name="icon" picking-mode="Ignore" style="flex-grow: 0; background-image: resource(&apos;DevStats/d_AnalyticsTracker Icon&apos;); width: 16px; height: 16px; flex-shrink: 0; align-self: center;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="tab" style="flex-grow: 0; width: 20px; height: 30px; background-color: rgb(42, 42, 42); flex-shrink: 1; margin-top: 1px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; align-items: center; justify-content: center;">
+                    <ui:Label text="♥" name="heart-label" picking-mode="Ignore" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 16px; height: 16px; -unity-text-align: middle-center;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="tab" style="flex-grow: 0; width: 20px; height: 30px; background-color: rgb(42, 42, 42); flex-shrink: 1; margin-top: 1px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; align-items: center; justify-content: center;">
+                    <ui:VisualElement name="icon" picking-mode="Ignore" style="flex-grow: 0; background-image: resource(&apos;DevStats/d__Popup@2x&apos;); width: 16px; height: 16px; flex-shrink: 0; align-self: center;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="tab" style="flex-grow: 0; width: 20px; height: 30px; background-color: rgb(42, 42, 42); flex-shrink: 1; margin-top: 1px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; align-items: center; justify-content: center;">
+                    <ui:VisualElement name="icon" picking-mode="Ignore" style="flex-grow: 0; background-image: resource(&apos;DevStats/d__Help@2x&apos;); width: 16px; height: 16px; flex-shrink: 0; align-self: center;" />
+                </ui:VisualElement>
+            </ui:ScrollView>
+        </ui:VisualElement>
+    </ui:VisualElement>
 </ui:UXML>

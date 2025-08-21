@@ -7,7 +7,7 @@ namespace DevStatsSystem.Editor
     [Serializable]
     internal class DevStatsSettings
     {
-        private static string SAVE_KEY = "DevStatsSettings";
+        private const string SAVE_KEY = "DevStatsSettings";
 
         [SerializeField]
         private string m_apiKey;
@@ -18,22 +18,26 @@ namespace DevStatsSystem.Editor
         public bool IsEnabled => m_isEnabled;
 
         [SerializeField]
-        private bool m_debugMode = false;
-        public bool IsDebugMode => m_debugMode;
+        private bool m_isDebugMode = false;
+        public bool IsDebugMode => m_isDebugMode;
         
         [NonSerialized]
         public static Action<bool, bool> OnEnabledChanged;
 
         // Singleton so it's easy to access.
         private static DevStatsSettings m_instance;
-        public static DevStatsSettings Get()
-        {
-            if (m_instance == null)
-            {
-                m_instance = Load();
-            }
 
-            return m_instance;
+        public static DevStatsSettings Instance
+        {
+            get
+            {
+                if (m_instance == null)
+                {
+                    m_instance = Load();
+                }
+
+                return m_instance;
+            }
         }
 
         public void SetAPIKey(string apiKey)
@@ -56,9 +60,9 @@ namespace DevStatsSystem.Editor
             OnEnabledChanged?.Invoke(isEnabled, previousValue);
         }
 
-        public void SetDebugMode(bool debugMode)
+        public void SetIsDebugMode(bool debugMode)
         {
-            m_debugMode = debugMode;
+            m_isDebugMode = debugMode;
             Save();
         }
 
