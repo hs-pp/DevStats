@@ -1,34 +1,27 @@
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace DevStatsSystem.Editor.Core
 {
-    [Serializable]
-    internal class DevStatsState : SavedData<DevStatsState>
-    {
-        public List<Heartbeat> QueuedHeartbeats = new();
-        public float LastHeartbeatSendTime = 0;
-        public List<Heartbeat> FailedToSendHeartbeats = new();
-    }
-    
     public static class DevStats
     {
         private const int SEND_INTERVAL = 120; // In seconds
         
         private static WakatimeCli m_wakatimeCli;
         private static HeartbeatProvider m_heartbeatProvider;
-        private static DevStatsState m_devStatsState;
+        private static DevStatsState m_state;
+        private static DevStatsSettings m_settings;
         
         [InitializeOnLoadMethod]
         static void RegisterAssemblyReloadEvents()
         {
-            DevStatsSettings.OnEnabledChanged += OnDevStatsEnabledChanged;
+            m_settings = DevStatsSettings.Instance;
+            m_settings.OnEnabledChanged += OnDevStatsEnabledChanged;
             AssemblyReloadEvents.afterAssemblyReload -= Initialize;
             AssemblyReloadEvents.beforeAssemblyReload -= Deinitialize;
             
-            if (DevStatsSettings.Instance.IsEnabled)
+            if (m_settings.IsEnabled)
             {
                 AssemblyReloadEvents.afterAssemblyReload += Initialize;
                 AssemblyReloadEvents.beforeAssemblyReload += Deinitialize;
@@ -58,7 +51,7 @@ namespace DevStatsSystem.Editor.Core
         
         private static async void Initialize()
         {
-            if (DevStatsSettings.Instance.IsEnabled && string.IsNullOrEmpty(DevStatsSettings.Instance.APIKey))
+            if (m_settings.IsEnabled && string.IsNullOrEmpty(m_settings.APIKey))
             {
                 LogError("DevStats is enabled but API key is missing. Open the DevStats window from \"Window/DevStats\" and set the API key!");
             }
@@ -75,13 +68,13 @@ namespace DevStatsSystem.Editor.Core
             m_heartbeatProvider = new(TriggerHeartbeat);
             m_heartbeatProvider.Initialize();
 
-            m_devStatsState = DevStatsState.Instance;
+            m_state = DevStatsState.Instance;
             EditorApplication.update += OnEditorUpdate;
         }
         
         private static void Deinitialize()
         {
-            m_devStatsState.Save();
+            m_state.Save();
             
             m_heartbeatProvider.Deinitialize();
             EditorApplication.update -= OnEditorUpdate;
@@ -94,26 +87,26 @@ namespace DevStatsSystem.Editor.Core
         /// </summary>
         public static void TriggerHeartbeat(Heartbeat heartbeat)
         {
-            if (!DevStatsSettings.Instance.IsRunning())
+            if (!m_settings.IsRunning())
             {
                 return;
             }
             
-            m_devStatsState.QueuedHeartbeats.Add(heartbeat);
+            m_state.AddHeartbeatToQueue(heartbeat);
         }
 
         private static void OnEditorUpdate()
         {
-            if (!DevStatsSettings.Instance.IsRunning())
+            if (!m_settings.IsRunning())
             {
                 return;
             }
             
             float timeSinceStartup = (float)EditorApplication.timeSinceStartup;
-            if (m_devStatsState.QueuedHeartbeats.Count > 0 && timeSinceStartup > m_devStatsState.LastHeartbeatSendTime + SEND_INTERVAL)
+            if (m_state.GetQueuedHeartbeatCount() > 0 && timeSinceStartup > m_state.LastHeartbeatSendTime + SEND_INTERVAL)
             {
                 SendHeartbeat();
-                m_devStatsState.LastHeartbeatSendTime = timeSinceStartup;
+                m_state.LastHeartbeatSendTime = timeSinceStartup;
             }
         }
 
@@ -124,18 +117,18 @@ namespace DevStatsSystem.Editor.Core
                 return;
             }
             
-            if (m_devStatsState.QueuedHeartbeats.Count == 0)
+            if (m_state.GetQueuedHeartbeatCount() == 0)
             {
                 return;
             }
             
-            _ = m_wakatimeCli.SendHeartbeats(new List<Heartbeat>(m_devStatsState.QueuedHeartbeats));
-            m_devStatsState.QueuedHeartbeats.Clear();
+            _ = m_wakatimeCli.SendHeartbeats(new List<Heartbeat>(m_state.GetQueuedHeartbeats()));
+            m_state.ClearQueuedHeartbeats();
         }
 
         public static void Log(string log)
         {
-            if (!DevStatsSettings.Instance.IsDebugMode)
+            if (!m_settings.IsDebugMode)
             {
                 return;
             }
@@ -145,7 +138,7 @@ namespace DevStatsSystem.Editor.Core
 
         public static void LogWarning(string warning)
         {
-            if (!DevStatsSettings.Instance.IsDebugMode)
+            if (!m_settings.IsDebugMode)
             {
                 return;
             }
@@ -165,7 +158,7 @@ namespace DevStatsSystem.Editor.Core
         
         public static float GetTimeRemainingDebug()
         {
-            return SEND_INTERVAL - ((float)EditorApplication.timeSinceStartup - m_devStatsState.LastHeartbeatSendTime);
+            return SEND_INTERVAL - ((float)EditorApplication.timeSinceStartup - m_state.LastHeartbeatSendTime);
         }
     }
 }

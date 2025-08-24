@@ -19,7 +19,7 @@ namespace DevStatsSystem.Editor.Core
         public bool IsDebugMode => m_isDebugMode;
         
         [NonSerialized]
-        public static Action<bool, bool> OnEnabledChanged;
+        public Action<bool, bool> OnEnabledChanged;
 
         public void SetAPIKey(string apiKey)
         {
