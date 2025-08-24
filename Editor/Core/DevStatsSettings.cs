@@ -1,14 +1,11 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 
-namespace DevStatsSystem.Editor
+namespace DevStatsSystem.Editor.Core
 {
     [Serializable]
-    internal class DevStatsSettings
+    internal class DevStatsSettings : SavedData<DevStatsSettings>
     {
-        private const string SAVE_KEY = "DevStatsSettings";
-
         [SerializeField]
         private string m_apiKey;
         public string APIKey => m_apiKey;
@@ -23,22 +20,6 @@ namespace DevStatsSystem.Editor
         
         [NonSerialized]
         public static Action<bool, bool> OnEnabledChanged;
-
-        // Singleton so it's easy to access.
-        private static DevStatsSettings m_instance;
-
-        public static DevStatsSettings Instance
-        {
-            get
-            {
-                if (m_instance == null)
-                {
-                    m_instance = Load();
-                }
-
-                return m_instance;
-            }
-        }
 
         public void SetAPIKey(string apiKey)
         {
@@ -69,21 +50,6 @@ namespace DevStatsSystem.Editor
         public bool IsRunning()
         {
             return IsEnabled && !string.IsNullOrEmpty(APIKey);
-        }
-
-        private static DevStatsSettings Load()
-        {
-            if (EditorPrefs.HasKey(SAVE_KEY))
-            {
-                return JsonUtility.FromJson<DevStatsSettings>(EditorPrefs.GetString(SAVE_KEY));
-            }
-
-            return new DevStatsSettings();
-        }
-
-        public void Save()
-        {
-            EditorPrefs.SetString(SAVE_KEY, JsonUtility.ToJson(this));
         }
     }
 }

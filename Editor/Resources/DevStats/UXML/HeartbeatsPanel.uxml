@@ -1,3 +1,23 @@
-<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <ui:Label text="Heartbeat Panel" />
+    <ui:Button text="GET Heartbeats" name="get-heartbeats-button" />
+    <ui:VisualElement name="day-summary-area" style="flex-grow: 0; flex-shrink: 0;">
+        <ui:Label text="Day Summary" />
+        <ui:Label text="Total Heartbeats: 1000" name="total-heartbeats-label" />
+    </ui:VisualElement>
+    <ui:VisualElement name="unsent-heartbeats-area" style="flex-grow: 0; flex-shrink: 0;">
+        <ui:Label text="Heartbeats in Queue" />
+        <ui:ListView name="queued-heartbeats-listview" />
+        <ui:VisualElement style="flex-grow: 0; flex-direction: row;">
+            <ui:Label text="Until Next Send: 100 Seconds" enable-rich-text="false" />
+            <ui:Button text="Force Send" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="sent-history-area" style="flex-grow: 0; flex-shrink: 0;">
+        <ui:Label text="Sent History" />
+        <ui:ListView name="sent-history-listview" />
+    </ui:VisualElement>
+    <ui:VisualElement name="failed-to-send-heartbeats" style="flex-grow: 0; flex-shrink: 0;">
+        <ui:Label text="Failed to Send Heartbeats" />
+    </ui:VisualElement>
 </ui:UXML>

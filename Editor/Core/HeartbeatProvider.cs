@@ -7,6 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace DevStatsSystem.Editor.Core
 {
+    [Serializable]
     public struct Heartbeat
     {
         public string FilePath;

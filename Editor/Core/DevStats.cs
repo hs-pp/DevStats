@@ -1,17 +1,25 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace DevStatsSystem.Editor.Core
 {
+    [Serializable]
+    internal class DevStatsState : SavedData<DevStatsState>
+    {
+        public List<Heartbeat> QueuedHeartbeats = new();
+        public float LastHeartbeatSendTime = 0;
+        public List<Heartbeat> FailedToSendHeartbeats = new();
+    }
+    
     public static class DevStats
     {
         private const int SEND_INTERVAL = 120; // In seconds
         
         private static WakatimeCli m_wakatimeCli;
         private static HeartbeatProvider m_heartbeatProvider;
-        private static List<Heartbeat> m_queuedHeartbeats = new();
-        private static float m_lastHeartbeatSendTime = 0;
+        private static DevStatsState m_devStatsState;
         
         [InitializeOnLoadMethod]
         static void RegisterAssemblyReloadEvents()
@@ -46,7 +54,6 @@ namespace DevStatsSystem.Editor.Core
                 AssemblyReloadEvents.beforeAssemblyReload -= Deinitialize;
                 Deinitialize();
             }
-            
         }
         
         private static async void Initialize()
@@ -67,13 +74,14 @@ namespace DevStatsSystem.Editor.Core
             }
             m_heartbeatProvider = new(TriggerHeartbeat);
             m_heartbeatProvider.Initialize();
+
+            m_devStatsState = DevStatsState.Instance;
             EditorApplication.update += OnEditorUpdate;
         }
         
         private static void Deinitialize()
         {
-            // Send any unsent heartbeats first.
-            SendHeartbeat();
+            m_devStatsState.Save();
             
             m_heartbeatProvider.Deinitialize();
             EditorApplication.update -= OnEditorUpdate;
@@ -91,7 +99,7 @@ namespace DevStatsSystem.Editor.Core
                 return;
             }
             
-            m_queuedHeartbeats.Add(heartbeat);
+            m_devStatsState.QueuedHeartbeats.Add(heartbeat);
         }
 
         private static void OnEditorUpdate()
@@ -102,10 +110,10 @@ namespace DevStatsSystem.Editor.Core
             }
             
             float timeSinceStartup = (float)EditorApplication.timeSinceStartup;
-            if (m_queuedHeartbeats.Count > 0 && timeSinceStartup > m_lastHeartbeatSendTime + SEND_INTERVAL)
+            if (m_devStatsState.QueuedHeartbeats.Count > 0 && timeSinceStartup > m_devStatsState.LastHeartbeatSendTime + SEND_INTERVAL)
             {
                 SendHeartbeat();
-                m_lastHeartbeatSendTime = timeSinceStartup;
+                m_devStatsState.LastHeartbeatSendTime = timeSinceStartup;
             }
         }
 
@@ -116,13 +124,13 @@ namespace DevStatsSystem.Editor.Core
                 return;
             }
             
-            if (m_queuedHeartbeats.Count == 0)
+            if (m_devStatsState.QueuedHeartbeats.Count == 0)
             {
                 return;
             }
             
-            _ = m_wakatimeCli.SendHeartbeats(m_queuedHeartbeats);
-            m_queuedHeartbeats.Clear();
+            _ = m_wakatimeCli.SendHeartbeats(new List<Heartbeat>(m_devStatsState.QueuedHeartbeats));
+            m_devStatsState.QueuedHeartbeats.Clear();
         }
 
         public static void Log(string log)
@@ -157,7 +165,7 @@ namespace DevStatsSystem.Editor.Core
         
         public static float GetTimeRemainingDebug()
         {
-            return SEND_INTERVAL - ((float)EditorApplication.timeSinceStartup - m_lastHeartbeatSendTime);
+            return SEND_INTERVAL - ((float)EditorApplication.timeSinceStartup - m_devStatsState.LastHeartbeatSendTime);
         }
     }
 }
