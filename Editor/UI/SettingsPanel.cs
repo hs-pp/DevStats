@@ -7,12 +7,10 @@ namespace DevStatsSystem.Editor.UI
     internal class SettingsPanel : ADevStatsPanel
     {
         private const string UXML_PATH = "DevStats/UXML/SettingsPanel";
-        private const string TEST_BUTTON_TAG = "test-button";
         private const string APIKEY_FIELD_TAG = "api-key-field";
         private const string ISENABLED_TOGGLE_TAG = "isenabled-toggle";
         private const string DEBUGMODE_TOGGLE_TAG = "debugmode-toggle";
 
-        private Button m_testButton;
         private TextField m_apiKeyField;
         private Toggle m_isEnabledToggle;
         private Toggle m_debugModeToggle;
@@ -27,12 +25,10 @@ namespace DevStatsSystem.Editor.UI
             var uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
             uxmlAsset.CloneTree(this);
             
-            m_testButton = this.Q<Button>(TEST_BUTTON_TAG);
             m_apiKeyField = this.Q<TextField>(APIKEY_FIELD_TAG);
             m_isEnabledToggle = this.Q<Toggle>(ISENABLED_TOGGLE_TAG);
             m_debugModeToggle = this.Q<Toggle>(DEBUGMODE_TOGGLE_TAG);
 
-            m_testButton.clicked += TestButtonClicked;
             m_apiKeyField.value = DevStatsSettings.Instance.APIKey;
             m_apiKeyField.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.SetAPIKey(evt.newValue));
             m_isEnabledToggle.value = DevStatsSettings.Instance.IsEnabled;
@@ -50,11 +46,6 @@ namespace DevStatsSystem.Editor.UI
         public override void OnHide()
         {
             
-        }
-        
-        private void TestButtonClicked()
-        {
-            Debug.Log(DevStats.GetTimeRemainingDebug());
         }
     }
 }

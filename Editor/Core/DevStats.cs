@@ -6,7 +6,7 @@ namespace DevStatsSystem.Editor.Core
 {
     public static class DevStats
     {
-        private const int SEND_INTERVAL = 120; // In seconds
+        public const int SEND_INTERVAL = 120; // In seconds
         
         private static WakatimeCli m_wakatimeCli;
         private static HeartbeatProvider m_heartbeatProvider;
@@ -154,11 +154,6 @@ namespace DevStatsSystem.Editor.Core
         private static string GetLogHeader()
         {
             return "<b><color=#F37828>[DevStats]</color></b>";
-        }
-        
-        public static float GetTimeRemainingDebug()
-        {
-            return SEND_INTERVAL - ((float)EditorApplication.timeSinceStartup - m_state.LastHeartbeatSendTime);
         }
     }
 }

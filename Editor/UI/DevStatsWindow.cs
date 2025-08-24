@@ -31,7 +31,7 @@ namespace DevStatsSystem.Editor.UI
         private const string ABOUT_TAB_TAG = "about-tab";
         private const string CONTENT_AREA_TAG = "content-area";
         
-        private static Color SELECTED_TAB_COLOR = new Color(0.234f, 0.234f, 0.234f);
+        private static Color SELECTED_TAB_COLOR = new Color(0.21875f, 0.21875f, 0.21875f);
         private static Color UNSELECTED_TAB_COLOR = new Color(0.164f, 0.164f, 0.164f);
 
         private VisualElement m_statsTab;
