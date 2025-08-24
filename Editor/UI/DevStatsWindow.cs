@@ -8,6 +8,7 @@ namespace DevStatsSystem.Editor.UI
 {
     internal class DevStatsWindow : EditorWindow
     {
+        [Serializable]
         private enum TabType
         {
             Stats,
@@ -16,12 +17,11 @@ namespace DevStatsSystem.Editor.UI
             About,
         }
 
-        private class Tab
+        private class TabInstance
         {
             public TabType Type;
-            public VisualElement TabButton;
-            public Type PanelType;
-            public ADevStatsPanel PanelInstance;
+            public VisualElement Button;
+            public ADevStatsPanel Panel;
         }
         
         private const string UXML_PATH = "DevStats/UXML/DevStatsWindow";
@@ -40,8 +40,10 @@ namespace DevStatsSystem.Editor.UI
         private VisualElement m_aboutTab;
         private VisualElement m_contentArea;
         
-        private List<ADevStatsPanel> m_panels = new();
-        private ADevStatsPanel m_openPanel;
+        private List<TabInstance> m_tabInstances = new();
+
+        [SerializeField]
+        private TabType m_openTabType = TabType.About;
 
         [MenuItem("Window/DevStats")]
         public static void OpenWindow()
@@ -54,8 +56,7 @@ namespace DevStatsSystem.Editor.UI
             titleContent = new GUIContent("DevStats");
 
             CreateLayout();
-
-            OpenSettingsTab();
+            OpenTab(m_openTabType);
         }
 
         private void CreateLayout()
@@ -69,64 +70,69 @@ namespace DevStatsSystem.Editor.UI
             m_aboutTab = rootVisualElement.Q<VisualElement>(ABOUT_TAB_TAG);
             m_contentArea = rootVisualElement.Q<VisualElement>(CONTENT_AREA_TAG);
             
-            m_statsTab.AddManipulator(new Clickable(OpenStatsTab));
-            m_heartbeatsTab.AddManipulator(new Clickable(OpenHeartbeatsTab));
-            m_settingsTab.AddManipulator(new Clickable(OpenSettingsTab));
-            m_aboutTab.AddManipulator(new Clickable(OpenAboutTab));
+            m_statsTab.AddManipulator(new Clickable(() => { OpenTab(TabType.Stats); }));
+            m_heartbeatsTab.AddManipulator(new Clickable(() => { OpenTab(TabType.Heartbeats); }));
+            m_settingsTab.AddManipulator(new Clickable(() => { OpenTab(TabType.Settings); }));
+            m_aboutTab.AddManipulator(new Clickable(() => { OpenTab(TabType.About); }));
+            
+            m_tabInstances.Add(new TabInstance()
+            {
+                Type = TabType.Stats,
+                Button = m_statsTab,
+                Panel = new StatsPanel(),
+            });
+            m_tabInstances.Add(new TabInstance()
+            {
+                Type = TabType.Heartbeats,
+                Button = m_heartbeatsTab,
+                Panel = new HeartbeatsPanel(),
+            });
+            m_tabInstances.Add(new TabInstance()
+            {
+                Type = TabType.Settings,
+                Button = m_settingsTab,
+                Panel = new SettingsPanel(),
+            });
+            m_tabInstances.Add(new TabInstance()
+            {
+                Type = TabType.About,
+                Button = m_aboutTab,
+                Panel = new AboutPanel(),
+            });
         }
 
-        private void OpenStatsTab()
+        private void OpenTab(TabType tabType)
         {
-            SetSelectedButton(m_statsTab);
-            OpenPanelOfType(typeof(StatsPanel));
-        }
-
-        private void OpenHeartbeatsTab()
-        {
-            SetSelectedButton(m_heartbeatsTab);
-            OpenPanelOfType(typeof(HeartbeatPanel));
+            TabInstance instance = m_tabInstances.Find(x => x.Type == tabType);
+            
+            SetSelectedButton(instance);
+            OpenPanel(instance);
+            m_openTabType = tabType;
         }
         
-        private void OpenSettingsTab()
-        {
-            SetSelectedButton(m_settingsTab);
-            OpenPanelOfType(typeof(SettingsPanel));
-        }
-
-        private void OpenAboutTab()
-        {
-            SetSelectedButton(m_aboutTab);
-            OpenPanelOfType(typeof(AboutPanel));
-        }
-        
-        private void SetSelectedButton(VisualElement button)
+        private void SetSelectedButton(TabInstance tabInstance)
         {
             m_statsTab.style.backgroundColor = UNSELECTED_TAB_COLOR;
             m_heartbeatsTab.style.backgroundColor = UNSELECTED_TAB_COLOR;
             m_settingsTab.style.backgroundColor = UNSELECTED_TAB_COLOR;
             m_aboutTab.style.backgroundColor = UNSELECTED_TAB_COLOR;
             
-            button.style.backgroundColor = SELECTED_TAB_COLOR;
+            tabInstance.Button.style.backgroundColor = SELECTED_TAB_COLOR;
         }
-        
-        private void OpenPanelOfType(Type panelType)
-        {
-            ADevStatsPanel panel = m_panels.Find(x => x.GetType() == panelType);
-            if (panel == null)
-            {
-                panel = Activator.CreateInstance(panelType) as ADevStatsPanel;
-                m_panels.Add(panel);
-            }
 
-            if (m_openPanel != null)
+        private void OpenPanel(TabInstance tabInstance)
+        {
+            foreach (VisualElement child in m_contentArea.Children())
             {
-                m_openPanel.OnHide();
-                m_contentArea.Clear();
+                if (child is ADevStatsPanel childPanel)
+                {
+                    childPanel.OnHide();
+                }
             }
+            m_contentArea.Clear();
             
-            m_openPanel = panel;
-            m_openPanel.OnShow();
-            m_contentArea.Add(panel);
+            tabInstance.Panel.OnShow();
+            m_contentArea.Add(tabInstance.Panel);
         }
     }
 }

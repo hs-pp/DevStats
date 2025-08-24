@@ -3,11 +3,11 @@ using UnityEngine.UIElements;
 
 namespace DevStatsSystem.Editor.UI
 {
-    internal class HeartbeatPanel : ADevStatsPanel
+    internal class HeartbeatsPanel : ADevStatsPanel
     {
-        private const string UXML_PATH = "DevStats/UXML/HeartbeatPanel";
+        private const string UXML_PATH = "DevStats/UXML/HeartbeatsPanel";
 
-        public HeartbeatPanel()
+        public HeartbeatsPanel()
         {
             CreateLayout();
         }
