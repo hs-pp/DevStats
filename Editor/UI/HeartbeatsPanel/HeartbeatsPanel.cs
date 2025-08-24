@@ -15,10 +15,11 @@ namespace DevStatsSystem.Editor.UI
         private const string UXML_PATH = "DevStats/UXML/HeartbeatsPanel";
         private const string HEARTBEATS_IN_QUEUE_LABEL_TAG = "heartbeats-in-queue-label";
         private const string UNTIL_NEXT_SEND_LABEL_TAG = "until-next-send-label";
+        private const string QUEUED_HEARTBEATS_LISTVIEW_TAG = "queued-heartbeats-listview";
         
-        private Button m_getHeartbeatsButton;
         private Label m_heartbeatsInQueueLabel;
         private Label m_untilNextSendLabel;
+        private ListView m_queuedHeartbeatsListView;
         
         private IVisualElementScheduledItem m_untilNextSendSchedule;
 
@@ -34,25 +35,33 @@ namespace DevStatsSystem.Editor.UI
             
             m_heartbeatsInQueueLabel = this.Q<Label>(HEARTBEATS_IN_QUEUE_LABEL_TAG);
             m_untilNextSendLabel = this.Q<Label>(UNTIL_NEXT_SEND_LABEL_TAG);
+            m_queuedHeartbeatsListView = this.Q<ListView>(QUEUED_HEARTBEATS_LISTVIEW_TAG);
+            m_queuedHeartbeatsListView.makeItem += () => new HeartbeatElement();
+            m_queuedHeartbeatsListView.bindItem += (element, i) => { (element as HeartbeatElement).BindHeartbeat((Heartbeat)m_queuedHeartbeatsListView.itemsSource[i]); };
+            m_queuedHeartbeatsListView.unbindItem += (element, i) => { (element as HeartbeatElement).UnbindHeartbeat(); };
         }
 
         public override void OnShow()
         {
-            DevStatsState.Instance.OnQueuedHeartbeatsChanged += UpdateHeartbeatsInQueueLabel;
-
-            UpdateHeartbeatsInQueueLabel();
+            DevStatsState.Instance.OnQueuedHeartbeatsChanged += OnHeartbeatsInQueueChanged;
+            
             m_untilNextSendSchedule = schedule.Execute(UpdateUntilNextSendLabel).Every(500);
+            m_queuedHeartbeatsListView.itemsSource = DevStatsState.Instance.GetQueuedHeartbeats();
+            
+            OnHeartbeatsInQueueChanged();
         }
 
         public override void OnHide()
         {
-            DevStatsState.Instance.OnQueuedHeartbeatsChanged -= UpdateHeartbeatsInQueueLabel;
+            DevStatsState.Instance.OnQueuedHeartbeatsChanged -= OnHeartbeatsInQueueChanged;
             m_untilNextSendSchedule.Pause();
+            m_queuedHeartbeatsListView.itemsSource = null;
         }
 
-        private void UpdateHeartbeatsInQueueLabel()
+        private void OnHeartbeatsInQueueChanged()
         {
             m_heartbeatsInQueueLabel.text = $"In Queue: {DevStatsState.Instance.GetQueuedHeartbeatCount()}";
+            m_queuedHeartbeatsListView.RefreshItems();
         }
 
         private void UpdateUntilNextSendLabel()

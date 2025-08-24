@@ -28,7 +28,7 @@ namespace DevStatsSystem.Editor.Core
 
         public WakatimeCliArguments AddKey() => AddArgument("--key", DevStatsSettings.Instance.APIKey);
         public WakatimeCliArguments AddFile(string file) => AddArgument("--entity", file);
-        public WakatimeCliArguments AddTimestamp(decimal timestamp) => AddArgument("--time", timestamp.ToString(CultureInfo.InvariantCulture));
+        public WakatimeCliArguments AddTimestamp(double timestamp) => AddArgument("--time", timestamp.ToString(CultureInfo.InvariantCulture));
         public WakatimeCliArguments AddIsWrite() => AddArgument("--write");
         public WakatimeCliArguments AddCategory(string category) => AddArgument("--category", category);
         public WakatimeCliArguments AddEntityType(string entityType) => AddArgument("--entity-type", entityType);

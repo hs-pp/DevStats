@@ -7,19 +7,6 @@ using Object = UnityEngine.Object;
 
 namespace DevStatsSystem.Editor.Core
 {
-    [Serializable]
-    public struct Heartbeat
-    {
-        public string FilePath;
-        public decimal Timestamp; // Unix epoch timestamp
-        public bool IsWrite; // Basically "was saved to disk"
-
-        public override string ToString()
-        {
-            return $"<color=red>[HEARTBEAT]</color> {FilePath.Replace(Application.dataPath, "Assets")}, {IsWrite}, {Timestamp}";
-        }
-    }
-    
     /// <summary>
     /// This provider captures a number of in-editor actions:
     /// Scenes - Open, Close, Save, Change
@@ -171,7 +158,7 @@ namespace DevStatsSystem.Editor.Core
             Heartbeat heartbeat = new Heartbeat()
             {
                 FilePath = filePath,
-                Timestamp = (decimal)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000,
+                Timestamp = (double)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000,
                 IsWrite = isSaveAction,
             };
             

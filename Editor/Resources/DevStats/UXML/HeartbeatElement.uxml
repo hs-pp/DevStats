@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement style="flex-grow: 0; flex-direction: row; flex-shrink: 0; align-items: center; margin-right: 4px; margin-left: 4px;">
+        <ui:Label text="♥" name="heart-icon" style="color: rgb(255, 0, 0); -unity-font-style: bold; font-size: 12px; -unity-text-align: middle-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+        <uie:ObjectField enabled="false" name="file-objectfield" style="flex-grow: 1; flex-shrink: 1;" />
+        <ui:VisualElement name="save-icon" style="flex-grow: 0; background-image: resource(&apos;DevStats/Icons/save_img&apos;); width: 12px; height: 12px; flex-shrink: 0; margin-right: 1px; margin-left: 1px;" />
+        <ui:Label text="1:40:00PM" name="time-label" enabled="true" style="-unity-text-align: middle-left;" />
+    </ui:VisualElement>
+</ui:UXML>
