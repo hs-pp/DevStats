@@ -15,6 +15,7 @@ namespace DevStatsSystem.Editor.Core
     /// </summary>
     internal class HeartbeatProvider
     {
+        private const int SAME_FILE_INTERVAL = 5; // How many seconds before we can log another heartbeat from the same file.
         private Action<Heartbeat> TriggerHeartbeat;
         private string m_projectPath = Application.dataPath.Replace("Assets", "");
         private Heartbeat m_previousHeartbeat;
@@ -66,7 +67,8 @@ namespace DevStatsSystem.Editor.Core
         {
             if (PrefabStageUtility.GetCurrentPrefabStage() is PrefabStage prefabStage) // Prefab hierarchy has changed.
             {
-                SendHeartbeat(AssetDatabase.LoadAssetAtPath<Object>(prefabStage.assetPath), false);
+                // Actually don't send this heartbeat. Prefabs normally auto-save.
+                //SendHeartbeat(AssetDatabase.LoadAssetAtPath<Object>(prefabStage.assetPath), false);
             }
             else if (EditorWindow.mouseOverWindow.GetType() == InternalBridgeHelper.GetSceneHierarchyWindowType())
             {
@@ -163,9 +165,9 @@ namespace DevStatsSystem.Editor.Core
             };
             
             // Don't add this heartbeat if it is not a write and is the same file as the last heartbeat and
-            // within 1 second of the last one. This will let us skip asset changed triggers that happen right after
+            // within 5 seconds of the last one. This will let us skip asset changed triggers that happen right after
             // an asset saved is triggered.
-            if (!heartbeat.IsWrite && m_previousHeartbeat.FilePath == heartbeat.FilePath && heartbeat.Timestamp - m_previousHeartbeat.Timestamp < 1)
+            if (!heartbeat.IsWrite && m_previousHeartbeat.FilePath == heartbeat.FilePath && heartbeat.Timestamp - m_previousHeartbeat.Timestamp < SAME_FILE_INTERVAL)
             {
                 return;
             }

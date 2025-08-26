@@ -56,11 +56,16 @@ namespace DevStatsSystem.Editor.Core
         }
         
         #region Send Heartbeat
-        public async Task SendHeartbeats(List<Heartbeat> heartbeats)
+        public async Task<CliResult> SendHeartbeats(List<Heartbeat> heartbeats)
         {
             if (heartbeats == null || heartbeats.Count == 0)
             {
-                return;
+                return new CliResult()
+                {
+                    Result = CliResultType.Failure,
+                    Output = "Empty heartbeats list.",
+                    MillisecondsWaited = 0,
+                };
             }
             
             Heartbeat heartbeat = heartbeats[0];
@@ -88,6 +93,7 @@ namespace DevStatsSystem.Editor.Core
             DevStats.Log($"Sending {heartbeats.Count + 1} Heartbeats to Wakatime.");
             CliResult result = await CallCli(args, stdin);
             DevStats.Log($"Send Heartbeats Result: {result.ToString()}");
+            return result;
         }
 
         private string GetSerializedExtraHeartbeats(List<Heartbeat> heartbeats)

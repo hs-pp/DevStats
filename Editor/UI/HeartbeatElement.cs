@@ -36,9 +36,7 @@ namespace DevStatsSystem.Editor.UI
 
         public void BindHeartbeat(Heartbeat heartbeat)
         {
-            string filePath = heartbeat.FilePath.Replace(Application.dataPath, "Assets");
-            Debug.Log(filePath);
-            m_fileObjectField.value = AssetDatabase.LoadAssetAtPath<Object>(filePath);
+            m_fileObjectField.value = AssetDatabase.LoadAssetAtPath<Object>(heartbeat.FilePath.Replace(Application.dataPath, "Assets"));
             m_saveIcon.style.display = heartbeat.IsWrite ? DisplayStyle.Flex : DisplayStyle.None;
             DateTime dateTime = DateTimeOffset.FromUnixTimeSeconds((long)heartbeat.Timestamp).ToLocalTime().DateTime;
             m_timeLabel.text = dateTime.ToString("hh:mm:sstt");

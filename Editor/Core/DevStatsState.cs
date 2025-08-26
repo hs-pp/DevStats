@@ -10,8 +10,8 @@ namespace DevStatsSystem.Editor.Core
         [SerializeField]
         private List<Heartbeat> m_queuedHeartbeats = new();
         [SerializeField]
-        private float m_lastHeartbeatSendTime = 0;
-        public float LastHeartbeatSendTime
+        private long m_lastHeartbeatSendTime = 0;
+        public long LastHeartbeatSendTime
         {
             get => m_lastHeartbeatSendTime;
             set

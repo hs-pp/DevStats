@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -6,11 +7,13 @@ namespace DevStatsSystem.Editor.Core
 {
     public static class DevStats
     {
-        public const int SEND_INTERVAL = 120; // In seconds
+        public const int SEND_INTERVAL = 120; // In datetime ticks (nanoseconds)
+        private const int SEND_INTERVAL_NANOSECONDS = SEND_INTERVAL * 10000000;
         
         private static WakatimeCli m_wakatimeCli;
         private static HeartbeatProvider m_heartbeatProvider;
         private static DevStatsState m_state;
+        private static DevStatsData m_data;
         private static DevStatsSettings m_settings;
         
         [InitializeOnLoadMethod]
@@ -18,6 +21,8 @@ namespace DevStatsSystem.Editor.Core
         {
             m_settings = DevStatsSettings.Instance;
             m_settings.OnEnabledChanged += OnDevStatsEnabledChanged;
+            m_data = DevStatsData.Instance;
+            
             AssemblyReloadEvents.afterAssemblyReload -= Initialize;
             AssemblyReloadEvents.beforeAssemblyReload -= Deinitialize;
             
@@ -101,16 +106,16 @@ namespace DevStatsSystem.Editor.Core
             {
                 return;
             }
-            
-            float timeSinceStartup = (float)EditorApplication.timeSinceStartup;
-            if (m_state.GetQueuedHeartbeatCount() > 0 && timeSinceStartup > m_state.LastHeartbeatSendTime + SEND_INTERVAL)
+
+            long timeSinceStartup = DateTime.Now.Ticks;
+            if (m_state.GetQueuedHeartbeatCount() > 0 && timeSinceStartup > m_state.LastHeartbeatSendTime + SEND_INTERVAL_NANOSECONDS)
             {
                 SendHeartbeat();
                 m_state.LastHeartbeatSendTime = timeSinceStartup;
             }
         }
 
-        private static void SendHeartbeat()
+        private static async void SendHeartbeat()
         {
             if (m_wakatimeCli == null)
             {
@@ -122,8 +127,19 @@ namespace DevStatsSystem.Editor.Core
                 return;
             }
             
-            _ = m_wakatimeCli.SendHeartbeats(new List<Heartbeat>(m_state.GetQueuedHeartbeats()));
+            // Locally copy the heartbeats and clear the queue.
+            List<Heartbeat> heartbeats = new List<Heartbeat>(m_state.GetQueuedHeartbeats());
             m_state.ClearQueuedHeartbeats();
+            
+            CliResult result = await m_wakatimeCli.SendHeartbeats(new List<Heartbeat>(heartbeats));
+            if (result.Result == CliResultType.Success)
+            {
+                m_data.AddSentHeartbeatInstance(heartbeats);
+            }
+            else
+            {
+                m_data.AddFailedToSendHeartbeats(heartbeats);
+            }
         }
 
         public static void Log(string log)
