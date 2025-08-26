@@ -34,9 +34,9 @@ namespace DevStatsSystem.Editor.UI
 
         public void BindSentHeartbeatsInstance(SentHeartbeatsInstance sentHeartbeatsInstance)
         {
-            m_heartbeatsCountLabel.text = $"{sentHeartbeatsInstance.NumHeartbeats} <color=red>\u2665</color>'s ";
+            m_heartbeatsCountLabel.text = $"{sentHeartbeatsInstance.NumHeartbeats} <color=red>\u2665</color>";
             DateTime dateTime = new DateTime(sentHeartbeatsInstance.Timestamp);
-            m_dateTimeLabel.text = $"{dateTime.ToString("G")}";
+            m_dateTimeLabel.text = $"{dateTime.ToString("H:mm:ss:tt MM/dd/yyyy")}";
             m_fileCountLabel.text = $"{sentHeartbeatsInstance.NumUniqueFiles} Files";
             tooltip = sentHeartbeatsInstance.FormattedListOfAssetPaths;
         }

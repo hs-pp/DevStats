@@ -12,14 +12,15 @@
         </ui:VisualElement>
         <ui:ListView name="queued-heartbeats-listview" enabled="true" style="flex-grow: 1; max-height: 86px;" />
     </ui:VisualElement>
+    <ui:VisualElement name="failed-send-area" style="flex-grow: 0; flex-shrink: 0; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 10px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-top: 10px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px; background-color: rgb(101, 29, 29);">
+        <ui:Label text="Failed To Send" name="failed-to-send-title" style="position: absolute; top: -10px; -unity-font-style: bold; color: rgb(88, 88, 88); background-color: rgb(56, 56, 56); padding-left: 2px; font-size: 15px; text-shadow: 2px 2px 0 rgb(32, 32, 32);" />
+        <ui:Label text="Failed to Send Heartbeats" />
+        <ui:ListView />
+        <ui:Button text="Retry" />
+    </ui:VisualElement>
     <ui:VisualElement name="history-area" style="flex-grow: 0; flex-shrink: 0; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 10px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-top: 10px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">
         <ui:Label text="History" name="history-title" style="position: absolute; top: -10px; -unity-font-style: bold; color: rgb(88, 88, 88); background-color: rgb(56, 56, 56); padding-left: 2px; font-size: 15px; text-shadow: 2px 2px 0 rgb(32, 32, 32);" />
         <ui:Label text="Sent From Unity Editor" />
-        <ui:ListView name="sent-history-listview" style="max-height: 86px;" />
-        <ui:VisualElement name="failed-to-send-heartbeats-area" style="flex-grow: 0; flex-shrink: 0; background-color: rgba(255, 4, 0, 0.28); padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px;">
-            <ui:Label text="Failed to Send Heartbeats" />
-            <ui:ListView />
-            <ui:Button text="Re-add to Queue" />
-        </ui:VisualElement>
+        <ui:ListView name="sent-history-listview" fixed-item-height="18" show-alternating-row-backgrounds="ContentOnly" show-border="true" style="max-height: 86px; margin-top: 6px;" />
     </ui:VisualElement>
 </ui:UXML>

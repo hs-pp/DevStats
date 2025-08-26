@@ -66,10 +66,10 @@ namespace DevStatsSystem.Editor.Core
                 .ToList();
 
             StringBuilder formattedFilesBuilder = new();
-            formattedFilesBuilder.AppendLine("Files: ");
+            formattedFilesBuilder.Append("Files: ");
             foreach (var file in filesByFrequency)
             {
-                formattedFilesBuilder.AppendLine($"- {Path.GetFileName(file)}");
+                formattedFilesBuilder.Append($"\n- {Path.GetFileName(file)}");
             }
 
             NumUniqueFiles = filesByFrequency.Count;
