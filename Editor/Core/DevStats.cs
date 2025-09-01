@@ -7,7 +7,7 @@ namespace DevStatsSystem.Editor.Core
 {
     public static class DevStats
     {
-        public const int SEND_INTERVAL = 120; // In datetime ticks (nanoseconds)
+        public const int SEND_INTERVAL = 120; // In seconds
         private const int SEND_INTERVAL_NANOSECONDS = SEND_INTERVAL * 10000000;
         
         private static WakatimeCli m_wakatimeCli;
@@ -21,15 +21,28 @@ namespace DevStatsSystem.Editor.Core
         {
             m_settings = DevStatsSettings.Instance;
             m_settings.OnEnabledChanged += OnDevStatsEnabledChanged;
-            m_data = DevStatsData.Instance;
-            
-            AssemblyReloadEvents.afterAssemblyReload -= Initialize;
-            AssemblyReloadEvents.beforeAssemblyReload -= Deinitialize;
+
+            AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
+            AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
+            AssemblyReloadEvents.beforeAssemblyReload -= OnBeforeAssemblyReload;
+            AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
+        }
+        
+        private static void OnAfterAssemblyReload()
+        {
+            if (m_settings.IsEnabled)
+            {
+                Initialize();
+            }
+        }
+
+        private static void OnBeforeAssemblyReload()
+        {
+            m_settings.Save();
             
             if (m_settings.IsEnabled)
             {
-                AssemblyReloadEvents.afterAssemblyReload += Initialize;
-                AssemblyReloadEvents.beforeAssemblyReload += Deinitialize;
+                Deinitialize();
             }
         }
 
@@ -42,14 +55,10 @@ namespace DevStatsSystem.Editor.Core
             
             if (newValue)
             {
-                AssemblyReloadEvents.afterAssemblyReload += Initialize;
-                AssemblyReloadEvents.beforeAssemblyReload += Deinitialize;
                 Initialize();
             }
             else
             {
-                AssemblyReloadEvents.afterAssemblyReload -= Initialize;
-                AssemblyReloadEvents.beforeAssemblyReload -= Deinitialize;
                 Deinitialize();
             }
         }
@@ -74,12 +83,14 @@ namespace DevStatsSystem.Editor.Core
             m_heartbeatProvider.Initialize();
 
             m_state = DevStatsState.Instance;
+            m_data = DevStatsData.Instance;
             EditorApplication.update += OnEditorUpdate;
         }
         
         private static void Deinitialize()
         {
             m_state.Save();
+            m_data.Save();
             
             m_heartbeatProvider.Deinitialize();
             EditorApplication.update -= OnEditorUpdate;

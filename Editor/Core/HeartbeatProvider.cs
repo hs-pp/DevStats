@@ -45,22 +45,24 @@ namespace DevStatsSystem.Editor.Core
         
         private void OnSceneOpened(Scene scene, OpenSceneMode mode)
         {
-            if (!scene.IsValid())
+            SceneAsset sceneAsset = SceneToSceneAsset(scene);
+            if (sceneAsset == null)
             {
                 return;
             }
             
-            SendHeartbeat(SceneToSceneAsset(scene), false);
+            SendHeartbeat(sceneAsset, false);
         }
         
         private void OnSceneClosing(Scene scene, bool removingScene)
         {
-            if (!scene.IsValid())
+            SceneAsset sceneAsset = SceneToSceneAsset(scene);
+            if (sceneAsset == null)
             {
                 return;
             }
             
-            SendHeartbeat(SceneToSceneAsset(scene), false);
+            SendHeartbeat(sceneAsset, false);
         }
         
         private void OnHierarchyChanged()
@@ -152,7 +154,7 @@ namespace DevStatsSystem.Editor.Core
             string assetPath = AssetDatabase.GetAssetPath(asset);
             if (string.IsNullOrEmpty(assetPath))
             {
-                //DevStats.LogWarning($"Change asset doesn't have a file path. Not sending heartbeat. \n {asset.name}({asset.GetType().Name})");
+                DevStats.LogWarning($"Change asset doesn't have a file path. Not sending heartbeat. \n {asset.name}({asset.GetType().Name})");
                 return;
             }
             

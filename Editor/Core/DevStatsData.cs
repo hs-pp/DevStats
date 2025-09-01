@@ -26,7 +26,6 @@ namespace DevStatsSystem.Editor.Core
                 m_sentHeartbeatsInstances.RemoveAt(0);
             }
             
-            Save();
             OnSentHeartbeatsInstancesChanged?.Invoke();
         }
 

@@ -8,7 +8,11 @@ namespace DevStatsSystem.Editor.Core
     {
         [SerializeField]
         private string m_apiKey;
-        public string APIKey => m_apiKey;
+        public string APIKey
+        {
+            get => m_apiKey;
+            set => m_apiKey = value;
+        }
 
         [SerializeField]
         private bool m_isEnabled = true;
@@ -16,16 +20,14 @@ namespace DevStatsSystem.Editor.Core
 
         [SerializeField]
         private bool m_isDebugMode = false;
-        public bool IsDebugMode => m_isDebugMode;
+        public bool IsDebugMode
+        {
+            get => m_isDebugMode;
+            set => m_isDebugMode = value;
+        }
         
         [NonSerialized]
         public Action<bool, bool> OnEnabledChanged;
-
-        public void SetAPIKey(string apiKey)
-        {
-            m_apiKey = apiKey;
-            Save();
-        }
 
         public void SetIsEnabled(bool isEnabled)
         {
@@ -36,15 +38,8 @@ namespace DevStatsSystem.Editor.Core
             
             bool previousValue = m_isEnabled;
             m_isEnabled = isEnabled;
-            Save();
             
             OnEnabledChanged?.Invoke(isEnabled, previousValue);
-        }
-
-        public void SetIsDebugMode(bool debugMode)
-        {
-            m_isDebugMode = debugMode;
-            Save();
         }
 
         public bool IsRunning()
