@@ -39,7 +39,6 @@ namespace DevStatsSystem.Editor.Core
         private const string MAC_CLI_NAME = "wakatime-cli-darwin-arm64";
         private const int MILLISECONDS_PER_WAIT = 16;
         private const int MAX_PROCESS_WAIT_TIME = 10000; // 10 seconds
-        private const int CALLCLI_TIMEOUT_ATTEMPTS = 3;
         
         private string m_cliPath;
         private string m_gitBranch;
@@ -83,10 +82,9 @@ namespace DevStatsSystem.Editor.Core
             }
 
             string stdin = null;
-            heartbeats.RemoveAt(0);
-            if (heartbeats.Count > 0)
+            if (heartbeats.Count > 1)
             {
-                stdin = GetSerializedExtraHeartbeats(heartbeats);
+                stdin = GetSerializedExtraHeartbeats(heartbeats.GetRange(1, heartbeats.Count - 1));
                 args.AddExtraHeartbeats();
             }
 
@@ -181,28 +179,9 @@ namespace DevStatsSystem.Editor.Core
         }
         #endregion
 
-        private async Task<CliResult> CallCli(WakatimeCliArguments arguments, string stdin = null)
+        private Task<CliResult> CallCli(WakatimeCliArguments arguments, string stdin = null)
         {
-            // Put in the effort to try at least 3 times. Otherwise we lose the whole command and any heartbeats.
-            int numAttempts = 0;
-            while (numAttempts < CALLCLI_TIMEOUT_ATTEMPTS)
-            {
-                CliResult result = await RunCommand(m_cliPath, arguments.ToArgs(false), stdin);
-                if (result.Result == CliResultType.Timeout)
-                {
-                    numAttempts++;
-                    continue;
-                }
-                
-                return result;
-            }
-
-            return new CliResult()
-            {
-                Result = CliResultType.Failure,
-                Output = $"Failure due to timeouts. Failed all {CALLCLI_TIMEOUT_ATTEMPTS} attempts.",
-                MillisecondsWaited = MAX_PROCESS_WAIT_TIME * CALLCLI_TIMEOUT_ATTEMPTS,
-            };
+            return RunCommand(m_cliPath, arguments.ToArgs(false), stdin);
         }
         
         private static async Task<CliResult> RunCommand(string command, string args, string stdin = null)

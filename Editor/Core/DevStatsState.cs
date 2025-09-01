@@ -20,13 +20,13 @@ namespace DevStatsSystem.Editor.Core
                 OnLastHeartbeatSentTimeChanged?.Invoke();
             }
         }
-        [SerializeField]
-        private List<Heartbeat> FailedToSendHeartbeats = new();
         
         [NonSerialized]
         public Action OnQueuedHeartbeatsChanged;
         [NonSerialized]
         public Action OnLastHeartbeatSentTimeChanged;
+        [NonSerialized]
+        public Action OnFailedToSendHeartbeatsChanged;
         
         public int GetQueuedHeartbeatCount()
         {

@@ -14,9 +14,10 @@ namespace DevStatsSystem.Editor.Core
         [SerializeField]
         private List<SentHeartbeatsInstance> m_sentHeartbeatsInstances = new();
         [SerializeField]
-        private List<FailedToSendHeartbeats> m_failedToSendHeartbeats = new();
+        private List<FailedToSendInstance> m_failedToSendInstances = new();
 
         public Action OnSentHeartbeatsInstancesChanged;
+        public Action OnFailedToSendInstancesChanged;
         
         public void AddSentHeartbeatInstance(List<Heartbeat> heartbeats)
         {
@@ -34,13 +35,51 @@ namespace DevStatsSystem.Editor.Core
             return m_sentHeartbeatsInstances;
         }
 
-        public void AddFailedToSendHeartbeats(List<Heartbeat> heartbeats)
+        public void AddFailedToSendInstance(List<Heartbeat> heartbeats)
         {
-            m_failedToSendHeartbeats.Add(new FailedToSendHeartbeats()
+            m_failedToSendInstances.Add(new FailedToSendInstance(DateTime.Now.Ticks, heartbeats));
+            OnFailedToSendInstancesChanged?.Invoke();
+        }
+
+        public List<FailedToSendInstance> GetFailedToSendInstances()
+        {
+            return m_failedToSendInstances;
+        }
+
+        public void ClearFailedToSendInstances()
+        {
+            m_failedToSendInstances.Clear();
+            OnFailedToSendInstancesChanged?.Invoke();
+        }
+        
+        public static (int, string) GetHeartbeatsMetaData(List<Heartbeat> heartbeats)
+        {
+            Dictionary<string, int> fileCountsLookup = new();
+            foreach (Heartbeat heartbeat in heartbeats)
             {
-                Timestamp = DateTime.Now.Ticks,
-                Heartbeats = heartbeats,
-            });
+                string filePath = heartbeat.FilePath;
+                if (!fileCountsLookup.ContainsKey(filePath))
+                {
+                    fileCountsLookup.Add(filePath, 0);
+                }
+                fileCountsLookup[filePath]++;
+            }
+            
+            List<(string, int)> fileToCount = new();
+            foreach (string filePath in fileCountsLookup.Keys)
+            {
+                fileToCount.Add((filePath, fileCountsLookup[filePath]));
+            }
+            fileToCount.Sort((x, y) => x.Item2.CompareTo(y.Item2));
+            StringBuilder stringBuilder = new();
+            stringBuilder.Append("Files: ");
+            foreach (var file in fileToCount)
+            {
+                stringBuilder.Append($"\n- {Path.GetFileName(file.Item1)} ({file.Item2})");
+            }
+            
+            // Return unique file count and formatted string for tooltip.
+            return (fileToCount.Count, stringBuilder.ToString());
         }
     }
     
@@ -56,30 +95,31 @@ namespace DevStatsSystem.Editor.Core
         {
             Timestamp = timestamp;
             NumHeartbeats = heartbeats.Count;
-            
-            List<string> filesByFrequency = heartbeats
-                .Select(x => x.FilePath)
-                .GroupBy(s => s) // Group by each string
-                .OrderByDescending(g => g.Count()) // Order by frequency, descending
-                .Select(g => g.Key) // Select only the unique string
-                .ToList();
 
-            StringBuilder formattedFilesBuilder = new();
-            formattedFilesBuilder.Append("Files: ");
-            foreach (var file in filesByFrequency)
-            {
-                formattedFilesBuilder.Append($"\n- {Path.GetFileName(file)}");
-            }
-
-            NumUniqueFiles = filesByFrequency.Count;
-            FormattedListOfAssetPaths = formattedFilesBuilder.ToString();
+            var metaData = DevStatsData.GetHeartbeatsMetaData(heartbeats);
+            NumUniqueFiles = metaData.Item1;
+            FormattedListOfAssetPaths = metaData.Item2;
         }
     }
 
     [Serializable]
-    internal struct FailedToSendHeartbeats
+    internal struct FailedToSendInstance
     {
         public long Timestamp;
         public List<Heartbeat> Heartbeats;
+        public int NumUniqueFiles; // TODO: Please let's stop serializing these...
+        public string FormattedListOfAssetPaths;
+
+        public FailedToSendInstance(long timestamp, List<Heartbeat> heartbeats)
+        {
+            Timestamp = timestamp;
+            Heartbeats = heartbeats;
+            Debug.Log("Serializing failed to send with num heartbeats: " + heartbeats.Count);
+            
+            var metaData = DevStatsData.GetHeartbeatsMetaData(heartbeats);
+            Debug.Log("FAILED TO SEND INSTNACEN UNIQUE COUNT: " + metaData.Item2);
+            NumUniqueFiles = metaData.Item1;
+            FormattedListOfAssetPaths = metaData.Item2;
+        }
     }
 }

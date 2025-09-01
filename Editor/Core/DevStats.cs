@@ -121,36 +121,60 @@ namespace DevStatsSystem.Editor.Core
             long timeSinceStartup = DateTime.Now.Ticks;
             if (m_state.GetQueuedHeartbeatCount() > 0 && timeSinceStartup > m_state.LastHeartbeatSendTime + SEND_INTERVAL_NANOSECONDS)
             {
-                SendHeartbeat();
+                SendHeartbeat(m_state.GetQueuedHeartbeats());
+                m_state.ClearQueuedHeartbeats();
                 m_state.LastHeartbeatSendTime = timeSinceStartup;
             }
         }
 
-        private static async void SendHeartbeat()
+        private static async void SendHeartbeat(List<Heartbeat> heartbeats)
         {
             if (m_wakatimeCli == null)
             {
                 return;
             }
-            
-            if (m_state.GetQueuedHeartbeatCount() == 0)
+
+            if (heartbeats == null || heartbeats.Count == 0)
             {
                 return;
             }
             
-            // Locally copy the heartbeats and clear the queue.
-            List<Heartbeat> heartbeats = new List<Heartbeat>(m_state.GetQueuedHeartbeats());
-            m_state.ClearQueuedHeartbeats();
-            
-            CliResult result = await m_wakatimeCli.SendHeartbeats(new List<Heartbeat>(heartbeats));
+            List<Heartbeat> localHeartbeats = new List<Heartbeat>(heartbeats);
+            CliResult result = await m_wakatimeCli.SendHeartbeats(localHeartbeats);
             if (result.Result == CliResultType.Success)
             {
-                m_data.AddSentHeartbeatInstance(heartbeats);
+                m_data.AddSentHeartbeatInstance(localHeartbeats);
             }
             else
             {
-                m_data.AddFailedToSendHeartbeats(heartbeats);
+                m_data.AddFailedToSendInstance(localHeartbeats);
             }
+        }
+
+        private static void SendToFailed(List<Heartbeat> heartbeats)
+        {
+            if (heartbeats == null || heartbeats.Count == 0)
+            {
+                return;
+            }
+            
+            m_data.AddFailedToSendInstance(new(heartbeats));
+        }
+
+        public static void RetryFailedHeartbeats()
+        {
+            if (m_data.GetFailedToSendInstances().Count == 0)
+            {
+                return;
+            }
+
+            List<Heartbeat> allFailedHeartbeats = new();
+            foreach (FailedToSendInstance instance in m_data.GetFailedToSendInstances())
+            {
+                allFailedHeartbeats.AddRange(instance.Heartbeats);
+            }
+            SendHeartbeat(allFailedHeartbeats);
+            m_data.ClearFailedToSendInstances();
         }
 
         public static void Log(string log)

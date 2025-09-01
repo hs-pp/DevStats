@@ -5,9 +5,9 @@ using UnityEngine.UIElements;
 
 namespace DevStatsSystem.Editor.UI
 {
-    internal class SentHeartbeatsInstanceElement : VisualElement
+    internal class FailedToSendInstanceElement : VisualElement
     {
-        private const string UXML_PATH = "DevStats/UXML/SentHeartbeatsInstanceElement";
+        private const string UXML_PATH = "DevStats/UXML/FailedToSendInstanceElement";
         
         private const string HEARTBEATS_COUNT_LABEL_TAG = "heartbeats-count-label";
         private const string DATETIME_LABEL_TAG = "datetime-label";
@@ -17,7 +17,7 @@ namespace DevStatsSystem.Editor.UI
         private Label m_dateTimeLabel;
         private Label m_fileCountLabel;
 
-        public SentHeartbeatsInstanceElement()
+        public FailedToSendInstanceElement()
         {
             CreateLayout();
         }
@@ -32,16 +32,16 @@ namespace DevStatsSystem.Editor.UI
             m_fileCountLabel = this.Q<Label>(FILECOUNT_LABEL_TAG);
         }
 
-        public void BindSentHeartbeatsInstance(SentHeartbeatsInstance sentHeartbeatsInstance)
+        public void BindFailedToSendInstance(FailedToSendInstance failedToSendInstance)
         {
-            m_heartbeatsCountLabel.text = $"{sentHeartbeatsInstance.NumHeartbeats} <color=red>\u2665</color>";
-            DateTime dateTime = new DateTime(sentHeartbeatsInstance.Timestamp);
+            m_heartbeatsCountLabel.text = $"{failedToSendInstance.Heartbeats.Count} <color=red>\u2665</color>";
+            DateTime dateTime = new DateTime(failedToSendInstance.Timestamp);
             m_dateTimeLabel.text = $"{dateTime.ToString("H:mm:ss:tt MM/dd/yy")}";
-            m_fileCountLabel.text = $"{sentHeartbeatsInstance.NumUniqueFiles} Files";
-            tooltip = sentHeartbeatsInstance.FormattedListOfAssetPaths;
+            m_fileCountLabel.text = $"{failedToSendInstance.NumUniqueFiles} Files";
+            tooltip = failedToSendInstance.FormattedListOfAssetPaths;
         }
 
-        public void UnbindSentHeartbeatsInstance()
+        public void UnbindFailedToSendInstance()
         {
             m_heartbeatsCountLabel.text = "";
             m_dateTimeLabel.text = "";

@@ -17,11 +17,17 @@ namespace DevStatsSystem.Editor.UI
         private const string HEARTBEATS_IN_QUEUE_LABEL_TAG = "heartbeats-in-queue-label";
         private const string UNTIL_NEXT_SEND_LABEL_TAG = "until-next-send-label";
         private const string QUEUED_HEARTBEATS_LISTVIEW_TAG = "queued-heartbeats-listview";
+        private const string FAILED_TO_SEND_AREA_TAG = "failed-to-send-area";
+        private const string FAILED_TO_SEND_LISTVIEW_TAG = "failed-to-send-listview";
+        private const string FAILED_TO_SEND_RETRY_BUTTON_TAG = "failed-to-send-retry-button";
         private const string SENT_HISTORY_LISTVIEW_TAG = "sent-history-listview";
         
         private Label m_heartbeatsInQueueLabel;
         private Label m_untilNextSendLabel;
         private ListView m_queuedHeartbeatsListView;
+        private VisualElement m_failedToSendArea;
+        private ListView m_failedToSendListView;
+        private Button m_failedToSendRetryButton;
         private ListView m_sentHistoryListView;
         
         private IVisualElementScheduledItem m_untilNextSendSchedule;
@@ -42,6 +48,14 @@ namespace DevStatsSystem.Editor.UI
             m_queuedHeartbeatsListView.makeItem += () => new HeartbeatElement();
             m_queuedHeartbeatsListView.bindItem += (element, i) => { (element as HeartbeatElement).BindHeartbeat((Heartbeat)m_queuedHeartbeatsListView.itemsSource[i]); };
             m_queuedHeartbeatsListView.unbindItem += (element, i) => { (element as HeartbeatElement).UnbindHeartbeat(); };
+            
+            m_failedToSendArea  = this.Q<VisualElement>(FAILED_TO_SEND_AREA_TAG);
+            m_failedToSendListView = this.Q<ListView>(FAILED_TO_SEND_LISTVIEW_TAG);
+            m_failedToSendListView.makeItem += () => new FailedToSendInstanceElement();
+            m_failedToSendListView.bindItem += (element, i) => { (element as FailedToSendInstanceElement).BindFailedToSendInstance((FailedToSendInstance)m_failedToSendListView.itemsSource[i]); };
+            m_failedToSendListView.unbindItem += (element, i) => { (element as FailedToSendInstanceElement).UnbindFailedToSendInstance(); };
+            m_failedToSendRetryButton = this.Q<Button>(FAILED_TO_SEND_RETRY_BUTTON_TAG);
+            m_failedToSendRetryButton.clicked += OnFailedToSendRetryPressed;
 
             m_sentHistoryListView = this.Q<ListView>(SENT_HISTORY_LISTVIEW_TAG);
             m_sentHistoryListView.makeItem += () => new SentHeartbeatsInstanceElement();
@@ -53,22 +67,28 @@ namespace DevStatsSystem.Editor.UI
         {
             DevStatsState.Instance.OnQueuedHeartbeatsChanged += OnHeartbeatsInQueueChanged;
             DevStatsData.Instance.OnSentHeartbeatsInstancesChanged += OnSentHeartbeatsInstancesChanged;
+            DevStatsData.Instance.OnFailedToSendInstancesChanged += OnFailedToSendInstancesChanged;
             
             m_untilNextSendSchedule = schedule.Execute(UpdateUntilNextSendLabel).Every(500);
             m_queuedHeartbeatsListView.itemsSource = DevStatsState.Instance.GetQueuedHeartbeats();
             m_sentHistoryListView.itemsSource = DevStatsData.Instance.GetSentHeartbeatsInstances();
+            m_failedToSendListView.itemsSource = DevStatsData.Instance.GetFailedToSendInstances();
             
             OnHeartbeatsInQueueChanged();
             OnSentHeartbeatsInstancesChanged();
+            OnFailedToSendInstancesChanged();
         }
 
         public override void OnHide()
         {
             DevStatsState.Instance.OnQueuedHeartbeatsChanged -= OnHeartbeatsInQueueChanged;
             DevStatsData.Instance.OnSentHeartbeatsInstancesChanged -= OnSentHeartbeatsInstancesChanged;
+            DevStatsData.Instance.OnFailedToSendInstancesChanged -= OnFailedToSendInstancesChanged;
 
             m_untilNextSendSchedule.Pause();
             m_queuedHeartbeatsListView.itemsSource = null;
+            m_sentHistoryListView.itemsSource = null;
+            m_failedToSendListView.itemsSource = null;
         }
 
         private void OnHeartbeatsInQueueChanged()
@@ -86,6 +106,12 @@ namespace DevStatsSystem.Editor.UI
             }
         }
 
+        private void OnFailedToSendInstancesChanged()
+        {
+            m_failedToSendArea.style.display = DevStatsData.Instance.GetFailedToSendInstances().Count > 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            m_failedToSendListView.RefreshItems();
+        }
+
         private void UpdateUntilNextSendLabel()
         {
             TimeSpan timeRemaining = DateTime.Now - new DateTime(DevStatsState.Instance.LastHeartbeatSendTime);
@@ -95,6 +121,11 @@ namespace DevStatsSystem.Editor.UI
                 secondsRemaining = 0;
             }
             m_untilNextSendLabel.text = $"POST in {secondsRemaining}";
+        }
+        
+        private void OnFailedToSendRetryPressed()
+        {
+            DevStats.RetryFailedHeartbeats();
         }
         
         private void GetHeartbeatsRequest()

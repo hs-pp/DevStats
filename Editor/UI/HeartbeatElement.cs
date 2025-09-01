@@ -39,7 +39,7 @@ namespace DevStatsSystem.Editor.UI
             m_fileObjectField.value = AssetDatabase.LoadAssetAtPath<Object>(heartbeat.FilePath.Replace(Application.dataPath, "Assets"));
             m_saveIcon.style.display = heartbeat.IsWrite ? DisplayStyle.Flex : DisplayStyle.None;
             DateTime dateTime = DateTimeOffset.FromUnixTimeSeconds((long)heartbeat.Timestamp).ToLocalTime().DateTime;
-            m_timeLabel.text = dateTime.ToString("hh:mm:sstt");
+            m_timeLabel.text = dateTime.ToString("H:mm:ss:tt");
         }
 
         public void UnbindHeartbeat()
