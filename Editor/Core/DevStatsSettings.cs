@@ -19,11 +19,36 @@ namespace DevStatsSystem.Editor.Core
         public bool IsEnabled => m_isEnabled;
 
         [SerializeField]
-        private bool m_isDebugMode = false;
-        public bool IsDebugMode
+        private bool m_printDebugLogs = false;
+        public bool PrintDebugLogs
         {
-            get => m_isDebugMode;
-            set => m_isDebugMode = value;
+            get => m_printDebugLogs;
+            set => m_printDebugLogs = value;
+        }
+
+        [SerializeField]
+        private int m_heartbeatSendInterval = 120; // in seconds
+        public int HeartbeatSendInterval
+        {
+            get => m_heartbeatSendInterval;
+            set
+            {
+                m_heartbeatSendInterval = value;
+                if (m_heartbeatSendInterval < 120)
+                {
+                    m_heartbeatSendInterval = 120; // This is min
+                }
+                OnHeartbeatSendIntervalChanged?.Invoke();
+            }
+        }
+        public Action OnHeartbeatSendIntervalChanged;
+
+        [SerializeField]
+        private int m_sameFileInterval = 5; // in seconds
+        public int SameFileInterval
+        {
+            get => m_sameFileInterval;
+            set => m_sameFileInterval = value;
         }
         
         [NonSerialized]

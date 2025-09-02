@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using DevStatsSystem.Editor.Core;
 using DevStatsSystem.Editor.Core.DTOs;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UIElements;
@@ -66,13 +65,13 @@ namespace DevStatsSystem.Editor.UI
         public override void OnShow()
         {
             DevStatsState.Instance.OnQueuedHeartbeatsChanged += OnHeartbeatsInQueueChanged;
-            DevStatsData.Instance.OnSentHeartbeatsInstancesChanged += OnSentHeartbeatsInstancesChanged;
-            DevStatsData.Instance.OnFailedToSendInstancesChanged += OnFailedToSendInstancesChanged;
+            DevStatsState.Instance.OnSentHeartbeatsInstancesChanged += OnSentHeartbeatsInstancesChanged;
+            DevStatsState.Instance.OnFailedToSendInstancesChanged += OnFailedToSendInstancesChanged;
             
             m_untilNextSendSchedule = schedule.Execute(UpdateUntilNextSendLabel).Every(500);
             m_queuedHeartbeatsListView.itemsSource = DevStatsState.Instance.GetQueuedHeartbeats();
-            m_sentHistoryListView.itemsSource = DevStatsData.Instance.GetSentHeartbeatsInstances();
-            m_failedToSendListView.itemsSource = DevStatsData.Instance.GetFailedToSendInstances();
+            m_sentHistoryListView.itemsSource = DevStatsState.Instance.GetSentHeartbeatsInstances();
+            m_failedToSendListView.itemsSource = DevStatsState.Instance.GetFailedToSendInstances();
             
             OnHeartbeatsInQueueChanged();
             OnSentHeartbeatsInstancesChanged();
@@ -82,8 +81,8 @@ namespace DevStatsSystem.Editor.UI
         public override void OnHide()
         {
             DevStatsState.Instance.OnQueuedHeartbeatsChanged -= OnHeartbeatsInQueueChanged;
-            DevStatsData.Instance.OnSentHeartbeatsInstancesChanged -= OnSentHeartbeatsInstancesChanged;
-            DevStatsData.Instance.OnFailedToSendInstancesChanged -= OnFailedToSendInstancesChanged;
+            DevStatsState.Instance.OnSentHeartbeatsInstancesChanged -= OnSentHeartbeatsInstancesChanged;
+            DevStatsState.Instance.OnFailedToSendInstancesChanged -= OnFailedToSendInstancesChanged;
 
             m_untilNextSendSchedule.Pause();
             m_queuedHeartbeatsListView.itemsSource = null;
@@ -108,19 +107,19 @@ namespace DevStatsSystem.Editor.UI
 
         private void OnFailedToSendInstancesChanged()
         {
-            m_failedToSendArea.style.display = DevStatsData.Instance.GetFailedToSendInstances().Count > 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            m_failedToSendArea.style.display = DevStatsState.Instance.GetFailedToSendInstances().Count > 0 ? DisplayStyle.Flex : DisplayStyle.None;
             m_failedToSendListView.RefreshItems();
         }
 
         private void UpdateUntilNextSendLabel()
         {
             TimeSpan timeRemaining = DateTime.Now - new DateTime(DevStatsState.Instance.LastHeartbeatSendTime);
-            int secondsRemaining = DevStats.SEND_INTERVAL - (int)timeRemaining.TotalSeconds;
+            int secondsRemaining = DevStatsSettings.Instance.HeartbeatSendInterval - (int)timeRemaining.TotalSeconds;
             if (secondsRemaining < 0)
             {
                 secondsRemaining = 0;
             }
-            m_untilNextSendLabel.text = $"POST in {secondsRemaining}";
+            m_untilNextSendLabel.text = $"Next POST in {secondsRemaining}";
         }
         
         private void OnFailedToSendRetryPressed()

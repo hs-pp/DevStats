@@ -33,9 +33,9 @@ namespace DevStatsSystem.Editor.UI
             m_apiKeyField.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.APIKey = evt.newValue);
             m_isEnabledToggle.value = DevStatsSettings.Instance.IsEnabled;
             m_isEnabledToggle.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.SetIsEnabled(evt.newValue));
-            m_debugModeToggle.value = DevStatsSettings.Instance.IsDebugMode;
+            m_debugModeToggle.value = DevStatsSettings.Instance.PrintDebugLogs;
             m_debugModeToggle.RegisterValueChangedCallback(
-                evt => DevStatsSettings.Instance.IsDebugMode = evt.newValue);
+                evt => DevStatsSettings.Instance.PrintDebugLogs = evt.newValue);
         }
         
         public override void OnShow()

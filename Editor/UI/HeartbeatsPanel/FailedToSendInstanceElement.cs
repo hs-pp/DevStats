@@ -37,8 +37,11 @@ namespace DevStatsSystem.Editor.UI
             m_heartbeatsCountLabel.text = $"{failedToSendInstance.Heartbeats.Count} <color=red>\u2665</color>";
             DateTime dateTime = new DateTime(failedToSendInstance.Timestamp);
             m_dateTimeLabel.text = $"{dateTime.ToString("H:mm:ss:tt MM/dd/yy")}";
-            m_fileCountLabel.text = $"{failedToSendInstance.NumUniqueFiles} Files";
-            tooltip = failedToSendInstance.FormattedListOfAssetPaths;
+            
+            var metaData = DevStatsState.GetHeartbeatsMetaData(failedToSendInstance.Heartbeats);
+
+            m_fileCountLabel.text = $"{metaData.Item1} Files";
+            tooltip = metaData.Item2;
         }
 
         public void UnbindFailedToSendInstance()

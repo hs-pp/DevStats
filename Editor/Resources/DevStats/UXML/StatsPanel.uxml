@@ -1,3 +1,53 @@
-<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Label text="Stats" name="title" style="-unity-font-style: bold; font-size: 18px; -unity-text-align: upper-center; margin-bottom: 4px;" />
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:Label text="Stats" name="title" style="-unity-font-style: bold; font-size: 24px; -unity-text-align: upper-left; margin-bottom: 4px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 4px; margin-right: 4px; margin-left: 4px;" />
+    <ui:VisualElement name="today-summary-area" style="flex-grow: 0; flex-shrink: 0; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 10px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-top: 12px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">
+        <ui:Label text="Today" name="today-title" style="position: absolute; top: -10px; -unity-font-style: bold; color: rgb(88, 88, 88); background-color: rgb(56, 56, 56); padding-left: 2px; font-size: 15px; text-shadow: 2px 2px 0 rgb(32, 32, 32);" />
+        <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(130, 231, 213); flex-shrink: 0;" />
+        <ui:VisualElement style="flex-grow: 0; height: 18px; flex-direction: row; flex-shrink: 0;">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgb(93, 216, 255);">
+                <ui:Label text="C#" style="color: rgb(0, 0, 0);" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 0.65; background-color: rgb(229, 154, 57);">
+                <ui:Label text="Unity Assets" style="-unity-text-align: upper-right; color: rgb(0, 0, 0);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
+            <ui:Label text="Total Time: 100" />
+            <ui:Label text="Total Heartbeats: 100" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="week-summary-area" style="flex-grow: 0; flex-shrink: 0; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 10px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-top: 12px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">
+        <ui:Label text="Week" name="week-title" style="position: absolute; top: -10px; -unity-font-style: bold; color: rgb(88, 88, 88); background-color: rgb(56, 56, 56); padding-left: 2px; font-size: 15px; text-shadow: 2px 2px 0 rgb(32, 32, 32);" />
+        <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(130, 231, 213); flex-shrink: 0;" />
+        <ui:VisualElement style="flex-grow: 0; height: 18px; flex-direction: row; flex-shrink: 0;">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgb(93, 216, 255);">
+                <ui:Label text="C#" style="color: rgb(0, 0, 0);" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 0.65; background-color: rgb(229, 154, 57);">
+                <ui:Label text="Unity Assets" style="-unity-text-align: upper-right; color: rgb(0, 0, 0);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Label text="Total Time: 100" />
+        <ui:Label text="Daily Average: 10" />
+    </ui:VisualElement>
+    <ui:VisualElement name="month-summary-area" style="flex-grow: 0; flex-shrink: 0; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 10px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-top: 12px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">
+        <ui:Label text="30 Days" name="month-title" style="position: absolute; top: -10px; -unity-font-style: bold; color: rgb(88, 88, 88); background-color: rgb(56, 56, 56); padding-left: 2px; font-size: 15px; text-shadow: 2px 2px 0 rgb(32, 32, 32);" />
+        <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(130, 231, 213); flex-shrink: 0;" />
+        <ui:VisualElement style="flex-grow: 0; height: 18px; flex-direction: row; flex-shrink: 0;">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgb(93, 216, 255);">
+                <ui:Label text="C#" style="color: rgb(0, 0, 0);" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 0.65; background-color: rgb(229, 154, 57);">
+                <ui:Label text="Unity Assets" style="-unity-text-align: upper-right; color: rgb(0, 0, 0);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Label text="Total Time: 100" />
+        <ui:Label text="Daily Average: 10" />
+    </ui:VisualElement>
+    <ui:VisualElement name="alltime-summary-area" style="flex-grow: 0; flex-shrink: 1; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 10px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-top: 12px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">
+        <ui:Label text="All Time" name="alltime-title" style="position: absolute; top: -10px; -unity-font-style: bold; color: rgb(88, 88, 88); background-color: rgb(56, 56, 56); padding-left: 2px; font-size: 15px; text-shadow: 2px 2px 0 rgb(32, 32, 32);" />
+        <ui:Label text="Project Total Time: 100" />
+        <ui:Label text="Daily Average: 10" />
+        <ui:Label text="Monthly Average: 10" />
+    </ui:VisualElement>
 </ui:UXML>

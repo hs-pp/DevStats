@@ -21,23 +21,29 @@ namespace DevStatsSystem.Editor.UI
         {
             public TabType Type;
             public VisualElement Button;
+            public VisualElement Disabler;
             public ADevStatsPanel Panel;
         }
         
         private const string UXML_PATH = "DevStats/UXML/DevStatsWindow";
         private const string STATS_TAB_TAG = "stats-tab";
+        private const string STATS_TAB_DISABLER_TAG = "stats-tab-disabler";
         private const string HEARTBEATS_TAB_TAG = "heartbeats-tab";
+        private const string HEARTBEATS_TAB_DISABLER_TAG = "heartbeats-tab-disabler";
         private const string SETTINGS_TAB_TAG = "settings-tab";
+        private const string SETTINGS_TAB_DISABLER_TAG = "settings-tab-disabler";
         private const string ABOUT_TAB_TAG = "about-tab";
+        private const string ABOUT_TAB_DISABLER_TAG = "about-tab-disabler";
         private const string CONTENT_AREA_TAG = "content-area";
-        
-        private static Color SELECTED_TAB_COLOR = new Color(0.21875f, 0.21875f, 0.21875f);
-        private static Color UNSELECTED_TAB_COLOR = new Color(0.164f, 0.164f, 0.164f);
 
         private VisualElement m_statsTab;
+        private VisualElement m_statsTabDisabler;
         private VisualElement m_heartbeatsTab;
+        private VisualElement m_heartbeatsTabDisabler;
         private VisualElement m_settingsTab;
+        private VisualElement m_settingsTabDisabler;
         private VisualElement m_aboutTab;
+        private VisualElement m_aboutTabDisabler;
         private VisualElement m_contentArea;
         
         private List<TabInstance> m_tabInstances = new();
@@ -65,9 +71,13 @@ namespace DevStatsSystem.Editor.UI
             uxmlAsset.CloneTree(rootVisualElement);
             
             m_statsTab = rootVisualElement.Q<VisualElement>(STATS_TAB_TAG);
+            m_statsTabDisabler = rootVisualElement.Q(STATS_TAB_DISABLER_TAG);
             m_heartbeatsTab = rootVisualElement.Q<VisualElement>(HEARTBEATS_TAB_TAG);
+            m_heartbeatsTabDisabler = rootVisualElement.Q(HEARTBEATS_TAB_DISABLER_TAG);
             m_settingsTab = rootVisualElement.Q<VisualElement>(SETTINGS_TAB_TAG);
+            m_settingsTabDisabler = rootVisualElement.Q<VisualElement>(SETTINGS_TAB_DISABLER_TAG);
             m_aboutTab = rootVisualElement.Q<VisualElement>(ABOUT_TAB_TAG);
+            m_aboutTabDisabler = rootVisualElement.Q<VisualElement>(ABOUT_TAB_DISABLER_TAG);
             m_contentArea = rootVisualElement.Q<VisualElement>(CONTENT_AREA_TAG);
             
             m_statsTab.AddManipulator(new Clickable(() => { OpenTab(TabType.Stats); }));
@@ -79,24 +89,28 @@ namespace DevStatsSystem.Editor.UI
             {
                 Type = TabType.Stats,
                 Button = m_statsTab,
+                Disabler = m_statsTabDisabler,
                 Panel = new StatsPanel(),
             });
             m_tabInstances.Add(new TabInstance()
             {
                 Type = TabType.Heartbeats,
                 Button = m_heartbeatsTab,
+                Disabler = m_heartbeatsTabDisabler,
                 Panel = new HeartbeatsPanel(),
             });
             m_tabInstances.Add(new TabInstance()
             {
                 Type = TabType.Settings,
                 Button = m_settingsTab,
+                Disabler = m_settingsTabDisabler,
                 Panel = new SettingsPanel(),
             });
             m_tabInstances.Add(new TabInstance()
             {
                 Type = TabType.About,
                 Button = m_aboutTab,
+                Disabler = m_aboutTabDisabler,
                 Panel = new AboutPanel(),
             });
         }
@@ -112,12 +126,10 @@ namespace DevStatsSystem.Editor.UI
         
         private void SetSelectedButton(TabInstance tabInstance)
         {
-            m_statsTab.style.backgroundColor = UNSELECTED_TAB_COLOR;
-            m_heartbeatsTab.style.backgroundColor = UNSELECTED_TAB_COLOR;
-            m_settingsTab.style.backgroundColor = UNSELECTED_TAB_COLOR;
-            m_aboutTab.style.backgroundColor = UNSELECTED_TAB_COLOR;
-            
-            tabInstance.Button.style.backgroundColor = SELECTED_TAB_COLOR;
+            m_statsTabDisabler.style.display = tabInstance.Disabler == m_statsTabDisabler ? DisplayStyle.None : DisplayStyle.Flex;
+            m_heartbeatsTabDisabler.style.display = tabInstance.Disabler == m_heartbeatsTabDisabler ? DisplayStyle.None : DisplayStyle.Flex;
+            m_settingsTabDisabler.style.display = tabInstance.Disabler == m_settingsTabDisabler ? DisplayStyle.None : DisplayStyle.Flex;
+            m_aboutTabDisabler.style.display = tabInstance.Disabler == m_aboutTabDisabler ? DisplayStyle.None : DisplayStyle.Flex;
         }
 
         private void OpenPanel(TabInstance tabInstance)
