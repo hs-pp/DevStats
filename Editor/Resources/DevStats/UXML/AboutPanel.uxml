@@ -1,5 +1,11 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:Label text="DevStats" name="name" style="-unity-text-align: middle-center; font-size: 38px; -unity-font-style: bold;" />
-    <ui:Label text="Powered by Wakatime" name="subtitle" style="-unity-text-align: middle-center; font-size: 18px; -unity-font-style: bold;" />
-    <ui:Label text="By Hyungjin Shin" name="subtitle" style="-unity-text-align: middle-center; font-size: 13px; -unity-font-style: bold;" />
+    <ui:VisualElement name="title-area" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px; align-items: center;">
+        <ui:VisualElement name="icon" style="flex-grow: 0; background-image: resource(&apos;DevStats/Icons/about_img&apos;); width: 30px; height: 30px; flex-shrink: 0;" />
+        <ui:Label text="About" name="title" style="-unity-font-style: bold; font-size: 24px; -unity-text-align: upper-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-left: 2px;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="container" style="flex-grow: 0; flex-shrink: 0; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 4px; padding-right: 8px; padding-bottom: 12px; padding-left: 8px; margin-top: 12px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px; overflow: hidden;">
+        <ui:Label text="DevStats" name="name" style="-unity-text-align: middle-center; font-size: 38px; -unity-font-style: bold; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+        <ui:Label text="Powered by Wakatime" name="subtitle" style="-unity-text-align: middle-center; font-size: 18px; -unity-font-style: bold;" />
+        <ui:Label text="By Hyungjin Shin" name="subtitle" style="-unity-text-align: middle-center; font-size: 13px; -unity-font-style: bold;" />
+    </ui:VisualElement>
 </ui:UXML>
