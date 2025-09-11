@@ -3,6 +3,7 @@
         <ui:VisualElement name="icon" style="flex-grow: 0; background-image: resource(&apos;DevStats/Icons/stats_img&apos;); width: 24px; height: 24px; flex-shrink: 0; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 3px;" />
         <ui:Label text="Stats" name="title" style="-unity-font-style: bold; font-size: 24px; -unity-text-align: upper-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-left: 4px;" />
     </ui:VisualElement>
+    <ui:Button text="Button" name="test-button" />
     <ui:VisualElement name="today-summary-area" style="flex-grow: 0; flex-shrink: 0; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 12px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; margin-top: 12px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">
         <ui:Label text="Today" name="today-title" style="position: absolute; top: -10px; -unity-font-style: bold; color: rgb(88, 88, 88); background-color: rgb(56, 56, 56); padding-left: 2px; font-size: 15px; text-shadow: 2px 2px 0 rgb(32, 32, 32);" />
         <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(130, 231, 213); flex-shrink: 0;" />

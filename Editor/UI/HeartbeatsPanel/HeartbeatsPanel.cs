@@ -1,17 +1,12 @@
 using System;
-using System.Text;
 using DevStatsSystem.Editor.Core;
-using DevStatsSystem.Editor.Core.DTOs;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UIElements;
 
 namespace DevStatsSystem.Editor.UI
 {
     internal class HeartbeatsPanel : ADevStatsPanel
     {
-        private const string URL_PREFIX = "https://api.wakatime.com/api/v1/";
-        
         private const string UXML_PATH = "DevStats/UXML/HeartbeatsPanel";
         private const string HEARTBEATS_IN_QUEUE_LABEL_TAG = "heartbeats-in-queue-label";
         private const string UNTIL_NEXT_SEND_LABEL_TAG = "until-next-send-label";
@@ -125,27 +120,6 @@ namespace DevStatsSystem.Editor.UI
         private void OnFailedToSendRetryPressed()
         {
             DevStats.RetryFailedHeartbeats();
-        }
-        
-        private void GetHeartbeatsRequest()
-        {
-            UnityWebRequest request = UnityWebRequest.Get(URL_PREFIX + "users/current/heartbeats?date=" + System.DateTime.Now.ToString("yyyy-MM-dd"));
-            string auth = System.Convert.ToBase64String(Encoding.ASCII.GetBytes(DevStatsSettings.Instance.APIKey + ":"));
-            request.SetRequestHeader("Authorization", "Basic " + auth);
-            
-            request.SendWebRequest().completed += (operation) =>
-            {
-                if (request.result == UnityWebRequest.Result.Success)
-                { 
-                    Debug.Log(request.downloadHandler.text);
-                    HeartbeatsResponseDTO responseDto = JsonUtility.FromJson<HeartbeatsResponseDTO>(request.downloadHandler.text);
-                    Debug.Log("Count: " + responseDto.data.Count);
-                }
-                else
-                {
-                    Debug.Log(request.result + " " + request.error);
-                }
-            };
         }
     }
 }

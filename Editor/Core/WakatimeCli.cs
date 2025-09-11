@@ -131,7 +131,7 @@ namespace DevStatsSystem.Editor.Core
             return value;
         }
         
-        private string GetProjectName()
+        public static string GetProjectName()
         {
             return Application.productName;
         }
