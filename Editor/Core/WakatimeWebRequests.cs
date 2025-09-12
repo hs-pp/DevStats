@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -10,48 +10,44 @@ namespace DevStatsSystem.Editor.Core
     {
         private static string URL_PREFIX = "https://api.wakatime.com/api/v1/users/current/";
 
-        public static void GetHeartbeatsRequest(Action<HeartbeatsDto> callback, Action<string> errorCallback = null)
+        public static async Task<HeartbeatsPayload> GetHeartbeatsRequest()
         {
-            CreateRequest($"heartbeats?date={DateTime.Now:yyyy-MM-dd}", callback, errorCallback);
+            return await CreateRequest<HeartbeatsPayload>($"heartbeats?date={DateTime.Now:yyyy-MM-dd}");
         }
 
-        public static void GetStatsRequest(Action<StatsDto> callback, Action<string> errorCallback = null)
+        public static async Task<StatsPayload> GetStatsRequest()
         {
-            CreateRequest("stats/all_time", callback, errorCallback);
+            return await CreateRequest<StatsPayload>("stats/all_time");
         }
 
-        public static void GetSummariesRequest(int numDays, Action<SummariesDto> callback, Action<string> errorCallback = null)
+        public static async Task<SummariesPayload> GetSummariesRequest(int numDays)
         {
             string startDate = DateTime.Now.AddDays(-numDays).ToString("yyyy-MM-dd");
             string endDate = DateTime.Now.ToString("yyyy-MM-dd");
-            CreateRequest($"summaries?start={startDate}&end={endDate}&project={WakatimeCli.GetProjectName()}", callback, errorCallback);
+            return await CreateRequest<SummariesPayload>($"summaries?start={startDate}&end={endDate}&project={WakatimeCli.GetProjectName()}");
         }
 
-        public static void GetDayDurationRequest(Action<DurationsDto> callback, Action<string> errorCallback = null)
+        public static async Task<DurationsPayload> GetDayDurationRequest()
         {
             string date = DateTime.Now.ToString("yyyy-MM-dd");
-            CreateRequest($"durations?date={date}&timeout=15", callback, errorCallback); // Specifying project returns garbage data. Just manually filter!!
+            return await CreateRequest<DurationsPayload>($"durations?date={date}&timeout=15"); // Specifying project returns garbage data. Just manually filter!!
         }
         
-        private static void CreateRequest<T>(string url, Action<T> onComplete = null, Action<string> onError = null)
+        private static async Task<T> CreateRequest<T>(string url) where T : AWebRequestPayload
         {
             UnityWebRequest request = UnityWebRequest.Get(URL_PREFIX + url);
             string auth = Convert.ToBase64String(Encoding.ASCII.GetBytes(DevStatsSettings.Instance.APIKey + ":"));
             request.SetRequestHeader("Authorization", "Basic " + auth);
-            request.SendWebRequest().completed += operation =>
+            await request.SendWebRequest();
+
+            T responseDto = JsonUtility.FromJson<T>(request.downloadHandler.text);
+            responseDto.WebRequestResult = new WebRequestResult()
             {
-                if (request.result == UnityWebRequest.Result.Success)
-                {
-                    T responseDto = JsonUtility.FromJson<T>(request.downloadHandler.text);
-                    Debug.Log(request.downloadHandler.text);
-                    onComplete?.Invoke(responseDto);
-                }
-                else
-                {
-                    Debug.LogError($"Wakatime WebRequest error: {request.error}");
-                    onError?.Invoke(request.error);
-                }
+                Result = request.result,
+                ResponseCode = request.responseCode,
+                ErrorMessage = request.error,
             };
+            return responseDto;
         }
     }
 }

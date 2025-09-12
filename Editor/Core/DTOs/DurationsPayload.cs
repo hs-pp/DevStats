@@ -3,7 +3,7 @@ using System;
 namespace DevStatsSystem.Editor.Core
 {
     [Serializable]
-    public struct DurationsDto
+    public class DurationsPayload : AWebRequestPayload
     {
         public DurationProjectDto[] data;
         public string start; // Start of time range as ISO 8601 UTC datetime

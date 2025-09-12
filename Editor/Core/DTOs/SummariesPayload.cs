@@ -3,9 +3,9 @@ using System;
 namespace DevStatsSystem.Editor.Core
 {
     [Serializable]
-    public struct SummariesDto
+    public class SummariesPayload : AWebRequestPayload
     {
-        public SummariesSummaryDto[] data;
+        public SummaryDto[] data;
         public SummariesCumulativeTotalDto cumulative_total;
         public SummariesDailyAverageDto daily_average;
         public string start; // start of time range as ISO 8601 UTC datetime
@@ -13,7 +13,7 @@ namespace DevStatsSystem.Editor.Core
     }
 
     [Serializable]
-    public struct SummariesSummaryDto
+    public struct SummaryDto
     {
         public SummaryGrandTotalDto grand_total;
         public SummaryProjectDto[] projects; // Should be empty since we're specifying the project we want.

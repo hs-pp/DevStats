@@ -3,13 +3,13 @@ using System;
 namespace DevStatsSystem.Editor.Core
 {
     [Serializable]
-    public struct StatsDto
+    public class StatsPayload : AWebRequestPayload
     {
-        public StatsDataDto data;
+        public StatsDto data;
     }
     
     [Serializable]
-    public struct StatsDataDto
+    public struct StatsDto
     {
         public float total_seconds;
         public float daily_average;
