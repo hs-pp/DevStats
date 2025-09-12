@@ -5,12 +5,13 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using DevStatsSystem.Core.SerializedData;
 using UnityEditor;
 using UnityEngine;
 using Application = UnityEngine.Device.Application;
 using Debug = UnityEngine.Debug;
 
-namespace DevStatsSystem.Editor.Core
+namespace DevStatsSystem.Core
 {
     internal enum CliResultType
     {
@@ -30,9 +31,6 @@ namespace DevStatsSystem.Editor.Core
         }
     }
     
-    /// <summary>
-    /// Dont forget to add the Wakatime plugin to your IDE to get full coverage!
-    /// </summary>
     internal class WakatimeCli
     {
         private const string WINDOWS_CLI_NAME = "wakatime-cli-windows-amd64";

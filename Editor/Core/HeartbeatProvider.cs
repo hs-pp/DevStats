@@ -1,11 +1,12 @@
 using System;
+using DevStatsSystem.Core.SerializedData;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
-namespace DevStatsSystem.Editor.Core
+namespace DevStatsSystem.Core
 {
     /// <summary>
     /// This provider captures a number of in-editor actions:

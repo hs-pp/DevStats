@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using DevStatsSystem.Core.SerializedData;
 
-namespace DevStatsSystem.Editor.Core
+namespace DevStatsSystem.Core
 {
     internal struct Argument
     {

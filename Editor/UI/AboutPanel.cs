@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DevStatsSystem.Editor.UI
+namespace DevStatsSystem.UI
 {
     internal class AboutPanel : ADevStatsPanel
     {

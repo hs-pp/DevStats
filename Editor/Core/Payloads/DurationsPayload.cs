@@ -1,12 +1,12 @@
 using System;
 using UnityEngine;
 
-namespace DevStatsSystem.Editor.Core
+namespace DevStatsSystem.Core.Payloads
 {
     [Serializable]
-    public struct DurationsPayload
+    internal struct DurationsPayload
     {
-        public DurationProjectDto[] data;
+        public DurationInstanceDto[] data;
         public string start; // Start of time range as ISO 8601 UTC datetime
         public string end; // End of time range as ISO 8601 UTC datetime
         public string timezone; // Timezone used for this request in Olson Country/Region format
@@ -18,7 +18,7 @@ namespace DevStatsSystem.Editor.Core
     }
 
     [Serializable]
-    public struct DurationProjectDto
+    internal struct DurationInstanceDto
     {
         public string project;
         public float time; // Start of this duration as UNIX epoch; numbers after decimal point are fractions of a second

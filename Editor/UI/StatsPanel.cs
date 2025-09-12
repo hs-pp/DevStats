@@ -1,13 +1,13 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using DevStatsSystem.Editor.Core;
+using DevStatsSystem.Core;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Debug = UnityEngine.Debug;
 
-namespace DevStatsSystem.Editor.UI
+namespace DevStatsSystem.UI
 {
     internal class StatsPanel : ADevStatsPanel
     {

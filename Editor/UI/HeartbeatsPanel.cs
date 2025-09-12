@@ -1,9 +1,10 @@
 using System;
-using DevStatsSystem.Editor.Core;
+using DevStatsSystem.Core;
+using DevStatsSystem.Core.SerializedData;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DevStatsSystem.Editor.UI
+namespace DevStatsSystem.UI
 {
     internal class HeartbeatsPanel : ADevStatsPanel
     {

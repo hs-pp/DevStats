@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-namespace DevStatsSystem.Editor.Core
+namespace DevStatsSystem.Core.SerializedData
 {
     [Serializable]
     internal class DevStatsState : SavedData<DevStatsState>

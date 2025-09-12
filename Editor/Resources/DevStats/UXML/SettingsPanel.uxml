@@ -3,9 +3,9 @@
         <ui:VisualElement name="icon" style="flex-grow: 0; background-image: resource(&apos;DevStats/Icons/settings_img&apos;); width: 30px; height: 30px; flex-shrink: 0;" />
         <ui:Label text="Settings" name="title" style="-unity-font-style: bold; font-size: 24px; -unity-text-align: upper-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-left: 2px;" />
     </ui:VisualElement>
-    <DevStatsSystem.Editor.UI.LabeledContainerElement name="core-container" title-text="Core">
+    <DevStatsSystem.UI.LabeledContainerElement name="core-container" title-text="Core">
         <ui:TextField label="API Key" placeholder-text="filler text" name="api-key-field" password="true" />
         <ui:Toggle label="Is Enabled" name="isenabled-toggle" />
         <ui:Toggle label="Print Logs" name="debugmode-toggle" enabled="true" />
-    </DevStatsSystem.Editor.UI.LabeledContainerElement>
+    </DevStatsSystem.UI.LabeledContainerElement>
 </ui:UXML>

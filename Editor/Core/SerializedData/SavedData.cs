@@ -1,9 +1,9 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace DevStatsSystem.Editor.Core
+namespace DevStatsSystem.Core.SerializedData
 {
-    public class SavedData<T> where T : new()
+    internal class SavedData<T> where T : new()
     {
         private static string SAVEKEY = typeof(T).Name;
         

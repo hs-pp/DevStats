@@ -4,7 +4,7 @@
         <ui:Label text="Stats" name="title" style="-unity-font-style: bold; font-size: 24px; -unity-text-align: upper-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-left: 4px;" />
     </ui:VisualElement>
     <ui:Button text="Button" name="test-button" />
-    <DevStatsSystem.Editor.UI.LabeledContainerElement name="today-container" title-text="Today">
+    <DevStatsSystem.UI.LabeledContainerElement name="today-container" title-text="Today">
         <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(130, 231, 213); flex-shrink: 0;" />
         <ui:VisualElement style="flex-grow: 0; height: 18px; flex-direction: row; flex-shrink: 0;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgb(93, 216, 255);">
@@ -18,8 +18,8 @@
             <ui:Label text="Total Time: 100" />
             <ui:Label text="Total Heartbeats: 100" />
         </ui:VisualElement>
-    </DevStatsSystem.Editor.UI.LabeledContainerElement>
-    <DevStatsSystem.Editor.UI.LabeledContainerElement name="week-container" title-text="Week">
+    </DevStatsSystem.UI.LabeledContainerElement>
+    <DevStatsSystem.UI.LabeledContainerElement name="week-container" title-text="Week">
         <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(130, 231, 213); flex-shrink: 0;" />
         <ui:VisualElement style="flex-grow: 0; height: 18px; flex-direction: row; flex-shrink: 0;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgb(93, 216, 255);">
@@ -31,8 +31,8 @@
         </ui:VisualElement>
         <ui:Label text="Total Time: 100" />
         <ui:Label text="Daily Average: 10" />
-    </DevStatsSystem.Editor.UI.LabeledContainerElement>
-    <DevStatsSystem.Editor.UI.LabeledContainerElement name="month-container" title-text="30 Days">
+    </DevStatsSystem.UI.LabeledContainerElement>
+    <DevStatsSystem.UI.LabeledContainerElement name="month-container" title-text="30 Days">
         <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(130, 231, 213); flex-shrink: 0;" />
         <ui:VisualElement style="flex-grow: 0; height: 18px; flex-direction: row; flex-shrink: 0;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgb(93, 216, 255);">
@@ -44,10 +44,10 @@
         </ui:VisualElement>
         <ui:Label text="Total Time: 100" />
         <ui:Label text="Daily Average: 10" />
-    </DevStatsSystem.Editor.UI.LabeledContainerElement>
-    <DevStatsSystem.Editor.UI.LabeledContainerElement name="alltime-container" title-text="All Time">
+    </DevStatsSystem.UI.LabeledContainerElement>
+    <DevStatsSystem.UI.LabeledContainerElement name="alltime-container" title-text="All Time">
         <ui:Label text="Project Total Time: 100" />
         <ui:Label text="Daily Average: 10" />
         <ui:Label text="Monthly Average: 10" />
-    </DevStatsSystem.Editor.UI.LabeledContainerElement>
+    </DevStatsSystem.UI.LabeledContainerElement>
 </ui:UXML>

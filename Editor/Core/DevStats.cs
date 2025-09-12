@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using DevStatsSystem.Core.SerializedData;
 using UnityEditor;
 using UnityEngine;
 
-namespace DevStatsSystem.Editor.Core
+namespace DevStatsSystem.Core
 {
     public static class DevStats
     {

@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-namespace DevStatsSystem.Editor.UI
+namespace DevStatsSystem.UI
 {
     internal abstract class ADevStatsPanel : VisualElement
     {

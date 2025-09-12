@@ -3,19 +3,19 @@
         <ui:VisualElement name="icon" style="flex-grow: 0; background-image: resource(&apos;DevStats/Icons/heartbeat_img&apos;); width: 18px; height: 18px; flex-shrink: 0; margin-top: 0; margin-right: 4px; margin-bottom: 0; margin-left: 6px;" />
         <ui:Label text="Heartbeats" name="title" style="-unity-font-style: bold; font-size: 24px; -unity-text-align: upper-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-left: 4px;" />
     </ui:VisualElement>
-    <DevStatsSystem.Editor.UI.LabeledContainerElement name="processing-container" title-text="Processing">
+    <DevStatsSystem.UI.LabeledContainerElement name="processing-container" title-text="Processing">
         <ui:VisualElement style="flex-grow: 0; flex-direction: row; justify-content: space-between; flex-shrink: 0; margin-bottom: 2px;">
             <ui:Label text="In Queue: 10" name="heartbeats-in-queue-label" />
             <ui:Label text="POST in 100" enable-rich-text="false" name="until-next-send-label" enabled="true" />
         </ui:VisualElement>
         <ui:ListView name="queued-heartbeats-listview" enabled="true" style="flex-grow: 1; max-height: 86px;" />
-    </DevStatsSystem.Editor.UI.LabeledContainerElement>
-    <DevStatsSystem.Editor.UI.LabeledContainerElement name="failed-to-send-container" title-text="Failed To Send" container-color="#651D1DFF">
+    </DevStatsSystem.UI.LabeledContainerElement>
+    <DevStatsSystem.UI.LabeledContainerElement name="failed-to-send-container" title-text="Failed To Send" container-color="#651D1DFF">
         <ui:ListView name="failed-to-send-listview" fixed-item-height="16" selection-type="None" show-border="true" />
         <ui:Button text="Retry" name="failed-to-send-retry-button" />
-    </DevStatsSystem.Editor.UI.LabeledContainerElement>
-    <DevStatsSystem.Editor.UI.LabeledContainerElement name="history-container" title-text="History">
+    </DevStatsSystem.UI.LabeledContainerElement>
+    <DevStatsSystem.UI.LabeledContainerElement name="history-container" title-text="History">
         <ui:Label text="Heartbeats Sent From Unity Editor" />
         <ui:ListView name="sent-history-listview" fixed-item-height="16" show-alternating-row-backgrounds="ContentOnly" show-border="true" selection-type="None" style="max-height: 86px; margin-top: 6px;" />
-    </DevStatsSystem.Editor.UI.LabeledContainerElement>
+    </DevStatsSystem.UI.LabeledContainerElement>
 </ui:UXML>

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace DevStatsSystem.Editor.Core
+namespace DevStatsSystem.Core.SerializedData
 {
     [Serializable]
     public struct Heartbeat

@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
 
-namespace DevStatsSystem.Editor.Core
+namespace DevStatsSystem.Core.Payloads
 {
     [Serializable]
-    public struct StatsPayload
+    internal struct StatsPayload
     {
         public StatsDto data;
         
@@ -15,7 +15,7 @@ namespace DevStatsSystem.Editor.Core
     }
     
     [Serializable]
-    public struct StatsDto
+    internal struct StatsDto
     {
         public float total_seconds;
         public float daily_average;
@@ -35,7 +35,7 @@ namespace DevStatsSystem.Editor.Core
     }
 
     [Serializable]
-    public struct StatsProjectDto
+    internal struct StatsProjectDto
     {
         public string name;
         public float total_seconds;
@@ -45,7 +45,7 @@ namespace DevStatsSystem.Editor.Core
     }
 
     [Serializable]
-    public struct StatsLanguageDto
+    internal struct StatsLanguageDto
     {
         public string name;
         public float total_seconds;
@@ -56,7 +56,7 @@ namespace DevStatsSystem.Editor.Core
     }
 
     [Serializable]
-    public struct StatsBestDayDto
+    internal struct StatsBestDayDto
     {
         public string date; // Day with most coding time logged as Date string in YEAR-MONTH-DAY format
         public float total_seconds;

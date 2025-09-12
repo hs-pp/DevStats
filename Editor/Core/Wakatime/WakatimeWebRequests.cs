@@ -1,20 +1,22 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using DevStatsSystem.Core.Payloads;
+using DevStatsSystem.Core.SerializedData;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace DevStatsSystem.Editor.Core
+namespace DevStatsSystem.Core
 {
     [Serializable]
-    public struct WebRequestResult
+    internal struct WebRequestResult
     {
         public UnityWebRequest.Result Result;
         public long ResponseCode;
         public string ErrorMessage;
     }
     
-    public static class WakatimeWebRequests
+    internal static class WakatimeWebRequests
     {
         private static string URL_PREFIX = "https://api.wakatime.com/api/v1/users/current/";
 

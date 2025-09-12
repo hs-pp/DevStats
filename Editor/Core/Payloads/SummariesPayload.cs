@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
 
-namespace DevStatsSystem.Editor.Core
+namespace DevStatsSystem.Core.Payloads
 {
     [Serializable]
-    public struct SummariesPayload
+    internal struct SummariesPayload
     {
         public SummaryDto[] data;
         public SummariesCumulativeTotalDto cumulative_total;
@@ -19,7 +19,7 @@ namespace DevStatsSystem.Editor.Core
     }
 
     [Serializable]
-    public struct SummaryDto
+    internal struct SummaryDto
     {
         public SummaryGrandTotalDto grand_total;
         public SummaryProjectDto[] projects; // Should be empty since we're specifying the project we want.
@@ -29,7 +29,7 @@ namespace DevStatsSystem.Editor.Core
     }
 
     [Serializable]
-    public struct SummaryGrandTotalDto
+    internal struct SummaryGrandTotalDto
     {
         public float total_seconds;
         public int hours;
@@ -37,7 +37,7 @@ namespace DevStatsSystem.Editor.Core
     }
 
     [Serializable]
-    public struct SummaryProjectDto
+    internal struct SummaryProjectDto
     {
         public string name;
         public float total_seconds;
@@ -47,7 +47,7 @@ namespace DevStatsSystem.Editor.Core
     }
 
     [Serializable]
-    public struct SummaryLanguageDto
+    internal struct SummaryLanguageDto
     {
         public string name;
         public float total_seconds;
@@ -57,7 +57,7 @@ namespace DevStatsSystem.Editor.Core
     }
 
     [Serializable]
-    public struct SummaryEntityDto
+    internal struct SummaryEntityDto
     {
         public string name;
         public float total_seconds;
@@ -68,7 +68,7 @@ namespace DevStatsSystem.Editor.Core
     }
 
     [Serializable]
-    public struct SummaryRangeDto
+    internal struct SummaryRangeDto
     {
         public string date;
         public string start;
@@ -78,13 +78,13 @@ namespace DevStatsSystem.Editor.Core
     }
 
     [Serializable]
-    public struct SummariesCumulativeTotalDto
+    internal struct SummariesCumulativeTotalDto
     {
         public float seconds;
     }
 
     [Serializable]
-    public struct SummariesDailyAverageDto
+    internal struct SummariesDailyAverageDto
     {
         public float seconds;
     }

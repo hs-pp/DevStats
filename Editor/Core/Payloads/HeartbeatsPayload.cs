@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
-namespace DevStatsSystem.Editor.Core
+namespace DevStatsSystem.Core.Payloads
 {
     [Serializable]
-    public struct HeartbeatsPayload
+    internal struct HeartbeatsPayload
     {
         public List<HeartbeatDto> data;
         public string start;
@@ -19,7 +18,7 @@ namespace DevStatsSystem.Editor.Core
     }
 
     [Serializable]
-    public struct HeartbeatDto
+    internal struct HeartbeatDto
     {
         public string entity;
         public double time; // Unix epoch timestamp\
