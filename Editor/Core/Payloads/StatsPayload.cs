@@ -1,11 +1,17 @@
 using System;
+using UnityEngine;
 
 namespace DevStatsSystem.Editor.Core
 {
     [Serializable]
-    public class StatsPayload : AWebRequestPayload
+    public struct StatsPayload
     {
         public StatsDto data;
+        
+        public override string ToString()
+        {
+            return JsonUtility.ToJson(this, true);
+        }
     }
     
     [Serializable]

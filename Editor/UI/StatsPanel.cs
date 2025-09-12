@@ -54,22 +54,22 @@ namespace DevStatsSystem.Editor.UI
             }
             
             var durationsPayload = await WakatimeWebRequests.GetDayDurationRequest();
-            Debug.Log($"Durations:\n{durationsPayload}");
+            Debug.Log($"Durations:\n{durationsPayload.payload}");
             
             await Task.Delay(TimeSpan.FromSeconds(1));
             
             var heartbeatsPayload = await WakatimeWebRequests.GetHeartbeatsRequest();
-            Debug.Log($"Heartbeats:\n{heartbeatsPayload}");
+            Debug.Log($"Heartbeats:\n{heartbeatsPayload.payload}");
             
             await Task.Delay(TimeSpan.FromSeconds(1));
 
             var statsPayload = await WakatimeWebRequests.GetStatsRequest();
-            Debug.Log($"Stats:\n{statsPayload}");
+            Debug.Log($"Stats:\n{statsPayload.payload}");
 
             await Task.Delay(TimeSpan.FromSeconds(1));
 
             var summariesPayload = await WakatimeWebRequests.GetSummariesRequest(7);
-            Debug.Log($"Summaries:\n{summariesPayload}");
+            Debug.Log($"Summaries:\n{summariesPayload.payload}");
             
             if (EditorApplication.isCompiling)
             {

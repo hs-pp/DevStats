@@ -1,15 +1,21 @@
 using System;
+using UnityEngine;
 
 namespace DevStatsSystem.Editor.Core
 {
     [Serializable]
-    public class SummariesPayload : AWebRequestPayload
+    public struct SummariesPayload
     {
         public SummaryDto[] data;
         public SummariesCumulativeTotalDto cumulative_total;
         public SummariesDailyAverageDto daily_average;
         public string start; // start of time range as ISO 8601 UTC datetime
         public string end; // end of time range as ISO 8601 UTC datetime
+        
+        public override string ToString()
+        {
+            return JsonUtility.ToJson(this, true);
+        }
     }
 
     [Serializable]
