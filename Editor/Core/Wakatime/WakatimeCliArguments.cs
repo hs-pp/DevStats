@@ -33,6 +33,7 @@ namespace DevStatsSystem.Core
         public WakatimeCliArguments AddIsWrite() => AddArgument("--write");
         public WakatimeCliArguments AddCategory(string category) => AddArgument("--category", category);
         public WakatimeCliArguments AddEntityType(string entityType) => AddArgument("--entity-type", entityType);
+        public WakatimeCliArguments AddLanguage(string language) => AddArgument("--language", language);
         public WakatimeCliArguments AddProject(string project) => AddArgument("--project", project);
         public WakatimeCliArguments AddPlugin() => AddArgument("--plugin", "DevStats");
         public WakatimeCliArguments AddExtraHeartbeats() => AddArgument("--extra-heartbeats");
