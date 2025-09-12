@@ -4,8 +4,7 @@
         <ui:Label text="Stats" name="title" style="-unity-font-style: bold; font-size: 24px; -unity-text-align: upper-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-left: 4px;" />
     </ui:VisualElement>
     <ui:Button text="Button" name="test-button" />
-    <ui:VisualElement name="today-summary-area" style="flex-grow: 0; flex-shrink: 0; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 12px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; margin-top: 12px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">
-        <ui:Label text="Today" name="today-title" style="position: absolute; top: -10px; -unity-font-style: bold; color: rgb(88, 88, 88); background-color: rgb(56, 56, 56); padding-left: 2px; font-size: 15px; text-shadow: 2px 2px 0 rgb(32, 32, 32);" />
+    <DevStatsSystem.Editor.UI.LabeledContainerElement name="today-container" title-text="Today">
         <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(130, 231, 213); flex-shrink: 0;" />
         <ui:VisualElement style="flex-grow: 0; height: 18px; flex-direction: row; flex-shrink: 0;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgb(93, 216, 255);">
@@ -19,9 +18,8 @@
             <ui:Label text="Total Time: 100" />
             <ui:Label text="Total Heartbeats: 100" />
         </ui:VisualElement>
-    </ui:VisualElement>
-    <ui:VisualElement name="week-summary-area" style="flex-grow: 0; flex-shrink: 0; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 12px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; margin-top: 12px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">
-        <ui:Label text="Week" name="week-title" style="position: absolute; top: -10px; -unity-font-style: bold; color: rgb(88, 88, 88); background-color: rgb(56, 56, 56); padding-left: 2px; font-size: 15px; text-shadow: 2px 2px 0 rgb(32, 32, 32);" />
+    </DevStatsSystem.Editor.UI.LabeledContainerElement>
+    <DevStatsSystem.Editor.UI.LabeledContainerElement name="week-container" title-text="Week">
         <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(130, 231, 213); flex-shrink: 0;" />
         <ui:VisualElement style="flex-grow: 0; height: 18px; flex-direction: row; flex-shrink: 0;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgb(93, 216, 255);">
@@ -33,9 +31,8 @@
         </ui:VisualElement>
         <ui:Label text="Total Time: 100" />
         <ui:Label text="Daily Average: 10" />
-    </ui:VisualElement>
-    <ui:VisualElement name="month-summary-area" style="flex-grow: 0; flex-shrink: 0; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 12px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; margin-top: 12px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">
-        <ui:Label text="30 Days" name="month-title" style="position: absolute; top: -10px; -unity-font-style: bold; color: rgb(88, 88, 88); background-color: rgb(56, 56, 56); padding-left: 2px; font-size: 15px; text-shadow: 2px 2px 0 rgb(32, 32, 32);" />
+    </DevStatsSystem.Editor.UI.LabeledContainerElement>
+    <DevStatsSystem.Editor.UI.LabeledContainerElement name="month-container" title-text="30 Days">
         <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(130, 231, 213); flex-shrink: 0;" />
         <ui:VisualElement style="flex-grow: 0; height: 18px; flex-direction: row; flex-shrink: 0;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgb(93, 216, 255);">
@@ -47,11 +44,10 @@
         </ui:VisualElement>
         <ui:Label text="Total Time: 100" />
         <ui:Label text="Daily Average: 10" />
-    </ui:VisualElement>
-    <ui:VisualElement name="alltime-summary-area" style="flex-grow: 0; flex-shrink: 1; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 12px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; margin-top: 12px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">
-        <ui:Label text="All Time" name="alltime-title" style="position: absolute; top: -10px; -unity-font-style: bold; color: rgb(88, 88, 88); background-color: rgb(56, 56, 56); padding-left: 2px; font-size: 15px; text-shadow: 2px 2px 0 rgb(32, 32, 32);" />
+    </DevStatsSystem.Editor.UI.LabeledContainerElement>
+    <DevStatsSystem.Editor.UI.LabeledContainerElement name="alltime-container" title-text="All Time">
         <ui:Label text="Project Total Time: 100" />
         <ui:Label text="Daily Average: 10" />
         <ui:Label text="Monthly Average: 10" />
-    </ui:VisualElement>
+    </DevStatsSystem.Editor.UI.LabeledContainerElement>
 </ui:UXML>

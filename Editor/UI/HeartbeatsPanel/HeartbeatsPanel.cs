@@ -11,7 +11,7 @@ namespace DevStatsSystem.Editor.UI
         private const string HEARTBEATS_IN_QUEUE_LABEL_TAG = "heartbeats-in-queue-label";
         private const string UNTIL_NEXT_SEND_LABEL_TAG = "until-next-send-label";
         private const string QUEUED_HEARTBEATS_LISTVIEW_TAG = "queued-heartbeats-listview";
-        private const string FAILED_TO_SEND_AREA_TAG = "failed-to-send-area";
+        private const string FAILED_TO_SEND_CONTAINER_TAG = "failed-to-send-container";
         private const string FAILED_TO_SEND_LISTVIEW_TAG = "failed-to-send-listview";
         private const string FAILED_TO_SEND_RETRY_BUTTON_TAG = "failed-to-send-retry-button";
         private const string SENT_HISTORY_LISTVIEW_TAG = "sent-history-listview";
@@ -19,7 +19,7 @@ namespace DevStatsSystem.Editor.UI
         private Label m_heartbeatsInQueueLabel;
         private Label m_untilNextSendLabel;
         private ListView m_queuedHeartbeatsListView;
-        private VisualElement m_failedToSendArea;
+        private VisualElement m_failedToSendContainer;
         private ListView m_failedToSendListView;
         private Button m_failedToSendRetryButton;
         private ListView m_sentHistoryListView;
@@ -43,7 +43,7 @@ namespace DevStatsSystem.Editor.UI
             m_queuedHeartbeatsListView.bindItem += (element, i) => { (element as HeartbeatElement).BindHeartbeat((Heartbeat)m_queuedHeartbeatsListView.itemsSource[i]); };
             m_queuedHeartbeatsListView.unbindItem += (element, i) => { (element as HeartbeatElement).UnbindHeartbeat(); };
             
-            m_failedToSendArea  = this.Q<VisualElement>(FAILED_TO_SEND_AREA_TAG);
+            m_failedToSendContainer  = this.Q<VisualElement>(FAILED_TO_SEND_CONTAINER_TAG);
             m_failedToSendListView = this.Q<ListView>(FAILED_TO_SEND_LISTVIEW_TAG);
             m_failedToSendListView.makeItem += () => new FailedToSendInstanceElement();
             m_failedToSendListView.bindItem += (element, i) => { (element as FailedToSendInstanceElement).BindFailedToSendInstance((FailedToSendInstance)m_failedToSendListView.itemsSource[i]); };
@@ -102,7 +102,7 @@ namespace DevStatsSystem.Editor.UI
 
         private void OnFailedToSendInstancesChanged()
         {
-            m_failedToSendArea.style.display = DevStatsState.Instance.GetFailedToSendInstances().Count > 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            m_failedToSendContainer.style.display = DevStatsState.Instance.GetFailedToSendInstances().Count > 0 ? DisplayStyle.Flex : DisplayStyle.None;
             m_failedToSendListView.RefreshItems();
         }
 

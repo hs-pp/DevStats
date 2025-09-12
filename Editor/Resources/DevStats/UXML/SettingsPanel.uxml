@@ -3,10 +3,9 @@
         <ui:VisualElement name="icon" style="flex-grow: 0; background-image: resource(&apos;DevStats/Icons/settings_img&apos;); width: 30px; height: 30px; flex-shrink: 0;" />
         <ui:Label text="Settings" name="title" style="-unity-font-style: bold; font-size: 24px; -unity-text-align: upper-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-left: 2px;" />
     </ui:VisualElement>
-    <ui:VisualElement name="container" style="flex-grow: 0; flex-shrink: 0; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 12px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; margin-top: 10px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">
-        <ui:Label text="Core" name="core-title" style="position: absolute; top: -10px; -unity-font-style: bold; color: rgb(88, 88, 88); background-color: rgb(56, 56, 56); padding-left: 2px; font-size: 15px; text-shadow: 2px 2px 0 rgb(32, 32, 32);" />
+    <DevStatsSystem.Editor.UI.LabeledContainerElement name="core-container" title-text="Core">
         <ui:TextField label="API Key" placeholder-text="filler text" name="api-key-field" password="true" />
         <ui:Toggle label="Is Enabled" name="isenabled-toggle" />
         <ui:Toggle label="Print Logs" name="debugmode-toggle" enabled="true" />
-    </ui:VisualElement>
+    </DevStatsSystem.Editor.UI.LabeledContainerElement>
 </ui:UXML>
