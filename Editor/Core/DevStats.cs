@@ -184,6 +184,16 @@ namespace DevStatsSystem.Core
             SendHeartbeatsToCli(allFailedHeartbeats);
             m_state.ClearFailedToSendInstances();
         }
+        
+        public static string GetProjectName()
+        {
+            return Application.productName;
+        }
+        public static string GetLanguage()
+        {
+            // TODO: Do we want to identify more specific file types?
+            return "Unity3D Asset";
+        }
 
         public static void Log(string log)
         {

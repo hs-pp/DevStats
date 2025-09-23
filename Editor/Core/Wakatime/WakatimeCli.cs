@@ -72,8 +72,8 @@ namespace DevStatsSystem.Core.Wakatime
                 .AddTimestamp(heartbeat.Timestamp)
                 .AddCategory(GetCategory())
                 .AddEntityType(GetEntityType())
-                .AddLanguage(GetLanguage())
-                .AddProject(GetProjectName())
+                .AddLanguage(DevStats.GetLanguage())
+                .AddProject(DevStats.GetProjectName())
                 .AddPlugin();
             if (heartbeat.IsWrite)
             {
@@ -120,8 +120,8 @@ namespace DevStatsSystem.Core.Wakatime
                            $"\"is_write\":{heartbeat.IsWrite.ToString().ToLower()}, " +
                            $"\"category\":\"{GetCategory()}\", " +
                            $"\"entity_type\":\"{GetEntityType()}\", " +
-                           $"\"language\":\"{GetLanguage()}\", " +
-                           $"\"project\":\"{GetProjectName().Replace("\"", "\\\"")}\"";
+                           $"\"language\":\"{DevStats.GetLanguage()}\", " +
+                           $"\"project\":\"{DevStats.GetProjectName().Replace("\"", "\\\"")}\"";
             if (!string.IsNullOrEmpty(m_gitBranch)) // For some reason Wakatime auto-finds the branch for the main heartbeat but not the extras???
             {
                 value += $", \"branch_name\":\"{m_gitBranch}\"";
@@ -129,11 +129,6 @@ namespace DevStatsSystem.Core.Wakatime
             value += "}";
 
             return value;
-        }
-        
-        public static string GetProjectName()
-        {
-            return Application.productName;
         }
 
         private string GetCategory()
@@ -144,12 +139,6 @@ namespace DevStatsSystem.Core.Wakatime
         private string GetEntityType()
         {
             return "file";
-        }
-
-        private string GetLanguage()
-        {
-            // TODO: Do we want to identify more specific file types?
-            return "Unity3D Asset";
         }
         
         private string FetchGitBranchName()

@@ -34,7 +34,7 @@ namespace DevStatsSystem.Core.Wakatime
         {
             string startDate = DateTime.Now.AddDays(-numDays).ToString("yyyy-MM-dd");
             string endDate = DateTime.Now.ToString("yyyy-MM-dd");
-            return await CreateRequest<SummariesPayload>($"summaries?start={startDate}&end={endDate}&project={WakatimeCli.GetProjectName()}");
+            return await CreateRequest<SummariesPayload>($"summaries?start={startDate}&end={endDate}&project={DevStats.GetProjectName()}");
         }
 
         public static async Task<(WebRequestResult result, DurationsPayload payload)> GetDayDurationRequest()

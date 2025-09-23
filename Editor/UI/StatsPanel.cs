@@ -97,12 +97,14 @@ namespace DevStatsSystem.UI
             Debug.Log("Started loading everything");
             
             m_isFetchingData = true;
+            OnFetchDataStarted();
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
                 m_isFetchingData = false;
+                OnFetchDataFinished();
                 return;
             }
             
@@ -132,18 +134,28 @@ namespace DevStatsSystem.UI
             }
             
             // Update data.
-            TodayStats todayStats = new TodayStats(in durationsPayload.payload, in summariesPayload.payload);
-            m_data.UpdateData(todayStats);
+            m_data.UpdateData(in durationsPayload.payload, in heartbeatsPayload.payload, in statsPayload.payload, in summariesPayload.payload);
             
             stopwatch.Stop();
             Debug.Log($"Finished loading everything T:{stopwatch.ElapsedMilliseconds/1000f}s");
             
             m_isFetchingData = false;
+            OnFetchDataFinished();
         }
 
         private void LoadDataToUI()
         {
             m_lastUpdatedLabel.text = $"Last Updated: {new DateTime(m_data.LastUpdateTime).ToLocalTime():hh:mm tt MM/dd/yyy}";
+        }
+
+        private void OnFetchDataStarted()
+        {
+            m_forceUpdateButton.enabledSelf = false;
+        }
+
+        private void OnFetchDataFinished()
+        {
+            m_forceUpdateButton.enabledSelf = true;
         }
     }
 }
