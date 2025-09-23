@@ -11,7 +11,7 @@ using UnityEngine;
 using Application = UnityEngine.Device.Application;
 using Debug = UnityEngine.Debug;
 
-namespace DevStatsSystem.Core
+namespace DevStatsSystem.Core.Wakatime
 {
     internal enum CliResultType
     {

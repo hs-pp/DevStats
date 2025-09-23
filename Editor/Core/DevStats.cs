@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DevStatsSystem.Core.SerializedData;
+using DevStatsSystem.Core.Wakatime;
 using UnityEditor;
 using UnityEngine;
 

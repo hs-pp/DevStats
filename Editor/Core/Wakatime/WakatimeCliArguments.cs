@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text;
 using DevStatsSystem.Core.SerializedData;
 
-namespace DevStatsSystem.Core
+namespace DevStatsSystem.Core.Wakatime
 {
     internal struct Argument
     {

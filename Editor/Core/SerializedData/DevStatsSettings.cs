@@ -1,8 +1,19 @@
 using System;
+using DevStatsSystem.UI;
 using UnityEngine;
 
 namespace DevStatsSystem.Core.SerializedData
 {
+    [Serializable]
+    internal enum StatsUpdateFrequency
+    {
+        OnceADay,
+        TwiceADay,
+        EveryHour,
+        EveryTenMinutes,
+        AfterEveryCompile,
+    }
+    
     [Serializable]
     internal class DevStatsSettings : SavedData<DevStatsSettings>
     {
@@ -50,6 +61,10 @@ namespace DevStatsSystem.Core.SerializedData
             get => m_sameFileInterval;
             set => m_sameFileInterval = value;
         }
+
+        [SerializeField]
+        private StatsUpdateFrequency m_statsUpdateFrequency = StatsUpdateFrequency.AfterEveryCompile;
+        public StatsUpdateFrequency StatsUpdateFrequency => m_statsUpdateFrequency;
         
         [NonSerialized]
         public Action<bool, bool> OnEnabledChanged;

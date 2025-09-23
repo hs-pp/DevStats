@@ -11,9 +11,18 @@ namespace DevStatsSystem.Core.SerializedData
     {
         [SerializeField]
         private long m_lastUpdateTime;
+        public long LastUpdateTime => m_lastUpdateTime;
         
         [SerializeField]
         private TodayStats m_todayStats;
         public TodayStats TodayStats => m_todayStats;
+
+        public void UpdateData(TodayStats todayStats)
+        {
+            m_lastUpdateTime = DateTime.UtcNow.Ticks;
+            m_todayStats = todayStats;
+
+            Save();
+        }
     }
 }

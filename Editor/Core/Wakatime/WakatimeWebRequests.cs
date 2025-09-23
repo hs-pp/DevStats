@@ -6,7 +6,7 @@ using DevStatsSystem.Core.SerializedData;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace DevStatsSystem.Core
+namespace DevStatsSystem.Core.Wakatime
 {
     [Serializable]
     internal struct WebRequestResult

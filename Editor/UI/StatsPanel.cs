@@ -1,7 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using DevStatsSystem.Core;
+using DevStatsSystem.Core.SerializedData;
+using DevStatsSystem.Core.Wakatime;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,9 +13,14 @@ namespace DevStatsSystem.UI
     internal class StatsPanel : ADevStatsPanel
     {
         private const string UXML_PATH = "DevStats/UXML/StatsPanel";
-        private const string TEST_BUTTON_TAG = "test-button";
+        private const string LAST_UPDATED_LABEL_TAG = "last-updated-label";
+        private const string FORCE_UPDATE_BUTTON_TAG = "force-update-button";
         
-        private Button m_testButton;
+        private Label m_lastUpdatedLabel;
+        private Button m_forceUpdateButton;
+        
+        private CachedStatsPanelData m_data;
+        private bool m_isFetchingData = false;
 
         public StatsPanel()
         {
@@ -26,30 +32,77 @@ namespace DevStatsSystem.UI
             var uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
             uxmlAsset.CloneTree(this);
             
-            m_testButton = this.Q<Button>(TEST_BUTTON_TAG);
-            m_testButton.clicked += () =>
-            {
-                _ = LoadData();
-            };
+            m_lastUpdatedLabel = this.Q<Label>(LAST_UPDATED_LABEL_TAG);
+            m_forceUpdateButton = this.Q<Button>(FORCE_UPDATE_BUTTON_TAG);
+            m_forceUpdateButton.clicked += ManuallyFetchData;
         }
         
         public override void OnShow()
         {
-            
+            m_data = CachedStatsPanelData.Instance;
+            TryAutoFetchData();
         }
 
         public override void OnHide()
         {
         }
 
-        private async Task LoadData()
+        private async void TryAutoFetchData()
         {
+            if (ShouldFetchData(DevStatsSettings.Instance.StatsUpdateFrequency, m_data.LastUpdateTime))
+            {
+                await FetchData();
+            }
+            LoadDataToUI();
+        }
+        
+        private bool ShouldFetchData(StatsUpdateFrequency frequency, long lastUpdateTime)
+        {
+            long tickThreshold = 0;
+            switch (frequency)
+            {
+                case StatsUpdateFrequency.OnceADay:
+                    tickThreshold = TimeSpan.TicksPerDay;
+                    break;
+                case StatsUpdateFrequency.TwiceADay:
+                    tickThreshold = TimeSpan.TicksPerDay / 2;
+                    break;
+                case StatsUpdateFrequency.EveryHour:
+                    tickThreshold = TimeSpan.TicksPerHour;
+                    break;
+                case StatsUpdateFrequency.EveryTenMinutes:
+                    tickThreshold = TimeSpan.TicksPerMinute * 10;
+                    break;
+                case StatsUpdateFrequency.AfterEveryCompile:
+                    tickThreshold = 0;
+                    break;
+            }
+
+            return DateTime.Now.Ticks - lastUpdateTime > tickThreshold;
+        }
+
+        private async void ManuallyFetchData()
+        {
+            await FetchData();
+            LoadDataToUI();
+        }
+
+        private async Task FetchData()
+        {
+            if (m_isFetchingData)
+            {
+                return;
+            }
+            
             Debug.Log("Started loading everything");
+            
+            m_isFetchingData = true;
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
+                m_isFetchingData = false;
                 return;
             }
             
@@ -73,12 +126,24 @@ namespace DevStatsSystem.UI
             
             if (EditorApplication.isCompiling)
             {
+                m_isFetchingData = false;
                 Debug.LogWarning("Editor is compiling. Stopping Run Everything");
                 return;
             }
             
+            // Update data.
+            TodayStats todayStats = new TodayStats(in durationsPayload.payload, in summariesPayload.payload);
+            m_data.UpdateData(todayStats);
+            
             stopwatch.Stop();
             Debug.Log($"Finished loading everything T:{stopwatch.ElapsedMilliseconds/1000f}s");
+            
+            m_isFetchingData = false;
+        }
+
+        private void LoadDataToUI()
+        {
+            m_lastUpdatedLabel.text = $"Last Updated: {new DateTime(m_data.LastUpdateTime).ToLocalTime():hh:mm tt MM/dd/yyy}";
         }
     }
 }
