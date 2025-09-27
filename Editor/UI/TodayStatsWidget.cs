@@ -1,3 +1,4 @@
+using DevStatsSystem.Core;
 using DevStatsSystem.Core.SerializedData;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -38,7 +39,7 @@ namespace DevStatsSystem.UI
         {
             m_hourlyGraph.SetData(data.DayTimeSegments);
             
-            m_totalTimeLabel.text = $"Total Time: {data.TotalTime}";
+            m_totalTimeLabel.text = $"Total Time: {DevStats.SecondsToFormattedTime(data.TotalTime)}";
             float totalPercentage = data.CodePercentage + data.UnityAssetPercentage;
 
             m_codePercentageElement.style.flexGrow = data.CodePercentage / totalPercentage;

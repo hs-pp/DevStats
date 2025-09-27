@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DevStatsSystem.Core;
 using DevStatsSystem.Core.SerializedData;
@@ -11,13 +12,18 @@ namespace DevStatsSystem.UI
     {
         private const string UXML_PATH = "DevStats/UXML/HourlyGraphWidget";
         private const string GRAPH_AREA_TAG = "graph-area";
-
+        
         private VisualElement m_graphArea;
+        private List<TimeSegmentElement> m_timeSegmentElements = new();
         
         public HourlyGraphWidget()
         {
             CreateLayout();
-            generateVisualContent += OnGenerateVisualContent;
+            
+            RegisterCallback<GeometryChangedEvent>(evt =>
+            {
+                RedrawTimeSegmentElements();
+            });
         }
 
         private void CreateLayout()
@@ -27,51 +33,99 @@ namespace DevStatsSystem.UI
             
             m_graphArea = this.Q<VisualElement>(GRAPH_AREA_TAG);
         }
-        
-        private void OnGenerateVisualContent(MeshGenerationContext mgc)
-        {
-            //Debug.Log("GenerateVisualContent ");
-        }
 
         public void SetData(List<TimeSegment> timeSegments)
         {
-            m_graphArea.Clear();
+            ClearTimeSegments();
 
             if (timeSegments == null || timeSegments.Count == 0)
             {
                 return;
             }
-            
-            // Add the first time segment.
-            m_graphArea.Add(CreateEmptySegment(0, timeSegments[0].StartTime));
-            
-            for(int i = 1; i < timeSegments.Count; i++)
-            {
-                // Add the time segment.
-                m_graphArea.Add(CreateTimeSegment(timeSegments[i]));
-                
-                // Add the next empty segment.
-                int nextStartTime = i + 1 < timeSegments.Count ? timeSegments[i + 1].StartTime : SECONDS_IN_DAY;
-                int endTime = timeSegments[i].StartTime + timeSegments[i].Duration;
-                m_graphArea.Add(CreateEmptySegment(endTime, nextStartTime - endTime));
-            }
-        }
 
-        private const int SECONDS_IN_DAY = 86400;
-        private VisualElement CreateEmptySegment(int startTime, int length)
-        {
-            VisualElement emptySegment = new VisualElement();
-            emptySegment.style.flexGrow = length/(float)SECONDS_IN_DAY;
-            return emptySegment;
+            foreach (TimeSegment timeSegment in timeSegments)
+            {
+                TimeSegmentElement timeSegmentElement = new TimeSegmentElement(timeSegment);
+                m_graphArea.Add(timeSegmentElement);
+                m_timeSegmentElements.Add(timeSegmentElement);
+            }
+            
+            schedule.Execute(RedrawTimeSegmentElements).ExecuteLater(1); // 1 frame later
         }
         
-        private VisualElement CreateTimeSegment(TimeSegment timeSegment)
+        private VisualElement CreateTimeSegmentElement(TimeSegment timeSegment)
         {
             VisualElement timeSegmentElement = new VisualElement();
-            timeSegmentElement.style.flexGrow = timeSegment.Duration/(float)SECONDS_IN_DAY;
-            timeSegmentElement.tooltip = $"Start: {timeSegment.StartTime} \nLength: {DevStats.SecondsToFormattedTime(timeSegment.Duration)}";
-            timeSegmentElement.style.backgroundColor = Color.green;
+
+
+            m_graphArea.Add(timeSegmentElement);
             return timeSegmentElement;
+        }
+
+        private void RedrawTimeSegmentElements()
+        {
+            float width = resolvedStyle.width;
+            if (float.IsNaN(width) || width == 0)
+            {
+                return;
+            }
+
+            foreach (TimeSegmentElement timeSegmentElement in m_timeSegmentElements)
+            {
+                timeSegmentElement.Redraw(m_graphArea.resolvedStyle.width);
+            }
+        }
+        
+        private void ClearTimeSegments()
+        {
+            foreach (TimeSegmentElement timeSegmentElement in m_timeSegmentElements)
+            {
+                timeSegmentElement.RemoveFromHierarchy();
+            }
+            m_timeSegmentElements.Clear();
+        }
+    }
+
+    internal class TimeSegmentElement : VisualElement
+    {
+        private const float SECONDS_IN_DAY = 86400;
+        private static Color NORMAL_COLOR = Color.white;
+        private static Color HOVER_COLOR = Color.yellow;
+
+        private TimeSegment m_timeSegment;
+        
+        public TimeSegmentElement(TimeSegment timeSegment)
+        {
+            m_timeSegment = timeSegment;
+            style.position = Position.Absolute;
+            style.backgroundColor = NORMAL_COLOR;
+            tooltip = $"Start: {SecondsToFormattedStartTime(timeSegment.StartTime)} \nLength: {DevStats.SecondsToFormattedTime(timeSegment.Duration)}";
+            
+            RegisterCallback<MouseEnterEvent>(_ =>
+            {
+                style.backgroundColor = HOVER_COLOR;
+            });
+
+            RegisterCallback<MouseLeaveEvent>(_ =>
+            {
+                style.backgroundColor = NORMAL_COLOR;
+            });
+        }
+
+        public void Redraw(float width)
+        {
+            float xStart = (m_timeSegment.StartTime / SECONDS_IN_DAY) * width;
+            float xStop = ((m_timeSegment.Duration) / SECONDS_IN_DAY) * width;
+                
+            style.left = xStart;
+            style.width = xStop;
+            style.top = 0;
+            style.bottom = 0;
+        }
+        
+        private string SecondsToFormattedStartTime(float startTime)
+        {
+            return DateTime.Today.AddSeconds(startTime).ToString("h:mmtt");
         }
     }
 }

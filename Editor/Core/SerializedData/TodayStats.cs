@@ -7,8 +7,8 @@ namespace DevStatsSystem.Core.SerializedData
     [Serializable]
     internal struct TimeSegment
     {
-        public int StartTime; // In seconds where 12am is 0.
-        public int Duration; // In seconds
+        public float StartTime; // In seconds where 12am is 0.
+        public float Duration; // In seconds
     }
     
     [Serializable]
@@ -34,12 +34,12 @@ namespace DevStatsSystem.Core.SerializedData
                 TimeSpan sinceMidnight = startTime - startTime.Date;
                 DayTimeSegments.Add(new()
                 {
-                    StartTime = (int)sinceMidnight.TotalSeconds,
-                    Duration = (int)durationInstance.duration,
+                    StartTime = (float)sinceMidnight.TotalSeconds,
+                    Duration = durationInstance.duration,
                 });
             }
 
-            TotalTime = todaySummary.grand_total.total_seconds;
+            TotalTime = (int)todaySummary.grand_total.total_seconds;
 
             CodePercentage = 0;
             UnityAssetPercentage = 0;

@@ -195,9 +195,21 @@ namespace DevStatsSystem.Core
             return "Unity3D Asset";
         }
         
-        public static string SecondsToFormattedTime(int seconds)
+        public static string SecondsToFormattedTime(float seconds)
         {
-            return TimeSpan.FromSeconds(seconds).ToString(@"hh\:mm\:ss");
+            TimeSpan time = TimeSpan.FromSeconds(seconds);
+            if (time.Hours > 1)
+            {
+                return $"{time.Hours}Hr {time.Minutes}Min {time.Seconds}Sec";
+            }
+            else if (time.Minutes > 1)
+            {
+                return $"{time.Minutes}Min {time.Seconds}Sec";
+            }
+            else
+            {
+                return $"{time.Seconds}Sec";
+            }
         }
 
         public static void Log(string log)

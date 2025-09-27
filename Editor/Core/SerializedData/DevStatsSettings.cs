@@ -66,6 +66,9 @@ namespace DevStatsSystem.Core.SerializedData
         private StatsUpdateFrequency m_statsUpdateFrequency = StatsUpdateFrequency.AfterEveryCompile;
         public StatsUpdateFrequency StatsUpdateFrequency => m_statsUpdateFrequency;
         
+        // TODO: Add setting - Duration payload timeout
+        // Timeout time is evaluated from the CLI so please force update the stats page
+        
         [NonSerialized]
         public Action<bool, bool> OnEnabledChanged;
 
