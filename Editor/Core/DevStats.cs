@@ -189,10 +189,15 @@ namespace DevStatsSystem.Core
         {
             return Application.productName;
         }
+        
         public static string GetLanguage()
         {
-            // TODO: Do we want to identify more specific file types?
             return "Unity3D Asset";
+        }
+        
+        public static string SecondsToFormattedTime(int seconds)
+        {
+            return TimeSpan.FromSeconds(seconds).ToString(@"hh\:mm\:ss");
         }
 
         public static void Log(string log)

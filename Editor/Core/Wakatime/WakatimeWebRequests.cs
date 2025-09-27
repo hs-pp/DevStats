@@ -40,7 +40,7 @@ namespace DevStatsSystem.Core.Wakatime
         public static async Task<(WebRequestResult result, DurationsPayload payload)> GetDayDurationRequest()
         {
             string date = DateTime.Now.ToString("yyyy-MM-dd");
-            return await CreateRequest<DurationsPayload>($"durations?date={date}&timeout=15"); // Specifying project returns garbage data. Just manually filter!!
+            return await CreateRequest<DurationsPayload>($"durations?date={date}&timeout=5"); // Specifying project returns garbage data. Just manually filter!!
         }
         
         private static async Task<(WebRequestResult result, T payload)> CreateRequest<T>(string url) where T : struct

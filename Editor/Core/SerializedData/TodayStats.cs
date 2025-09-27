@@ -5,25 +5,24 @@ using DevStatsSystem.Core.Payloads;
 namespace DevStatsSystem.Core.SerializedData
 {
     [Serializable]
-    internal struct WorkSegment
+    internal struct TimeSegment
     {
-        public long StartTime; // In ticks
-        public float Duration; // In seconds
+        public int StartTime; // In seconds where 12am is 0.
+        public int Duration; // In seconds
     }
     
     [Serializable]
     internal struct TodayStats
     {
-        public List<WorkSegment> DayWorkSegments;
+        public List<TimeSegment> DayTimeSegments;
         public float TotalTime; // In seconds
-        public int NumHeartbeats;
         public float CodePercentage;
         public float UnityAssetPercentage;
 
         public TodayStats(in DurationsPayload durations, in HeartbeatsPayload heartbeatsPayload,
             in SummaryDto todaySummary)
         {
-            DayWorkSegments = new List<WorkSegment>();
+            DayTimeSegments = new List<TimeSegment>();
             foreach (DurationInstanceDto durationInstance in durations.data)
             {
                 if (durationInstance.project != DevStats.GetProjectName())
@@ -31,17 +30,15 @@ namespace DevStatsSystem.Core.SerializedData
                     continue;
                 }
 
-                DayWorkSegments.Add(new()
+                DateTime startTime = DateTimeOffset.FromUnixTimeSeconds((long)durationInstance.time).LocalDateTime;
+                TimeSpan sinceMidnight = startTime - startTime.Date;
+                DayTimeSegments.Add(new()
                 {
-                    StartTime = DateTimeOffset
-                        .FromUnixTimeSeconds((long)durationInstance.time) // Integer part
-                        .AddSeconds(durationInstance.time % 1) // Fractional part
-                        .LocalDateTime.Ticks,
-                    Duration = durationInstance.duration,
+                    StartTime = (int)sinceMidnight.TotalSeconds,
+                    Duration = (int)durationInstance.duration,
                 });
             }
 
-            NumHeartbeats = heartbeatsPayload.data.Count;
             TotalTime = todaySummary.grand_total.total_seconds;
 
             CodePercentage = 0;

@@ -14,7 +14,7 @@ namespace DevStatsSystem.Core.SerializedData
         
         [SerializeField]
         private TodayStats m_todayStats;
-        public TodayStats TodayStats => m_todayStats;
+        public ref TodayStats TodayStats => ref m_todayStats;
 
         public void UpdateData(in DurationsPayload durations, in HeartbeatsPayload heartbeats, in StatsPayload statsPayload, in SummariesPayload summaries)
         {

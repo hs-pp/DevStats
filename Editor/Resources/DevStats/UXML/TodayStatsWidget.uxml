@@ -1,0 +1,16 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <DevStatsSystem.UI.LabeledContainerElement name="today-container" title-text="Today">
+        <DevStatsSystem.UI.HourlyGraphWidget name="hourly-graph" />
+        <ui:VisualElement style="flex-grow: 0; height: 18px; flex-direction: row; flex-shrink: 0;">
+            <ui:VisualElement name="code-percentage-element" style="flex-grow: 1; background-color: rgb(93, 216, 255);">
+                <ui:Label text="C#" style="color: rgb(0, 0, 0);" />
+            </ui:VisualElement>
+            <ui:VisualElement name="asset-percentage-element" style="flex-grow: 0.65; background-color: rgb(229, 154, 57);">
+                <ui:Label text="Unity Assets" style="-unity-text-align: upper-right; color: rgb(0, 0, 0);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
+            <ui:Label text="Total Time: 100" name="total-time-label" />
+        </ui:VisualElement>
+    </DevStatsSystem.UI.LabeledContainerElement>
+</ui:UXML>
