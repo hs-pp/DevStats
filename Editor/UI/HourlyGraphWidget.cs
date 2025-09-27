@@ -89,8 +89,8 @@ namespace DevStatsSystem.UI
     internal class TimeSegmentElement : VisualElement
     {
         private const float SECONDS_IN_DAY = 86400;
-        private static Color NORMAL_COLOR = Color.white;
-        private static Color HOVER_COLOR = Color.yellow;
+        private static Color NORMAL_COLOR = Color.lightSkyBlue;
+        private static Color HOVER_COLOR = Color.white;
 
         private TimeSegment m_timeSegment;
         
@@ -99,7 +99,7 @@ namespace DevStatsSystem.UI
             m_timeSegment = timeSegment;
             style.position = Position.Absolute;
             style.backgroundColor = NORMAL_COLOR;
-            tooltip = $"Start: {SecondsToFormattedStartTime(timeSegment.StartTime)} \nLength: {DevStats.SecondsToFormattedTime(timeSegment.Duration)}";
+            tooltip = $"Start: {SecondsToFormattedStartTime(timeSegment.StartTime)}\nEnd: {SecondsToFormattedStartTime(timeSegment.StartTime + timeSegment.Duration)}\nLength: {DevStats.SecondsToFormattedTime(timeSegment.Duration)}";
             
             RegisterCallback<MouseEnterEvent>(_ =>
             {

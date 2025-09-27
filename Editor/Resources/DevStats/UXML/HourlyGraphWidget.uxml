@@ -1,66 +1,66 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:VisualElement style="flex-grow: 1; padding-top: 16px; padding-right: 12px; padding-bottom: 8px; padding-left: 12px;">
+    <ui:VisualElement name="container" style="flex-grow: 1; padding-top: 20px; padding-right: 12px; padding-bottom: 8px; padding-left: 12px;">
         <ui:VisualElement name="measurements-area" style="flex-grow: 0; flex-shrink: 0; flex-direction: row; align-items: flex-end;">
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 2px; height: 8px; background-color: rgb(32, 32, 32);">
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 2px; height: 8px; background-color: rgb(88, 88, 88);">
                 <ui:Label text="12am" style="position: absolute; right: 0; left: 0; top: -15px; -unity-text-align: middle-center; font-size: 10px; -unity-font-style: normal;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 2px; height: 8px; background-color: rgb(32, 32, 32);">
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 2px; height: 8px; background-color: rgb(88, 88, 88);">
                 <ui:Label text="6am" style="position: absolute; right: 0; left: 0; top: -15px; -unity-text-align: middle-center; font-size: 10px; -unity-font-style: normal;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 2px; height: 8px; background-color: rgb(32, 32, 32);">
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 2px; height: 8px; background-color: rgb(88, 88, 88);">
                 <ui:Label text="12pm" style="position: absolute; right: 0; left: 0; top: -15px; -unity-text-align: middle-center; font-size: 10px; -unity-font-style: normal;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 2px; height: 8px; background-color: rgb(32, 32, 32);">
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 2px; height: 8px; background-color: rgb(88, 88, 88);">
                 <ui:Label text="6pm" style="position: absolute; right: 0; left: 0; top: -15px; -unity-text-align: middle-center; font-size: 10px; -unity-font-style: normal;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(32, 32, 32);" />
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 1px; height: 6px; background-color: rgb(88, 88, 88);" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="line" style="flex-grow: 0; width: 2px; height: 8px; background-color: rgb(32, 32, 32);">
+            <ui:VisualElement name="line" style="flex-grow: 0; width: 2px; height: 8px; background-color: rgb(88, 88, 88);">
                 <ui:Label text="12am" style="position: absolute; right: 0; left: 0; top: -15px; -unity-text-align: middle-center; font-size: 10px; -unity-font-style: normal;" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="graph-area" style="flex-grow: 1; border-left-color: rgb(40, 40, 40); border-right-color: rgb(40, 40, 40); border-top-color: rgb(40, 40, 40); border-bottom-color: rgb(40, 40, 40); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; flex-direction: row; height: 30px; flex-shrink: 0; background-color: rgb(70, 70, 70);" />
+        <ui:VisualElement name="graph-area" style="flex-grow: 1; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; flex-direction: row; height: 30px; flex-shrink: 0; background-color: rgb(70, 70, 70);" />
     </ui:VisualElement>
 </ui:UXML>

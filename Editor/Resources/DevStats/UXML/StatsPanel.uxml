@@ -4,8 +4,8 @@
         <ui:Label text="Stats" name="title" style="-unity-font-style: bold; font-size: 24px; -unity-text-align: upper-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-left: 4px;" />
     </ui:VisualElement>
     <DevStatsSystem.UI.TodayStatsWidget name="today-stats-widget" />
-    <DevStatsSystem.UI.LabeledContainerElement name="week-container" title-text="Week">
-        <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(130, 231, 213); flex-shrink: 0;" />
+    <DevStatsSystem.UI.LabeledContainerElement name="week-container" title-text="Week" style="display: none;">
+        <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(79, 79, 79); flex-shrink: 0;" />
         <ui:VisualElement style="flex-grow: 0; height: 18px; flex-direction: row; flex-shrink: 0;">
             <ui:VisualElement style="flex-grow: 1; background-color: rgb(93, 216, 255);">
                 <ui:Label text="C#" style="color: rgb(0, 0, 0);" />
@@ -17,20 +17,7 @@
         <ui:Label text="Total Time: 100" />
         <ui:Label text="Daily Average: 10" />
     </DevStatsSystem.UI.LabeledContainerElement>
-    <DevStatsSystem.UI.LabeledContainerElement name="month-container" title-text="30 Days">
-        <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(130, 231, 213); flex-shrink: 0;" />
-        <ui:VisualElement style="flex-grow: 0; height: 18px; flex-direction: row; flex-shrink: 0;">
-            <ui:VisualElement style="flex-grow: 1; background-color: rgb(93, 216, 255);">
-                <ui:Label text="C#" style="color: rgb(0, 0, 0);" />
-            </ui:VisualElement>
-            <ui:VisualElement style="flex-grow: 0.65; background-color: rgb(229, 154, 57);">
-                <ui:Label text="Unity Assets" style="-unity-text-align: upper-right; color: rgb(0, 0, 0);" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:Label text="Total Time: 100" />
-        <ui:Label text="Daily Average: 10" />
-    </DevStatsSystem.UI.LabeledContainerElement>
-    <DevStatsSystem.UI.LabeledContainerElement name="alltime-container" title-text="All Time">
+    <DevStatsSystem.UI.LabeledContainerElement name="alltime-container" title-text="All Time" style="display: none;">
         <ui:Label text="Project Total Time: 100" />
         <ui:Label text="Daily Average: 10" />
         <ui:Label text="Monthly Average: 10" />
