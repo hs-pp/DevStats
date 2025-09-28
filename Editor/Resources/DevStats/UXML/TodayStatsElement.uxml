@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <DevStatsSystem.UI.LabeledContainerElement name="today-container" title-text="Today">
+        <ui:Label text="Total Time: 100" name="total-time-label" />
+        <DevStatsSystem.UI.HourlyGraphElement name="hourly-graph" />
+        <DevStatsSystem.UI.CodeToAssetPercentageElement name="code-to-asset-percentage-element" style="margin-left: 12px; margin-right: 12px;" />
+    </DevStatsSystem.UI.LabeledContainerElement>
+</ui:UXML>

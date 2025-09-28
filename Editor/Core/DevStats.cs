@@ -195,7 +195,7 @@ namespace DevStatsSystem.Core
             return "Unity3D Asset";
         }
         
-        public static string SecondsToFormattedTime(float seconds)
+        public static string SecondsToFormattedTimePassed(float seconds)
         {
             TimeSpan time = TimeSpan.FromSeconds(seconds);
             if (time.Hours > 1)
@@ -210,6 +210,11 @@ namespace DevStatsSystem.Core
             {
                 return $"{time.Seconds}Sec";
             }
+        }
+        
+        public static string SecondsToFormattedTimeSinceMidnight(float startTime)
+        {
+            return DateTime.Today.AddSeconds(startTime).ToString("h:mmtt");
         }
 
         public static void Log(string log)

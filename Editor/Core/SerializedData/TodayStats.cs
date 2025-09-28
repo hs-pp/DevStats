@@ -16,8 +16,8 @@ namespace DevStatsSystem.Core.SerializedData
     {
         public List<TimeSegment> DayTimeSegments;
         public float TotalTime; // In seconds
-        public float CodePercentage;
-        public float UnityAssetPercentage;
+        public float CodeTime;
+        public float AssetTime;
 
         public TodayStats(in DurationsPayload durations, in HeartbeatsPayload heartbeatsPayload,
             in SummaryDto todaySummary)
@@ -41,17 +41,17 @@ namespace DevStatsSystem.Core.SerializedData
 
             TotalTime = (int)todaySummary.grand_total.total_seconds;
 
-            CodePercentage = 0;
-            UnityAssetPercentage = 0;
+            CodeTime = 0;
+            AssetTime = 0;
             foreach (SummaryLanguageDto language in todaySummary.languages)
             {
                 if (language.name == "C#")
                 {
-                    CodePercentage = language.percent;
+                    CodeTime = language.total_seconds;
                 }
                 else if (language.name == DevStats.GetLanguage())
                 {
-                    UnityAssetPercentage = language.percent;
+                    AssetTime = language.total_seconds;
                 }
             }
             

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DevStatsSystem.Core;
 using DevStatsSystem.Core.SerializedData;
@@ -8,15 +7,15 @@ using UnityEngine.UIElements;
 namespace DevStatsSystem.UI
 {
     [UxmlElement]
-    internal partial class HourlyGraphWidget : VisualElement
+    internal partial class HourlyGraphElement : VisualElement
     {
-        private const string UXML_PATH = "DevStats/UXML/HourlyGraphWidget";
+        private const string UXML_PATH = "DevStats/UXML/HourlyGraphElement";
         private const string GRAPH_AREA_TAG = "graph-area";
         
         private VisualElement m_graphArea;
         private List<TimeSegmentElement> m_timeSegmentElements = new();
         
-        public HourlyGraphWidget()
+        public HourlyGraphElement()
         {
             CreateLayout();
             
@@ -50,16 +49,7 @@ namespace DevStatsSystem.UI
                 m_timeSegmentElements.Add(timeSegmentElement);
             }
             
-            schedule.Execute(RedrawTimeSegmentElements).ExecuteLater(1); // 1 frame later
-        }
-        
-        private VisualElement CreateTimeSegmentElement(TimeSegment timeSegment)
-        {
-            VisualElement timeSegmentElement = new VisualElement();
-
-
-            m_graphArea.Add(timeSegmentElement);
-            return timeSegmentElement;
+            schedule.Execute(RedrawTimeSegmentElements).ExecuteLater(1); // 1 frame later so style resolves.
         }
 
         private void RedrawTimeSegmentElements()
@@ -89,7 +79,7 @@ namespace DevStatsSystem.UI
     internal class TimeSegmentElement : VisualElement
     {
         private const float SECONDS_IN_DAY = 86400;
-        private static Color NORMAL_COLOR = Color.lightSkyBlue;
+        private static Color NORMAL_COLOR = Color.deepSkyBlue;
         private static Color HOVER_COLOR = Color.white;
 
         private TimeSegment m_timeSegment;
@@ -99,7 +89,8 @@ namespace DevStatsSystem.UI
             m_timeSegment = timeSegment;
             style.position = Position.Absolute;
             style.backgroundColor = NORMAL_COLOR;
-            tooltip = $"Start: {SecondsToFormattedStartTime(timeSegment.StartTime)}\nEnd: {SecondsToFormattedStartTime(timeSegment.StartTime + timeSegment.Duration)}\nLength: {DevStats.SecondsToFormattedTime(timeSegment.Duration)}";
+            tooltip = @$"{DevStats.SecondsToFormattedTimeSinceMidnight(timeSegment.StartTime)} - {DevStats.SecondsToFormattedTimeSinceMidnight(timeSegment.StartTime + timeSegment.Duration)}
+({DevStats.SecondsToFormattedTimePassed(timeSegment.Duration)})";
             
             RegisterCallback<MouseEnterEvent>(_ =>
             {
@@ -121,11 +112,6 @@ namespace DevStatsSystem.UI
             style.width = xStop;
             style.top = 0;
             style.bottom = 0;
-        }
-        
-        private string SecondsToFormattedStartTime(float startTime)
-        {
-            return DateTime.Today.AddSeconds(startTime).ToString("h:mmtt");
         }
     }
 }
