@@ -17,11 +17,7 @@
         <ui:Label text="Total Time: 100" />
         <ui:Label text="Daily Average: 10" />
     </DevStatsSystem.UI.LabeledContainerElement>
-    <DevStatsSystem.UI.LabeledContainerElement name="alltime-container" title-text="All Time" style="display: flex;">
-        <ui:Label text="Project Total Time: 100" />
-        <ui:Label text="Daily Average: 10" />
-        <ui:Label text="Monthly Average: 10" />
-    </DevStatsSystem.UI.LabeledContainerElement>
+    <DevStatsSystem.UI.AllTimeStatsElement name="all-time-stats-element" />
     <ui:VisualElement name="last-updated-container" style="flex-grow: 0; flex-direction: row; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 10px; margin-right: 4px; margin-bottom: 8px; margin-left: 4px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; flex-shrink: 0; justify-content: space-between;">
         <ui:Label text="Lasted Updated 12:00PM 01/01/1999" name="last-updated-label" style="color: rgb(88, 88, 88); -unity-text-align: middle-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
         <ui:Button text="Force Update" name="force-update-button" />

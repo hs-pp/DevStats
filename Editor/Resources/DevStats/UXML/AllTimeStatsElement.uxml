@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <DevStatsSystem.UI.LabeledContainerElement name="alltime-container" title-text="All Time" style="display: flex;">
+        <ui:Label text="Project Total: 100" name="project-total-time-label" />
+        <ui:VisualElement name="divider" style="flex-grow: 0; background-color: rgb(88, 88, 88); flex-shrink: 0; height: 1px; margin-top: 8px; margin-bottom: 8px;" />
+        <ui:Label text="Grand Total: " name="grand-total-time-label" />
+        <ui:Label text="Daily Average: 10" name="daily-average-label" />
+    </DevStatsSystem.UI.LabeledContainerElement>
+</ui:UXML>

@@ -89,8 +89,8 @@ namespace DevStatsSystem.UI
             m_timeSegment = timeSegment;
             style.position = Position.Absolute;
             style.backgroundColor = NORMAL_COLOR;
-            tooltip = @$"{DevStats.SecondsToFormattedTimeSinceMidnight(timeSegment.StartTime)} - {DevStats.SecondsToFormattedTimeSinceMidnight(timeSegment.StartTime + timeSegment.Duration)}
-({DevStats.SecondsToFormattedTimePassed(timeSegment.Duration)})";
+            tooltip = @$"{DevStats.SecondsToFormattedTimePassed(timeSegment.Duration)}
+{DevStats.SecondsToFormattedTimeSinceMidnight(timeSegment.StartTime)} - {DevStats.SecondsToFormattedTimeSinceMidnight(timeSegment.StartTime + timeSegment.Duration)}";
             
             RegisterCallback<MouseEnterEvent>(_ =>
             {

@@ -14,10 +14,12 @@ namespace DevStatsSystem.UI
     {
         private const string UXML_PATH = "DevStats/UXML/StatsPanel";
         private const string TODAY_STATS_ELEMENT_TAG = "today-stats-element";
+        private const string ALL_TIME_STATS_ELEMENT_TAG = "all-time-stats-element";
         private const string LAST_UPDATED_LABEL_TAG = "last-updated-label";
         private const string FORCE_UPDATE_BUTTON_TAG = "force-update-button";
         
         private TodayStatsElement m_todayStatsElement;
+        private AllTimeStatsElement m_allTimeStatsElement;
         private Label m_lastUpdatedLabel;
         private Button m_forceUpdateButton;
         
@@ -35,6 +37,7 @@ namespace DevStatsSystem.UI
             uxmlAsset.CloneTree(this);
             
             m_todayStatsElement = this.Q<TodayStatsElement>(TODAY_STATS_ELEMENT_TAG);
+            m_allTimeStatsElement = this.Q<AllTimeStatsElement>(ALL_TIME_STATS_ELEMENT_TAG);
             m_lastUpdatedLabel = this.Q<Label>(LAST_UPDATED_LABEL_TAG);
             m_forceUpdateButton = this.Q<Button>(FORCE_UPDATE_BUTTON_TAG);
             m_forceUpdateButton.clicked += ManuallyFetchData;
@@ -149,6 +152,7 @@ namespace DevStatsSystem.UI
         private void LoadDataToUI()
         {
             m_todayStatsElement.SetData(in m_data.TodayStats);
+            m_allTimeStatsElement.SetData(in m_data.AllTimeStats);
             m_lastUpdatedLabel.text = $"Last Updated: {new DateTime(m_data.LastUpdateTime).ToLocalTime():hh:mm tt MM/dd/yyy}";
         }
 

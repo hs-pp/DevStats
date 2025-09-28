@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using DevStatsSystem.Core.SerializedData;
 using DevStatsSystem.Core.Wakatime;
 using UnityEditor;
@@ -197,19 +198,27 @@ namespace DevStatsSystem.Core
         
         public static string SecondsToFormattedTimePassed(float seconds)
         {
+            if (seconds == 0)
+            {
+                return "0 sec";
+            }
+            
             TimeSpan time = TimeSpan.FromSeconds(seconds);
-            if (time.Hours > 1)
+            StringBuilder strBuilder = new StringBuilder();
+            if (time.Hours > 0 || time.Days > 0)
             {
-                return $"{time.Hours}Hr {time.Minutes}Min {time.Seconds}Sec";
+                strBuilder.AppendFormat($"<b><size=16>{time.Days * 24 + time.Hours}</size></b>hr ");
             }
-            else if (time.Minutes > 1)
+            if (time.Minutes > 0)
             {
-                return $"{time.Minutes}Min {time.Seconds}Sec";
+                strBuilder.AppendFormat($"<b><size=16>{time.Minutes}</size></b>min ");
             }
-            else
+            if (time.Seconds > 0)
             {
-                return $"{time.Seconds}Sec";
+                strBuilder.AppendFormat($"<b><size=16>{time.Seconds}</size></b>sec");
             }
+            
+            return strBuilder.ToString();
         }
         
         public static string SecondsToFormattedTimeSinceMidnight(float startTime)

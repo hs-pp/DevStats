@@ -37,7 +37,7 @@ namespace DevStatsSystem.UI
             m_hourlyGraph.SetData(data.DayTimeSegments);
             m_codeToAssetPercentageElement.SetData(data.CodeTime, data.AssetTime);
 
-            m_totalTimeLabel.text = $"Total: {DevStats.SecondsToFormattedTimePassed(data.TotalTime)}";
+            m_totalTimeLabel.text = $"{DevStats.SecondsToFormattedTimePassed(data.TotalTime)}";
         }
     }
 }

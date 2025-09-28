@@ -15,6 +15,10 @@ namespace DevStatsSystem.Core.SerializedData
         [SerializeField]
         private TodayStats m_todayStats;
         public ref TodayStats TodayStats => ref m_todayStats;
+        
+        [SerializeField]
+        private AllTimeStats m_allTimeStats;
+        public ref AllTimeStats AllTimeStats => ref m_allTimeStats;
 
         public void UpdateData(in DurationsPayload durations, in HeartbeatsPayload heartbeats, in StatsPayload statsPayload, in SummariesPayload summaries)
         {
@@ -30,6 +34,7 @@ namespace DevStatsSystem.Core.SerializedData
             {
                 m_todayStats = new TodayStats();
             }
+            m_allTimeStats = new AllTimeStats(in statsPayload);
             Save();
         }
 
