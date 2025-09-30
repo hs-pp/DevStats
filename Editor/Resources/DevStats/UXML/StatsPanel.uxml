@@ -4,22 +4,10 @@
         <ui:Label text="Stats" name="title" style="-unity-font-style: bold; font-size: 24px; -unity-text-align: upper-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-left: 4px;" />
     </ui:VisualElement>
     <DevStatsSystem.UI.TodayStatsElement name="today-stats-element" />
-    <DevStatsSystem.UI.LabeledContainerElement name="week-container" title-text="Week" style="display: flex;">
-        <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(79, 79, 79); flex-shrink: 0;" />
-        <ui:VisualElement style="flex-grow: 0; height: 18px; flex-direction: row; flex-shrink: 0;">
-            <ui:VisualElement style="flex-grow: 1; background-color: rgb(93, 216, 255);">
-                <ui:Label text="C#" style="color: rgb(0, 0, 0);" />
-            </ui:VisualElement>
-            <ui:VisualElement style="flex-grow: 0.65; background-color: rgb(229, 154, 57);">
-                <ui:Label text="Unity Assets" style="-unity-text-align: upper-right; color: rgb(0, 0, 0);" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:Label text="Total Time: 100" />
-        <ui:Label text="Daily Average: 10" />
-    </DevStatsSystem.UI.LabeledContainerElement>
+    <DevStatsSystem.UI.TimespanStatsElement name="week-stats-element" />
     <DevStatsSystem.UI.AllTimeStatsElement name="all-time-stats-element" />
-    <ui:VisualElement name="last-updated-container" style="flex-grow: 0; flex-direction: row; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 10px; margin-right: 4px; margin-bottom: 8px; margin-left: 4px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; flex-shrink: 0; justify-content: space-between;">
-        <ui:Label text="Lasted Updated 12:00PM 01/01/1999" name="last-updated-label" style="color: rgb(88, 88, 88); -unity-text-align: middle-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+    <ui:VisualElement name="last-updated-container" style="flex-grow: 0; flex-direction: row; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; margin-top: 10px; margin-right: 8px; margin-bottom: 8px; margin-left: 8px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; flex-shrink: 0; justify-content: space-between;">
+        <ui:Label text="Lasted Updated 12:00PM 01/01/1999" name="last-updated-label" style="-unity-text-align: middle-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
         <ui:Button text="Force Update" name="force-update-button" />
     </ui:VisualElement>
 </ui:UXML>

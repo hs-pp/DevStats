@@ -1,10 +1,10 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <ui:VisualElement name="container" style="flex-grow: 0; height: 12px; flex-direction: row; flex-shrink: 0;">
         <ui:VisualElement name="code-percentage-element" style="flex-grow: 1; background-color: rgb(56, 139, 166); border-top-left-radius: 3px; border-bottom-left-radius: 3px;">
-            <ui:Label text="C#" style="-unity-text-align: middle-left; flex-grow: 0; font-size: 10px; padding-left: 2px; overflow: hidden; position: absolute; left: 0; right: 0;" />
+            <ui:Label text="C#" style="-unity-text-align: middle-left; flex-grow: 0; font-size: 10px; padding-left: 2px; overflow: hidden; position: absolute; left: 0; right: 0; color: rgb(255, 255, 255);" />
         </ui:VisualElement>
-        <ui:VisualElement name="asset-percentage-element" style="flex-grow: 1; background-color: rgb(154, 93, 11); border-top-right-radius: 3px; border-bottom-right-radius: 3px; display: flex;">
-            <ui:Label text="Assets" style="-unity-text-align: middle-right; flex-grow: 0; font-size: 10px; overflow: hidden; position: absolute; right: 0; left: 0; padding-right: 3px;" />
+        <ui:VisualElement name="asset-percentage-element" style="flex-grow: 1; background-color: rgb(255, 140, 2); border-top-right-radius: 3px; border-bottom-right-radius: 3px; display: flex;">
+            <ui:Label text="Assets" style="-unity-text-align: middle-right; flex-grow: 0; font-size: 10px; overflow: hidden; position: absolute; right: 0; left: 0; padding-right: 3px; color: rgb(255, 255, 255);" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

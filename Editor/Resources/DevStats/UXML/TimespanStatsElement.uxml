@@ -1,0 +1,10 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <DevStatsSystem.UI.LabeledContainerElement name="timespan-container" title-text="Timespan" style="display: flex;">
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
+            <ui:Label text="Total Time: 100" name="total-time-label" />
+            <ui:Label text="Daily Average: 10" name="daily-average-label" />
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 0; height: 70px; background-color: rgb(79, 79, 79); flex-shrink: 0; margin-right: 12px; margin-left: 12px; margin-top: 4px;" />
+        <DevStatsSystem.UI.CodeToAssetPercentageElement name="code-to-asset-percentage-element" style="margin-right: 12px; margin-left: 12px;" />
+    </DevStatsSystem.UI.LabeledContainerElement>
+</ui:UXML>

@@ -15,25 +15,31 @@ namespace DevStatsSystem.Core.SerializedData
         [SerializeField]
         private TodayStats m_todayStats;
         public ref TodayStats TodayStats => ref m_todayStats;
+
+        [SerializeField]
+        private TimespanStats m_weekStats;
+        public ref TimespanStats WeekStats => ref m_weekStats;
         
         [SerializeField]
         private AllTimeStats m_allTimeStats;
         public ref AllTimeStats AllTimeStats => ref m_allTimeStats;
 
-        public void UpdateData(in DurationsPayload durations, in HeartbeatsPayload heartbeats, in StatsPayload statsPayload, in SummariesPayload summaries)
+        public void UpdateData(in DurationsPayload durations, in HeartbeatsPayload heartbeats, in StatsPayload statsPayload, in SummariesPayload weekSummaries)
         {
             m_lastUpdateTime = DateTime.UtcNow.Ticks;
 
             // Today Stats
-            int todaySummaryIndex = GetIndexOfTodaySummary(summaries);
+            int todaySummaryIndex = GetIndexOfTodaySummary(weekSummaries);
             if (todaySummaryIndex != -1)
             {
-                m_todayStats = new TodayStats(in durations, in heartbeats, in summaries.data[todaySummaryIndex]);
+                m_todayStats = new TodayStats(in durations, in heartbeats, in weekSummaries.data[todaySummaryIndex]);
             }
             else
             {
                 m_todayStats = new TodayStats();
             }
+
+            m_weekStats = new TimespanStats("Week", in weekSummaries);
             m_allTimeStats = new AllTimeStats(in statsPayload);
             Save();
         }
