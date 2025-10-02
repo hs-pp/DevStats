@@ -1,0 +1,3 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="graph-container" style="flex-grow: 0; height: 70px; background-color: rgb(70, 70, 70); flex-shrink: 0; margin-right: 12px; margin-left: 12px; margin-top: 4px; border-bottom-width: 1px; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); margin-bottom: 4px; flex-direction: row;" />
+</ui:UXML>

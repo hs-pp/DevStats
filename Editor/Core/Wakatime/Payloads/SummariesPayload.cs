@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace DevStatsSystem.Core.Payloads
+namespace DevStatsSystem.Core.Wakatime.Payloads
 {
     [Serializable]
     internal struct SummariesPayload

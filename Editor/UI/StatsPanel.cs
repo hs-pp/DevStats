@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using DevStatsSystem.Core.SerializedData;
 using DevStatsSystem.Core.Wakatime;
+
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;

@@ -1,8 +1,8 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using DevStatsSystem.Core.Payloads;
 using DevStatsSystem.Core.SerializedData;
+using DevStatsSystem.Core.Wakatime.Payloads;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -32,7 +32,7 @@ namespace DevStatsSystem.Core.Wakatime
 
         public static async Task<(WebRequestResult result, SummariesPayload payload)> GetSummariesRequest(int numDays)
         {
-            string startDate = DateTime.Now.AddDays(-numDays).ToString("yyyy-MM-dd");
+            string startDate = DateTime.Now.AddDays(-numDays + 1).ToString("yyyy-MM-dd");
             string endDate = DateTime.Now.ToString("yyyy-MM-dd");
             return await CreateRequest<SummariesPayload>($"summaries?start={startDate}&end={endDate}&project={DevStats.GetProjectName()}");
         }

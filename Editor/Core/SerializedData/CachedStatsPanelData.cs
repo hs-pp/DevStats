@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using DevStatsSystem.Core.Payloads;
+using DevStatsSystem.Core.Wakatime.Payloads;
 using UnityEngine;
 
 namespace DevStatsSystem.Core.SerializedData

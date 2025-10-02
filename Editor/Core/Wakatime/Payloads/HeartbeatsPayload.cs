@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DevStatsSystem.Core.Payloads
+namespace DevStatsSystem.Core.Wakatime.Payloads
 {
     [Serializable]
     internal struct HeartbeatsPayload

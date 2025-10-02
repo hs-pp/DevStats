@@ -200,20 +200,24 @@ namespace DevStatsSystem.Core
         {
             if (seconds == 0)
             {
-                return "0 sec";
+                return "<b><size=16>0</size></b>sec";
             }
             
+            bool hasHours = false;
+            bool hasMinutes = false;
             TimeSpan time = TimeSpan.FromSeconds(seconds);
             StringBuilder strBuilder = new StringBuilder();
             if (time.Hours > 0 || time.Days > 0)
             {
                 strBuilder.AppendFormat($"<b><size=16>{time.Days * 24 + time.Hours}</size></b>hr ");
+                hasHours = true;
             }
-            if (time.Minutes > 0)
+            if (time.Minutes > 0 || hasHours)
             {
                 strBuilder.AppendFormat($"<b><size=16>{time.Minutes}</size></b>min ");
+                hasMinutes = true;
             }
-            if (time.Seconds > 0)
+            if (time.Seconds > 0 || hasHours || hasMinutes)
             {
                 strBuilder.AppendFormat($"<b><size=16>{time.Seconds}</size></b>sec");
             }

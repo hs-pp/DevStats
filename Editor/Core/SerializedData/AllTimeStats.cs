@@ -1,5 +1,5 @@
 using System;
-using DevStatsSystem.Core.Payloads;
+using DevStatsSystem.Core.Wakatime.Payloads;
 
 namespace DevStatsSystem.Core.SerializedData
 {
