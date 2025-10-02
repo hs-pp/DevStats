@@ -9,17 +9,15 @@ namespace DevStatsSystem.UI
     {
         private const string UXML_PATH = "DevStats/UXML/CodeToAssetPercentageElement";
         private const string CODE_PERCENTAGE_ELEMENT_TAG = "code-percentage-element";
+        private const string CODE_HOVER_SHADER_TAG = "code-hover-shader";
         private const string ASSET_PERCENTAGE_ELEMENT_TAG = "asset-percentage-element";
-
-        private static Color CODE_NORMAL_COLOR = Color.royalBlue;
-        private static Color CODE_HOVER_COLOR = Color.dodgerBlue;
-        
-        private static Color ASSET_NORMAL_COLOR = Color.darkOrange;
-        private static Color ASSET_HOVER_COLOR = Color.sandyBrown;
+        private const string ASSET_HOVER_SHADER_TAG = "asset-hover-shader";
         
         private VisualElement m_codePercentageElement;
+        private VisualElement m_codeHoverShaderElement;
         private VisualElement m_assetPercentageElement;
-
+        private VisualElement m_assetHoverShaderElement;
+        
         public CodeToAssetPercentageElement()
         {
             CreateLayout();
@@ -32,15 +30,17 @@ namespace DevStatsSystem.UI
             uxmlAsset.CloneTree(this);
 
             m_codePercentageElement = this.Q<VisualElement>(CODE_PERCENTAGE_ELEMENT_TAG);
+            m_codeHoverShaderElement = this.Q<VisualElement>(CODE_HOVER_SHADER_TAG);
             m_assetPercentageElement = this.Q<VisualElement>(ASSET_PERCENTAGE_ELEMENT_TAG);
+            m_assetHoverShaderElement = this.Q<VisualElement>(ASSET_HOVER_SHADER_TAG);
 
-            m_codePercentageElement.style.backgroundColor = CODE_NORMAL_COLOR;
-            m_codePercentageElement.RegisterCallback<MouseEnterEvent>(_ => { m_codePercentageElement.style.backgroundColor = CODE_HOVER_COLOR; });
-            m_codePercentageElement.RegisterCallback<MouseLeaveEvent>(_ => { m_codePercentageElement.style.backgroundColor = CODE_NORMAL_COLOR; });
+            m_codeHoverShaderElement.style.display = DisplayStyle.None;
+            m_codePercentageElement.RegisterCallback<MouseEnterEvent>(_ => { m_codeHoverShaderElement.style.display = DisplayStyle.Flex; });
+            m_codePercentageElement.RegisterCallback<MouseLeaveEvent>(_ => { m_codeHoverShaderElement.style.display = DisplayStyle.None; });
             
-            m_assetPercentageElement.style.backgroundColor = ASSET_NORMAL_COLOR;
-            m_assetPercentageElement.RegisterCallback<MouseEnterEvent>(_ => { m_assetPercentageElement.style.backgroundColor = ASSET_HOVER_COLOR; });
-            m_assetPercentageElement.RegisterCallback<MouseLeaveEvent>(_ => { m_assetPercentageElement.style.backgroundColor = ASSET_NORMAL_COLOR; });
+            m_assetHoverShaderElement.style.display = DisplayStyle.None;
+            m_assetPercentageElement.RegisterCallback<MouseEnterEvent>(_ => { m_assetHoverShaderElement.style.display = DisplayStyle.Flex; });
+            m_assetPercentageElement.RegisterCallback<MouseLeaveEvent>(_ => { m_assetHoverShaderElement.style.display = DisplayStyle.None; });
         }
 
         public void SetData(float codeTime, float assetTime)

@@ -13,7 +13,6 @@ namespace DevStatsSystem.UI
         private const float MIN_GRAPH_HEIGHT = 3 * 60; // 3 hours
         private const string UXML_PATH = "DevStats/UXML/TimespanGraphElement";
         private const string GRAPH_CONTAINER_TAG = "graph-container";
-        private const float GRAPH_HEIGHT = 30;
 
         private VisualElement m_graphContainer;
         private List<TimespanGraphDayElement> m_dayElements = new();
