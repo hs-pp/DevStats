@@ -26,7 +26,7 @@ namespace DevStatsSystem.UI
 
         private void CreateLayout()
         {
-            var uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
+            VisualTreeAsset uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
             uxmlAsset.CloneTree(this);
 
             m_codePercentageElement = this.Q<VisualElement>(CODE_PERCENTAGE_ELEMENT_TAG);

@@ -34,7 +34,7 @@ namespace DevStatsSystem.UI
 
         private void CreateLayout()
         {
-            var uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
+            VisualTreeAsset uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
             uxmlAsset.CloneTree(this);
             
             m_heartbeatsInQueueLabel = this.Q<Label>(HEARTBEATS_IN_QUEUE_LABEL_TAG);

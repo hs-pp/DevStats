@@ -10,4 +10,7 @@
         <ui:Label text="Lasted Updated 12:00PM 01/01/1999" name="last-updated-label" style="-unity-text-align: middle-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
         <ui:Button text="Force Update" name="force-update-button" />
     </ui:VisualElement>
+    <ui:VisualElement name="loading-screen" style="flex-grow: 1; position: absolute; top: 38px; left: 0; bottom: 0; right: 0; background-color: rgba(56, 56, 56, 0.91); align-items: center; display: none;">
+        <ui:Label text="Loading..." style="-unity-font-style: italic; margin-top: 20px;" />
+    </ui:VisualElement>
 </ui:UXML>

@@ -67,7 +67,7 @@ namespace DevStatsSystem.UI
 
         private void CreateLayout()
         {
-            var uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
+            VisualTreeAsset uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
             uxmlAsset.CloneTree(rootVisualElement);
             
             m_statsTab = rootVisualElement.Q<VisualElement>(STATS_TAB_TAG);

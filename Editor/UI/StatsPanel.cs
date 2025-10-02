@@ -19,12 +19,14 @@ namespace DevStatsSystem.UI
         private const string ALL_TIME_STATS_ELEMENT_TAG = "all-time-stats-element";
         private const string LAST_UPDATED_LABEL_TAG = "last-updated-label";
         private const string FORCE_UPDATE_BUTTON_TAG = "force-update-button";
+        private const string LOADING_SCREEN_TAG = "loading-screen";
         
         private TodayStatsElement m_todayStatsElement;
         private TimespanStatsElement m_weekStatsElement;
         private AllTimeStatsElement m_allTimeStatsElement;
         private Label m_lastUpdatedLabel;
         private Button m_forceUpdateButton;
+        private VisualElement m_loadingScreen;
         
         private CachedStatsPanelData m_data;
         private bool m_isFetchingData = false;
@@ -36,7 +38,7 @@ namespace DevStatsSystem.UI
 
         private void CreateLayout()
         {
-            var uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
+            VisualTreeAsset uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
             uxmlAsset.CloneTree(this);
             
             m_todayStatsElement = this.Q<TodayStatsElement>(TODAY_STATS_ELEMENT_TAG);
@@ -45,6 +47,8 @@ namespace DevStatsSystem.UI
             m_lastUpdatedLabel = this.Q<Label>(LAST_UPDATED_LABEL_TAG);
             m_forceUpdateButton = this.Q<Button>(FORCE_UPDATE_BUTTON_TAG);
             m_forceUpdateButton.clicked += ManuallyFetchData;
+            m_loadingScreen = this.Q<VisualElement>(LOADING_SCREEN_TAG);
+            m_loadingScreen.style.display = DisplayStyle.None;
         }
         
         public override void OnShow()
@@ -164,11 +168,13 @@ namespace DevStatsSystem.UI
         private void OnFetchDataStarted()
         {
             m_forceUpdateButton.enabledSelf = false;
+            m_loadingScreen.style.display = DisplayStyle.Flex;
         }
 
         private void OnFetchDataFinished()
         {
             m_forceUpdateButton.enabledSelf = true;
+            m_loadingScreen.style.display = DisplayStyle.None;
         }
     }
 }

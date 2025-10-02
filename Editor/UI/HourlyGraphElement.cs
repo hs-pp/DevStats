@@ -99,7 +99,7 @@ namespace DevStatsSystem.UI
         
         private void CreateLayout()
         {
-            var uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
+            VisualTreeAsset uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
             uxmlAsset.CloneTree(this);
             
             m_barElement = this.Q<VisualElement>(BAR_TAG);
