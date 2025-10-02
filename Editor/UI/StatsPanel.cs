@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using DevStatsSystem.Core.SerializedData;
 using DevStatsSystem.Core.Wakatime;
-
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -126,11 +125,6 @@ namespace DevStatsSystem.UI
             Debug.Log($"Durations:\n{durationsPayload.payload}");
             
             await Task.Delay(TimeSpan.FromSeconds(1));
-            
-            var heartbeatsPayload = await WakatimeWebRequests.GetHeartbeatsRequest();
-            Debug.Log($"Heartbeats:\n{heartbeatsPayload.payload}");
-            
-            await Task.Delay(TimeSpan.FromSeconds(1));
 
             var statsPayload = await WakatimeWebRequests.GetStatsRequest();
             Debug.Log($"Stats:\n{statsPayload.payload}");
@@ -148,7 +142,7 @@ namespace DevStatsSystem.UI
             }
             
             // Update data.
-            m_data.UpdateData(in durationsPayload.payload, in heartbeatsPayload.payload, in statsPayload.payload, in summariesPayload.payload);
+            m_data.UpdateData(in durationsPayload.payload, in statsPayload.payload, in summariesPayload.payload);
             
             stopwatch.Stop();
             Debug.Log($"Finished loading everything T:{stopwatch.ElapsedMilliseconds/1000f}s");

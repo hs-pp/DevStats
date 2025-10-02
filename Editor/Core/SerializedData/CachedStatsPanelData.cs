@@ -23,7 +23,7 @@ namespace DevStatsSystem.Core.SerializedData
         private AllTimeStats m_allTimeStats;
         public ref AllTimeStats AllTimeStats => ref m_allTimeStats;
 
-        public void UpdateData(in DurationsPayload durations, in HeartbeatsPayload heartbeats, in StatsPayload statsPayload, in SummariesPayload weekSummaries)
+        public void UpdateData(in DurationsPayload durations, in StatsPayload statsPayload, in SummariesPayload weekSummaries)
         {
             m_lastUpdateTime = DateTime.UtcNow.Ticks;
 
@@ -31,7 +31,7 @@ namespace DevStatsSystem.Core.SerializedData
             int todaySummaryIndex = GetIndexOfTodaySummary(weekSummaries);
             if (todaySummaryIndex != -1)
             {
-                m_todayStats = new TodayStats(in durations, in heartbeats, in weekSummaries.data[todaySummaryIndex]);
+                m_todayStats = new TodayStats(in durations, in weekSummaries.data[todaySummaryIndex]);
             }
             else
             {

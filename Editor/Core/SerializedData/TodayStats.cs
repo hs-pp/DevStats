@@ -19,23 +19,24 @@ namespace DevStatsSystem.Core.SerializedData
         public float CodeTime;
         public float AssetTime;
 
-        public TodayStats(in DurationsPayload durations, in HeartbeatsPayload heartbeatsPayload,
-            in SummaryDto todaySummary)
+        public TodayStats(in DurationsPayload durations, in SummaryDto todaySummary)
         {
             DayTimeSegments = new List<TimeSegment>();
-            foreach (DurationInstanceDto durationInstance in durations.data)
+            
+            // Regular for loops to avoid copying a bunch of structs
+            for (int i = 0; i < durations.data.Length; i++)
             {
-                if (durationInstance.project != DevStats.GetProjectName())
+                if (durations.data[i].project != DevStats.GetProjectName())
                 {
                     continue;
                 }
-
-                DateTime startTime = DateTimeOffset.FromUnixTimeSeconds((long)durationInstance.time).LocalDateTime;
+                
+                DateTime startTime = DateTimeOffset.FromUnixTimeSeconds((long)durations.data[i].time).LocalDateTime;
                 TimeSpan sinceMidnight = startTime - startTime.Date;
                 DayTimeSegments.Add(new()
                 {
                     StartTime = (float)sinceMidnight.TotalSeconds,
-                    Duration = durationInstance.duration,
+                    Duration = durations.data[i].duration,
                 });
             }
 
@@ -43,19 +44,17 @@ namespace DevStatsSystem.Core.SerializedData
 
             CodeTime = 0;
             AssetTime = 0;
-            foreach (SummaryLanguageDto language in todaySummary.languages)
+            for (int i = 0; i < todaySummary.languages.Length; i++)
             {
-                if (language.name == "C#")
+                if (todaySummary.languages[i].name == "C#")
                 {
-                    CodeTime = language.total_seconds;
+                    CodeTime = todaySummary.languages[i].total_seconds;
                 }
-                else if (language.name == DevStats.GetLanguage())
+                else if (todaySummary.languages[i].name == DevStats.GetLanguage())
                 {
-                    AssetTime = language.total_seconds;
+                    AssetTime = todaySummary.languages[i].total_seconds;
                 }
             }
-            
-            //Debug.Log($"Today:\n {JsonUtility.ToJson(this, true)}");
         }
     }
 }
