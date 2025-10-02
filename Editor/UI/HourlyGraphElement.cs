@@ -78,29 +78,38 @@ namespace DevStatsSystem.UI
 
     internal class TimeSegmentElement : VisualElement
     {
+        private const string UXML_PATH = "DevStats/UXML/TimeSegmentElement";
+        private const string BAR_TAG = "bar";
+        private const string HOVER_SHADER_TAG = "hover-shader";
+
         private const float SECONDS_IN_DAY = 86400;
-        private static Color NORMAL_COLOR = Color.deepSkyBlue;
-        private static Color HOVER_COLOR = Color.white;
+        private VisualElement m_barElement;
+        private VisualElement m_hoverShader;
 
         private TimeSegment m_timeSegment;
         
         public TimeSegmentElement(TimeSegment timeSegment)
         {
             m_timeSegment = timeSegment;
-            style.position = Position.Absolute;
-            style.backgroundColor = NORMAL_COLOR;
-            tooltip = @$"{DevStats.SecondsToFormattedTimePassed(timeSegment.Duration)}
-{DevStats.SecondsToFormattedTimeSinceMidnight(timeSegment.StartTime)} - {DevStats.SecondsToFormattedTimeSinceMidnight(timeSegment.StartTime + timeSegment.Duration)}";
+            CreateLayout();
             
-            RegisterCallback<MouseEnterEvent>(_ =>
-            {
-                style.backgroundColor = HOVER_COLOR;
-            });
-
-            RegisterCallback<MouseLeaveEvent>(_ =>
-            {
-                style.backgroundColor = NORMAL_COLOR;
-            });
+            tooltip = @$"{DevStats.SecondsToFormattedTimeSinceMidnight(timeSegment.StartTime)} - {DevStats.SecondsToFormattedTimeSinceMidnight(timeSegment.StartTime + timeSegment.Duration)}
+{DevStats.SecondsToFormattedTimePassed(timeSegment.Duration)}";
+        }
+        
+        private void CreateLayout()
+        {
+            var uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
+            uxmlAsset.CloneTree(this);
+            
+            m_barElement = this.Q<VisualElement>(BAR_TAG);
+            m_hoverShader = this.Q<VisualElement>(HOVER_SHADER_TAG);
+            
+            m_hoverShader.style.display = DisplayStyle.None;
+            RegisterCallback<MouseEnterEvent>(_ => { m_hoverShader.style.display = DisplayStyle.Flex; });
+            RegisterCallback<MouseLeaveEvent>(_ => { m_hoverShader.style.display = DisplayStyle.None; });
+            
+            style.position = Position.Absolute;
         }
 
         public void Redraw(float width)
