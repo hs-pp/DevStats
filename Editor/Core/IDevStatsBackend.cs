@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DevStatsSystem.Core.SerializedData;
 
-//TODO: all these classes should be PUBLIC not INTERNAL
 namespace DevStatsSystem.Core
 {
     public enum CommandResultType
@@ -24,7 +23,7 @@ namespace DevStatsSystem.Core
         }
     }
 
-    internal class StatsData
+    public class StatsData
     {
         public CommandResult Result;
         
@@ -33,7 +32,7 @@ namespace DevStatsSystem.Core
         public AllTimeStats AllTimeStats;
     }
     
-    internal interface IDevStatsBackend
+    public interface IDevStatsBackend
     {
         Task<CommandResult> Load();
         Task<CommandResult> SendHeartbeats(List<Heartbeat> heartbeats);
