@@ -17,15 +17,5 @@ namespace DevStatsSystem.UI
             VisualTreeAsset uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
             uxmlAsset.CloneTree(this);
         }
-        
-        public override void OnShow()
-        {
-            
-        }
-
-        public override void OnHide()
-        {
-            
-        }
     }
 }

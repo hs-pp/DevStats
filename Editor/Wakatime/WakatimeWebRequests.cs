@@ -22,20 +22,20 @@ namespace DevStatsSystem.Wakatime{
         
         public static async Task<(WebRequestResult result, StatsPayload payload)> GetStatsRequest()
         {
-            return await CreateRequest<StatsPayload>("stats/all_time");
+            return await CreateRequest<StatsPayload>($"stats/all_time?timeout={(int)DevStatsSettings.Instance.KeystrokeTimeout}");
         }
 
         public static async Task<(WebRequestResult result, SummariesPayload payload)> GetSummariesRequest(int numDays)
         {
             string startDate = DateTime.Now.AddDays(-numDays + 1).ToString("yyyy-MM-dd");
             string endDate = DateTime.Now.ToString("yyyy-MM-dd");
-            return await CreateRequest<SummariesPayload>($"summaries?start={startDate}&end={endDate}&project={DevStats.GetProjectName()}");
+            return await CreateRequest<SummariesPayload>($"summaries?start={startDate}&end={endDate}&project={DevStats.GetProjectName()}&timeout={(int)DevStatsSettings.Instance.KeystrokeTimeout}");
         }
 
         public static async Task<(WebRequestResult result, DurationsPayload payload)> GetDayDurationRequest()
         {
             string date = DateTime.Now.ToString("yyyy-MM-dd");
-            return await CreateRequest<DurationsPayload>($"durations?date={date}&timeout=5"); // Specifying project returns garbage data. Just manually filter!!
+            return await CreateRequest<DurationsPayload>($"durations?date={date}&timeout={(int)DevStatsSettings.Instance.KeystrokeTimeout}"); // Specifying project returns garbage data. Just manually filter!!
         }
         
         private static async Task<(WebRequestResult result, T payload)> CreateRequest<T>(string url) where T : struct

@@ -10,8 +10,6 @@ namespace DevStatsSystem.Core
 {
     public static class DevStats
     {
-        private static int SEND_INTERVAL_NANOSECONDS = 0;
-
         internal static IDevStatsBackend Backend;
         private static HeartbeatProvider m_heartbeatProvider;
         private static DevStatsState m_state;
@@ -24,8 +22,6 @@ namespace DevStatsSystem.Core
         {
             m_settings = DevStatsSettings.Instance;
             m_settings.OnEnabledChanged += OnDevStatsEnabledChanged;
-            m_settings.OnHeartbeatSendIntervalChanged += OnHeartbeatSendIntervalChanged;
-            OnHeartbeatSendIntervalChanged();
 
             AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
             AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
@@ -51,13 +47,8 @@ namespace DevStatsSystem.Core
             }
         }
 
-        private static void OnDevStatsEnabledChanged(bool newValue, bool prevValue)
+        private static void OnDevStatsEnabledChanged(bool newValue)
         {
-            if (newValue == prevValue)
-            {
-                return;
-            }
-            
             if (newValue)
             {
                 Initialize();
@@ -66,11 +57,6 @@ namespace DevStatsSystem.Core
             {
                 Deinitialize();
             }
-        }
-        
-        private static void OnHeartbeatSendIntervalChanged()
-        {
-            SEND_INTERVAL_NANOSECONDS = m_settings.HeartbeatSendInterval * 10000000;
         }
         
         private static async void Initialize()
@@ -132,7 +118,8 @@ namespace DevStatsSystem.Core
             }
 
             long timeSinceStartup = DateTime.Now.Ticks;
-            if (m_state.GetQueuedHeartbeatCount() > 0 && timeSinceStartup > m_state.LastHeartbeatSendTime + SEND_INTERVAL_NANOSECONDS)
+            int sendInterval = (int)m_settings.PostFrequency * 10000000;
+            if (m_state.GetQueuedHeartbeatCount() > 0 && timeSinceStartup > m_state.LastHeartbeatSendTime + sendInterval)
             {
                 SendHeartbeatsToCli(m_state.GetQueuedHeartbeats());
                 m_state.ClearQueuedHeartbeats();

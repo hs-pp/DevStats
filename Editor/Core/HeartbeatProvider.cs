@@ -167,9 +167,9 @@ namespace DevStatsSystem.Core
             };
             
             // Don't add this heartbeat if it is not a write and is the same file as the last heartbeat and
-            // within 5 seconds of the last one. This will let us skip asset changed triggers that happen right after
+            // within x seconds of the last one. This will let us skip asset changed triggers that happen right after
             // an asset saved is triggered.
-            if (!heartbeat.IsWrite && m_previousHeartbeat.FilePath == heartbeat.FilePath && heartbeat.Timestamp - m_previousHeartbeat.Timestamp < DevStatsSettings.Instance.SameFileInterval)
+            if (!heartbeat.IsWrite && m_previousHeartbeat.FilePath == heartbeat.FilePath && heartbeat.Timestamp - m_previousHeartbeat.Timestamp < (int)DevStatsSettings.Instance.SameFileCooldown)
             {
                 return;
             }

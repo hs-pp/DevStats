@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DevStatsSystem.Core.SerializedData
 {
     [Serializable]
-    internal enum StatsUpdateFrequency
+    internal enum StatsRefreshRate
     {
         OnceADay,
         TwiceADay,
@@ -13,78 +13,63 @@ namespace DevStatsSystem.Core.SerializedData
         EveryTenMinutes,
         AfterEveryCompile,
     }
+
+    [Serializable]
+    internal enum PostFrequency : int
+    {
+        TwoMinutes = 120,
+        ThreeMinutes = 180,
+        FiveMinutes = 300,
+    }
+    
+    [Serializable]
+    internal enum SameFileCooldown : int
+    {
+        OneSecond = 1,
+        ThreeSeconds = 3,
+        FiveSeconds = 5,
+        TenSeconds = 10,
+    }
+
+    [Serializable]
+    internal enum KeystrokeTimeout : int
+    {
+        TwoMinutes = 2,
+        FiveMinutes = 5,
+        TenMinutes = 10,
+        FifteenMinutes = 15,
+    }
     
     [Serializable]
     internal class DevStatsSettings : SavedData<DevStatsSettings>
     {
         [SerializeField]
-        private string m_apiKey;
-        public string APIKey
-        {
-            get => m_apiKey;
-            set => m_apiKey = value;
-        }
-
-        [SerializeField]
         private bool m_isEnabled = true;
-        public bool IsEnabled => m_isEnabled;
-
-        [SerializeField]
-        private bool m_printDebugLogs = false;
-        public bool PrintDebugLogs
+        [NonSerialized]
+        public Action<bool> OnEnabledChanged;
+        public bool IsEnabled
         {
-            get => m_printDebugLogs;
-            set => m_printDebugLogs = value;
-        }
-
-        [SerializeField]
-        private int m_heartbeatSendInterval = 120; // in seconds
-        public int HeartbeatSendInterval
-        {
-            get => m_heartbeatSendInterval;
+            get => m_isEnabled;
             set
             {
-                m_heartbeatSendInterval = value;
-                if (m_heartbeatSendInterval < 120)
+                if (value == m_isEnabled)
                 {
-                    m_heartbeatSendInterval = 120; // This is min
+                    return;
                 }
-                OnHeartbeatSendIntervalChanged?.Invoke();
+            
+                m_isEnabled = value;
+                OnEnabledChanged?.Invoke(m_isEnabled);
             }
         }
-        public Action OnHeartbeatSendIntervalChanged;
-
-        [SerializeField]
-        private int m_sameFileInterval = 5; // in seconds
-        public int SameFileInterval
-        {
-            get => m_sameFileInterval;
-            set => m_sameFileInterval = value;
-        }
-
-        [SerializeField]
-        private StatsUpdateFrequency m_statsUpdateFrequency = StatsUpdateFrequency.AfterEveryCompile;
-        public StatsUpdateFrequency StatsUpdateFrequency => m_statsUpdateFrequency;
+        public bool PrintDebugLogs = false;
+        public StatsRefreshRate StatsRefreshRate = StatsRefreshRate.AfterEveryCompile;
+        public PostFrequency PostFrequency = PostFrequency.TwoMinutes;
+        public SameFileCooldown SameFileCooldown = SameFileCooldown.FiveSeconds;
         
-        // TODO: Add setting - Duration payload timeout
-        // Timeout time is evaluated from the CLI so please force update the stats page
+        // Wakatime settings
+        public string APIKey;
+        public KeystrokeTimeout KeystrokeTimeout = KeystrokeTimeout.FiveMinutes;
         
-        [NonSerialized]
-        public Action<bool, bool> OnEnabledChanged;
-
-        public void SetIsEnabled(bool isEnabled)
-        {
-            if (isEnabled == m_isEnabled)
-            {
-                return;
-            }
-            
-            bool previousValue = m_isEnabled;
-            m_isEnabled = isEnabled;
-            
-            OnEnabledChanged?.Invoke(isEnabled, previousValue);
-        }
-
         public bool IsRunning()
         {
             return IsEnabled && !string.IsNullOrEmpty(APIKey);

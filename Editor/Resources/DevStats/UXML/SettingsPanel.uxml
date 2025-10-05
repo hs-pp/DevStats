@@ -3,9 +3,15 @@
         <ui:VisualElement name="icon" style="flex-grow: 0; background-image: resource(&apos;DevStats/Icons/settings_img&apos;); width: 30px; height: 30px; flex-shrink: 0;" />
         <ui:Label text="Settings" name="title" style="-unity-font-style: bold; font-size: 24px; -unity-text-align: upper-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-left: 2px;" />
     </ui:VisualElement>
-    <DevStatsSystem.UI.LabeledContainerElement name="core-container" title-text="Core">
-        <ui:TextField label="API Key" placeholder-text="filler text" name="api-key-field" password="true" />
+    <DevStatsSystem.UI.LabeledContainerElement name="core-settings" title-text="Core">
         <ui:Toggle label="Is Enabled" name="isenabled-toggle" />
         <ui:Toggle label="Print Logs" name="debugmode-toggle" enabled="true" />
+        <ui:EnumField label="Stats Refresh Rate" value="EveryHour" type="DevStatsSystem.Core.SerializedData.StatsRefreshRate, DevStats" name="stats-refresh-rate-enum" tooltip="How often the stats panel should auto refresh." />
+        <ui:EnumField label="POST Frequency" value="TwoMinutes" type="DevStatsSystem.Core.SerializedData.PostFrequency, DevStats" name="post-frequency-enum" tooltip="How often DevStats should push the collected heartbeats to the backend. (WakatimeCLI)" />
+        <ui:EnumField label="Same File Cooldown" value="FiveSeconds" type="DevStatsSystem.Core.SerializedData.SameFileCooldown, DevStats" name="same-file-cooldown-enum" tooltip="The amount of time to wait before we can create another heartbeat for the same file." />
+    </DevStatsSystem.UI.LabeledContainerElement>
+    <DevStatsSystem.UI.LabeledContainerElement name="wakatime-settings" title-text="Wakatime">
+        <ui:TextField label="API Key" placeholder-text="filler text" name="api-key-field" password="true" />
+        <ui:EnumField label="Keystroke Timeout" value="FiveMinutes" type="DevStatsSystem.Core.SerializedData.KeystrokeTimeout, DevStats" name="keystroke-timeout-enum" tooltip="The keystroke timeout preference used when joining heartbeats into durations." />
     </DevStatsSystem.UI.LabeledContainerElement>
 </ui:UXML>

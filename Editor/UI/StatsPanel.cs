@@ -63,31 +63,31 @@ namespace DevStatsSystem.UI
 
         private async void TryAutoFetchData()
         {
-            if (ShouldFetchData(DevStatsSettings.Instance.StatsUpdateFrequency, m_data.LastUpdateTime))
+            if (ShouldFetchData(DevStatsSettings.Instance.StatsRefreshRate, m_data.LastUpdateTime))
             {
                 await FetchData();
             }
             LoadDataToUI();
         }
         
-        private bool ShouldFetchData(StatsUpdateFrequency frequency, long lastUpdateTime)
+        private bool ShouldFetchData(StatsRefreshRate statsRefreshRate, long lastUpdateTime)
         {
             long tickThreshold = 0;
-            switch (frequency)
+            switch (statsRefreshRate)
             {
-                case StatsUpdateFrequency.OnceADay:
+                case StatsRefreshRate.OnceADay:
                     tickThreshold = TimeSpan.TicksPerDay;
                     break;
-                case StatsUpdateFrequency.TwiceADay:
+                case StatsRefreshRate.TwiceADay:
                     tickThreshold = TimeSpan.TicksPerDay / 2;
                     break;
-                case StatsUpdateFrequency.EveryHour:
+                case StatsRefreshRate.EveryHour:
                     tickThreshold = TimeSpan.TicksPerHour;
                     break;
-                case StatsUpdateFrequency.EveryTenMinutes:
+                case StatsRefreshRate.EveryTenMinutes:
                     tickThreshold = TimeSpan.TicksPerMinute * 10;
                     break;
-                case StatsUpdateFrequency.AfterEveryCompile:
+                case StatsRefreshRate.AfterEveryCompile:
                     tickThreshold = 0;
                     break;
             }
