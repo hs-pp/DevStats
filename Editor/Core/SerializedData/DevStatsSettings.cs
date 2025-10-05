@@ -10,16 +10,17 @@ namespace DevStatsSystem.Core.SerializedData
         OnceADay,
         TwiceADay,
         EveryHour,
+        EveryThirtyMinutes,
+        EveryFifteenMinutes,
         EveryTenMinutes,
-        AfterEveryCompile,
     }
 
     [Serializable]
     internal enum PostFrequency : int
     {
-        TwoMinutes = 120,
-        ThreeMinutes = 180,
-        FiveMinutes = 300,
+        EveryTwoMinutes = 120,
+        EveryThreeMinutes = 180,
+        EveryFiveMinutes = 300,
     }
     
     [Serializable]
@@ -62,8 +63,8 @@ namespace DevStatsSystem.Core.SerializedData
             }
         }
         public bool PrintDebugLogs = false;
-        public StatsRefreshRate StatsRefreshRate = StatsRefreshRate.AfterEveryCompile;
-        public PostFrequency PostFrequency = PostFrequency.TwoMinutes;
+        public StatsRefreshRate StatsRefreshRate = StatsRefreshRate.EveryFifteenMinutes;
+        public PostFrequency PostFrequency = PostFrequency.EveryTwoMinutes;
         public SameFileCooldown SameFileCooldown = SameFileCooldown.FiveSeconds;
         
         // Wakatime settings

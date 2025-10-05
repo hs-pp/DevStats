@@ -84,15 +84,18 @@ namespace DevStatsSystem.UI
                 case StatsRefreshRate.EveryHour:
                     tickThreshold = TimeSpan.TicksPerHour;
                     break;
+                case StatsRefreshRate.EveryThirtyMinutes:
+                    tickThreshold = TimeSpan.TicksPerMinute * 30;
+                    break;
+                case StatsRefreshRate.EveryFifteenMinutes:
+                    tickThreshold = TimeSpan.TicksPerMinute * 15;
+                    break;
                 case StatsRefreshRate.EveryTenMinutes:
                     tickThreshold = TimeSpan.TicksPerMinute * 10;
                     break;
-                case StatsRefreshRate.AfterEveryCompile:
-                    tickThreshold = 0;
-                    break;
             }
 
-            return DateTime.Now.Ticks - lastUpdateTime > tickThreshold;
+            return DateTime.UtcNow.Ticks - lastUpdateTime > tickThreshold;
         }
 
         private async void ManuallyFetchData()
