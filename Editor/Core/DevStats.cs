@@ -11,11 +11,13 @@ namespace DevStatsSystem.Core
     public static class DevStats
     {
         private static int SEND_INTERVAL_NANOSECONDS = 0;
-        
-        private static WakatimeCli m_wakatimeCli;
+
+        internal static IDevStatsBackend Backend;
         private static HeartbeatProvider m_heartbeatProvider;
         private static DevStatsState m_state;
         private static DevStatsSettings m_settings;
+
+        public static Action OnInitializedCallback;
         
         [InitializeOnLoadMethod]
         static void RegisterAssemblyReloadEvents()
@@ -82,9 +84,12 @@ namespace DevStatsSystem.Core
                 Log("Initialized DevStats.");
             }
 
-            m_wakatimeCli = await WakatimeCli.Get();
-            if (m_wakatimeCli == null)
+            Backend = new WakatimeBackend();
+            CommandResult result = await Backend.Load();
+            if (result.Result == CommandResultType.Failure)
             {
+                LogError("DevStats Backend failed to load.");
+                Backend = null;
                 return;
             }
             m_heartbeatProvider = new(TriggerHeartbeat);
@@ -92,6 +97,8 @@ namespace DevStatsSystem.Core
 
             m_state = DevStatsState.Instance;
             EditorApplication.update += OnEditorUpdate;
+            
+            OnInitializedCallback?.Invoke();
         }
         
         private static void Deinitialize()
@@ -135,7 +142,7 @@ namespace DevStatsSystem.Core
 
         private static async void SendHeartbeatsToCli(List<Heartbeat> heartbeats)
         {
-            if (m_wakatimeCli == null)
+            if (Backend == null)
             {
                 return;
             }
@@ -146,8 +153,8 @@ namespace DevStatsSystem.Core
             }
             
             List<Heartbeat> localHeartbeats = new List<Heartbeat>(heartbeats);
-            CliResult result = await m_wakatimeCli.SendHeartbeats(localHeartbeats);
-            if (result.Result == CliResultType.Success)
+            CommandResult result = await Backend.SendHeartbeats(localHeartbeats);
+            if (result.Result == CommandResultType.Success)
             {
                 m_state.AddSentHeartbeatInstance(localHeartbeats);
             }

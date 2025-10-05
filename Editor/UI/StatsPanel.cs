@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using DevStatsSystem.Core;
 using DevStatsSystem.Core.SerializedData;
 using DevStatsSystem.Core.Wakatime;
 using UnityEditor;
@@ -53,11 +54,13 @@ namespace DevStatsSystem.UI
         public override void OnShow()
         {
             m_data = CachedStatsPanelData.Instance;
+            DevStats.OnInitializedCallback += TryAutoFetchData;
             TryAutoFetchData();
         }
 
         public override void OnHide()
         {
+            DevStats.OnInitializedCallback -= TryAutoFetchData;
         }
 
         private async void TryAutoFetchData()
@@ -102,50 +105,37 @@ namespace DevStatsSystem.UI
 
         private async Task FetchData()
         {
+            if (DevStats.Backend == null)
+            {
+                return;
+            }
+            
             if (m_isFetchingData)
             {
                 return;
             }
             
-            Debug.Log("Started loading everything");
-            
             m_isFetchingData = true;
             OnFetchDataStarted();
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
             
-            if (Application.internetReachability == NetworkReachability.NotReachable)
+            StatsData statsData = await DevStats.Backend.GetStats();
+            
+            if (statsData.Result.Result != CommandResultType.Success)
             {
                 m_isFetchingData = false;
-                OnFetchDataFinished();
+                Debug.LogError($"Failed to fetch stats! Output: {statsData.Result.Output}");
                 return;
             }
-            
-            var durationsPayload = await WakatimeWebRequests.GetDayDurationRequest();
-            Debug.Log($"Durations:\n{durationsPayload.payload}");
-            
-            await Task.Delay(TimeSpan.FromSeconds(1));
-
-            var statsPayload = await WakatimeWebRequests.GetStatsRequest();
-            Debug.Log($"Stats:\n{statsPayload.payload}");
-
-            await Task.Delay(TimeSpan.FromSeconds(1));
-
-            var summariesPayload = await WakatimeWebRequests.GetSummariesRequest(7);
-            Debug.Log($"Summaries:\n{summariesPayload.payload}");
             
             if (EditorApplication.isCompiling)
             {
                 m_isFetchingData = false;
-                Debug.LogWarning("Editor is compiling. Stopping Run Everything");
+                Debug.LogWarning("Editor is compiling. Stopping Run Everything!");
                 return;
             }
             
             // Update data.
-            m_data.UpdateData(in durationsPayload.payload, in statsPayload.payload, in summariesPayload.payload);
-            
-            stopwatch.Stop();
-            Debug.Log($"Finished loading everything T:{stopwatch.ElapsedMilliseconds/1000f}s");
+            m_data.UpdateData(statsData);
             
             m_isFetchingData = false;
             OnFetchDataFinished();

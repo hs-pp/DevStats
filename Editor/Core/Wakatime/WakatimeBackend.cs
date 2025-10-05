@@ -8,58 +8,30 @@ using System.Threading.Tasks;
 using DevStatsSystem.Core.SerializedData;
 using UnityEditor;
 using UnityEngine;
-using Application = UnityEngine.Device.Application;
+using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
 
 namespace DevStatsSystem.Core.Wakatime
 {
-    internal enum CliResultType
-    {
-        Success,
-        Failure,
-        Timeout,
-    }
-    internal struct CliResult
-    {
-        public CliResultType Result;
-        public string Output;
-        public int MillisecondsWaited;
-        
-        public override string ToString()
-        {
-            return $"[{Result.ToString()}] {Output}\nFinished in {MillisecondsWaited} milliseconds.";
-        }
-    }
-    
-    internal class WakatimeCli
+    internal class WakatimeBackend : IDevStatsBackend
     {
         private const string WINDOWS_CLI_NAME = "wakatime-cli-windows-amd64";
         private const string MAC_CLI_NAME = "wakatime-cli-darwin-arm64";
+        
         private const int MILLISECONDS_PER_WAIT = 16;
         private const int MAX_PROCESS_WAIT_TIME = 10000; // 10 seconds
         
         private string m_cliPath;
         private string m_gitBranch;
         
-        private WakatimeCli(string cliPath)
-        {
-            m_cliPath = cliPath;
-            
-            // There's no chance the git branch will change without triggering a full recompile so we can just fetch it once.
-            m_gitBranch = FetchGitBranchName();
-            
-            string gitBranchDisplay = string.IsNullOrEmpty(m_gitBranch) ? "N/A" : m_gitBranch;
-            DevStats.Log($"{nameof(WakatimeCli)} Created.\nCLI: {m_cliPath.Replace(Application.dataPath, "Assets")}\nGit branch: {gitBranchDisplay}");
-        }
-        
         #region Send Heartbeat
-        public async Task<CliResult> SendHeartbeats(List<Heartbeat> heartbeats)
+        public async Task<CommandResult> SendHeartbeats(List<Heartbeat> heartbeats)
         {
             if (heartbeats == null || heartbeats.Count == 0)
             {
-                return new CliResult()
+                return new CommandResult()
                 {
-                    Result = CliResultType.Failure,
+                    Result = CommandResultType.Failure,
                     Output = "Empty heartbeats list.",
                     MillisecondsWaited = 0,
                 };
@@ -88,11 +60,11 @@ namespace DevStatsSystem.Core.Wakatime
             }
 
             DevStats.Log($"Sending {heartbeats.Count + 1} Heartbeats to Wakatime.");
-            CliResult result = await CallCli(args, stdin);
+            CommandResult result = await CallCli(args, stdin);
             DevStats.Log($"Send Heartbeats Result: {result.ToString()}");
             return result;
         }
-
+        
         private string GetSerializedExtraHeartbeats(List<Heartbeat> heartbeats)
         {
             StringBuilder stringBuilder = new();
@@ -130,7 +102,7 @@ namespace DevStatsSystem.Core.Wakatime
 
             return value;
         }
-
+        
         private string GetCategory()
         {
             return "coding";
@@ -174,12 +146,13 @@ namespace DevStatsSystem.Core.Wakatime
         }
         #endregion
 
-        private Task<CliResult> CallCli(WakatimeCliArguments arguments, string stdin = null)
+        #region CLI Commands
+        private Task<CommandResult> CallCli(WakatimeCliArguments arguments, string stdin = null)
         {
             return RunCommand(m_cliPath, arguments.ToArgs(false), stdin);
         }
         
-        private static async Task<CliResult> RunCommand(string command, string args, string stdin = null)
+        private static async Task<CommandResult> RunCommand(string command, string args, string stdin = null)
         {
             ProcessStartInfo psi = new ProcessStartInfo()
             {
@@ -196,9 +169,9 @@ namespace DevStatsSystem.Core.Wakatime
             Process process = Process.Start(psi);
             if (process == null)
             {
-                return new CliResult()
+                return new CommandResult()
                 {
-                    Result = CliResultType.Failure,
+                    Result = CommandResultType.Failure,
                     Output = "Could not start process!",
                 };
             }
@@ -236,9 +209,9 @@ namespace DevStatsSystem.Core.Wakatime
                 if (millisecondsWaited > MAX_PROCESS_WAIT_TIME) // Process took too long.
                 {
                     process.Kill();
-                    return new CliResult()
+                    return new CommandResult()
                     {
-                        Result = CliResultType.Timeout,
+                        Result = CommandResultType.Timeout,
                         Output = "Process timed out!",
                         MillisecondsWaited = millisecondsWaited,
                     };
@@ -247,48 +220,66 @@ namespace DevStatsSystem.Core.Wakatime
 
             if (!string.IsNullOrEmpty(errorStr.ToString())) // Is error.
             {
-                return new CliResult()
+                return new CommandResult()
                 {
-                    Result = CliResultType.Failure,
+                    Result = CommandResultType.Failure,
                     Output = errorStr.ToString(),
                     MillisecondsWaited = millisecondsWaited,
                 };
             }
             
-            return new CliResult()
+            return new CommandResult()
             {
-                Result = CliResultType.Success,
+                Result = CommandResultType.Success,
                 Output = outputStr.ToString(),
                 MillisecondsWaited = millisecondsWaited,
             };
         }
-
+        
         public async Task Help()
         {
-            CliResult result = await CallCli(WakatimeCliArguments.Help());
+            CommandResult result = await CallCli(WakatimeCliArguments.Help());
             Debug.Log(result.ToString());
         }
-
+        
         public async Task Version()
         {
-            CliResult result = await CallCli(WakatimeCliArguments.Version());
+            CommandResult result = await CallCli(WakatimeCliArguments.Version());
             Debug.Log(result.ToString());
         }
+        #endregion
         
         #region Loading CLI
-        public static async Task<WakatimeCli> Get()
+        public async Task<CommandResult> Load()
         {
-            string cliPath = await LoadCli();
-            if (string.IsNullOrEmpty(cliPath))
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            
+            m_cliPath = await LoadCli();
+            if (string.IsNullOrEmpty(m_cliPath))
             {
-                DevStats.LogError($"Failed to get {nameof(WakatimeCli)}.");
-                return null;
+                return new CommandResult()
+                {
+                    Result = CommandResultType.Failure,
+                    MillisecondsWaited = 0,
+                    Output = "Failed to get Wakatime Cli path.",
+                };
             }
-
-            return new WakatimeCli(cliPath);
+            
+            // There's no chance the git branch will change without triggering a full recompile so we can just fetch it once.
+            m_gitBranch = FetchGitBranchName();
+            string gitBranchDisplay = string.IsNullOrEmpty(m_gitBranch) ? "N/A" : m_gitBranch;
+            
+            stopwatch.Stop();
+            return new CommandResult()
+            {
+                Result = CommandResultType.Success,
+                MillisecondsWaited = (int)stopwatch.ElapsedMilliseconds,
+                Output = $"{nameof(WakatimeBackend)} Created.\nCLI: {m_cliPath.Replace(Application.dataPath, "Assets")}\nGit branch: {gitBranchDisplay}",
+            };
         }
         
-        private static async Task<string> LoadCli()
+        private async Task<string> LoadCli()
         {
             string cliPath = "";
             switch (Application.platform)
@@ -313,7 +304,7 @@ namespace DevStatsSystem.Core.Wakatime
             return cliPath;
         }
         
-        private static string FindCliPath(string filename)
+        private string FindCliPath(string filename)
         {
             string[] guids = AssetDatabase.FindAssets(Path.GetFileNameWithoutExtension(filename));
             foreach (string guid in guids)
@@ -324,17 +315,16 @@ namespace DevStatsSystem.Core.Wakatime
                     return Path.GetFullPath(assetPath);
                 }
             }
-
-            DevStats.LogError($"Failed to find CLI {filename}.");
+            
             return null;
         }
         
-        private static async Task<bool> MakeExecutable(string filePath)
+        private async Task<bool> MakeExecutable(string filePath)
         {
             if (Application.platform == RuntimePlatform.OSXEditor)
             {
-                CliResult result = await RunCommand("/bin/chmod", $"+x \"{filePath}\"");
-                return result.Result == CliResultType.Success;
+                CommandResult result = await RunCommand("/bin/chmod", $"+x \"{filePath}\"");
+                return result.Result == CommandResultType.Success;
             }
             else
             {
@@ -343,5 +333,117 @@ namespace DevStatsSystem.Core.Wakatime
             }
         }
         #endregion
+        
+        public async Task<StatsData> GetStats()
+        {
+            StatsData stats = new StatsData();
+            
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+            {
+                stats.Result = new CommandResult()
+                {
+                    Result = CommandResultType.Failure,
+                    MillisecondsWaited = 0,
+                    Output = "",
+                };
+                return stats;
+            }
+            
+            var durationsPayload = await WakatimeWebRequests.GetDayDurationRequest();
+            if (durationsPayload.result.Result != UnityWebRequest.Result.Success)
+            {
+                stats.Result = new CommandResult()
+                {
+                    Result = CommandResultType.Failure,
+                    MillisecondsWaited = 0,
+                    Output = $"WakatimeBackend: Failed to get durations payload:\nResponse Code: {durationsPayload.result.ResponseCode}\nOutput: {durationsPayload.result.ErrorMessage}",
+                };
+                return stats;
+            }
+            
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
+            var statsPayload = await WakatimeWebRequests.GetStatsRequest();
+            if (statsPayload.result.Result != UnityWebRequest.Result.Success)
+            {
+                stats.Result = new CommandResult()
+                {
+                    Result = CommandResultType.Failure,
+                    MillisecondsWaited = 0,
+                    Output = $"WakatimeBackend: Failed to get stats payload:\nResponse Code: {statsPayload.result.ResponseCode}\nOutput: {statsPayload.result.ErrorMessage}",
+                };
+                return stats;
+            }
+
+            if (!statsPayload.payload.data.is_up_to_date) // Let's try again after a few seconds.
+            {
+                await Task.Delay(TimeSpan.FromSeconds(2));
+                statsPayload = await WakatimeWebRequests.GetStatsRequest();
+                if (statsPayload.result.Result != UnityWebRequest.Result.Success)
+                {
+                    stats.Result = new CommandResult()
+                    {
+                        Result = CommandResultType.Failure,
+                        MillisecondsWaited = 0,
+                        Output = $"WakatimeBackend: Failed to get stats payload:\nResponse Code: {statsPayload.result.ResponseCode}\nOutput: {statsPayload.result.ErrorMessage}",
+                    };
+                    return stats;
+                }
+                
+                // Just move on even if it's still not "up_to_date". It won't technically break anything and we can let
+                // the user just refresh.
+            }
+
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
+            var summariesPayload = await WakatimeWebRequests.GetSummariesRequest(7);
+            if (summariesPayload.result.Result != UnityWebRequest.Result.Success)
+            {
+                stats.Result = new CommandResult()
+                {
+                    Result = CommandResultType.Failure,
+                    MillisecondsWaited = 0,
+                    Output = $"WakatimeBackend: Failed to get summaries payload:\nResponse Code: {summariesPayload.result.ResponseCode}\nOutput: {summariesPayload.result.ErrorMessage}",
+                };
+                return stats;
+            }
+            
+            if (EditorApplication.isCompiling)
+            {
+                stats.Result = new CommandResult()
+                {
+                    Result = CommandResultType.Failure,
+                    MillisecondsWaited = 0,
+                    Output = "Editor is compiling. Stopping run everything",
+                };
+                return stats;
+            }
+            
+            // Update data.
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+            for (int i = 0; i < summariesPayload.payload.data.Length; i++)
+            {
+                if (summariesPayload.payload.data[i].range.date == today)
+                {
+                    stats.TodayStats = new TodayStats(in durationsPayload.payload, in summariesPayload.payload.data[i]);
+                    break;
+                }
+            }
+            stats.WeekStats = new TimespanStats("Week", in summariesPayload.payload);
+            stats.AllTimeStats = new AllTimeStats(statsPayload.payload);       
+            
+            stopwatch.Stop();
+            stats.Result = new CommandResult()
+            {
+                Result = CommandResultType.Success,
+                MillisecondsWaited = (int)stopwatch.ElapsedMilliseconds,
+                Output = "",
+            };
+            
+            return stats;
+        }
     }
 }
