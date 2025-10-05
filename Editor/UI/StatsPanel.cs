@@ -145,7 +145,7 @@ namespace DevStatsSystem.UI
             m_todayStatsElement.SetData(in m_data.TodayStats);
             m_weekStatsElement.SetData(in m_data.WeekStats);
             m_allTimeStatsElement.SetData(in m_data.AllTimeStats);
-            m_lastUpdatedLabel.text = $"Last Updated: {new DateTime(m_data.LastUpdateTime).ToLocalTime():hh:mm tt MM/dd/yyy}";
+            m_lastUpdatedLabel.text = $"Last Updated: {new DateTime(m_data.LastUpdateTime).ToLocalTime():hh:mm tt MM/dd/yy}";
         }
 
         private void OnFetchDataStarted()
