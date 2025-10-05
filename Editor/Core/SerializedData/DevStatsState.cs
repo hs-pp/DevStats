@@ -120,7 +120,7 @@ namespace DevStatsSystem.Core.SerializedData
             {
                 fileToCount.Add((filePath, fileCountsLookup[filePath]));
             }
-            fileToCount.Sort((x, y) => x.Item2.CompareTo(y.Item2));
+            fileToCount.Sort((x, y) => y.Item2.CompareTo(x.Item2));
             StringBuilder stringBuilder = new();
             stringBuilder.Append("Files: ");
             foreach (var file in fileToCount)

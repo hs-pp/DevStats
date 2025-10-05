@@ -13,6 +13,8 @@ namespace DevStatsSystem.UI
         private const string POST_FREQUENCY_ENUM_TAG = "post-frequency-enum";
         private const string SAME_FILE_COOLDOWN_ENUM_TAG = "same-file-cooldown-enum";
         private const string APIKEY_FIELD_TAG = "api-key-field";
+        private const string API_LINK_FULL_ELEMENT_TAG = "api-link-full-element";
+        private const string API_WEBLINK_LABEL_TAG = "api-weblink-label";
         private const string KEYSTROKE_TIMEOUT_ENUM_TAG = "keystroke-timeout-enum";
         
         private Toggle m_isEnabledToggle;
@@ -23,6 +25,8 @@ namespace DevStatsSystem.UI
         
         // If we ever decide to support other backends, we should move these settings out to its own "wakatime" settings.
         private TextField m_apiKeyField;
+        private VisualElement m_apiLinkFullElement;
+        private Label m_apiWeblinkLabel;
         private EnumField m_keystrokeTimeoutEnum;
 
         public SettingsPanel()
@@ -41,6 +45,8 @@ namespace DevStatsSystem.UI
             m_postFrequencyEnum = this.Q<EnumField>(POST_FREQUENCY_ENUM_TAG);
             m_sameFileCooldownEnum = this.Q<EnumField>(SAME_FILE_COOLDOWN_ENUM_TAG);
             m_apiKeyField = this.Q<TextField>(APIKEY_FIELD_TAG);
+            m_apiLinkFullElement = this.Q<VisualElement>(API_LINK_FULL_ELEMENT_TAG);
+            m_apiWeblinkLabel = this.Q<Label>(API_WEBLINK_LABEL_TAG);
             m_keystrokeTimeoutEnum = this.Q<EnumField>(KEYSTROKE_TIMEOUT_ENUM_TAG);
             
             m_isEnabledToggle.value = DevStatsSettings.Instance.IsEnabled;
@@ -54,7 +60,16 @@ namespace DevStatsSystem.UI
             m_sameFileCooldownEnum.value = DevStatsSettings.Instance.SameFileCooldown;
             m_sameFileCooldownEnum.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.SameFileCooldown = (SameFileCooldown)evt.newValue);
             m_apiKeyField.value = DevStatsSettings.Instance.APIKey;
-            m_apiKeyField.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.APIKey = evt.newValue);
+            m_apiLinkFullElement.style.display = string.IsNullOrEmpty(DevStatsSettings.Instance.APIKey) ? DisplayStyle.Flex : DisplayStyle.None;
+            m_apiKeyField.RegisterValueChangedCallback(evt =>
+            {
+                DevStatsSettings.Instance.APIKey = evt.newValue;
+                m_apiLinkFullElement.style.display = string.IsNullOrEmpty(evt.newValue) ? DisplayStyle.Flex : DisplayStyle.None;
+            });
+            m_apiWeblinkLabel.AddManipulator(new Clickable(() =>
+            {
+                Application.OpenURL("https://wakatime.com/settings/account");
+            }));
             m_keystrokeTimeoutEnum.value = DevStatsSettings.Instance.KeystrokeTimeout;
             m_keystrokeTimeoutEnum.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.KeystrokeTimeout = (KeystrokeTimeout)evt.newValue);
         }
