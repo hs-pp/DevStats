@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using DevStatsSystem.Core;
 using DevStatsSystem.Core.SerializedData;
 
-namespace DevStatsSystem.Core.Wakatime
+namespace DevStatsSystem.Wakatime
 {
     internal struct Argument
     {

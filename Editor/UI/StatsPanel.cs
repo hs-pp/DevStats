@@ -1,9 +1,7 @@
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using DevStatsSystem.Core;
 using DevStatsSystem.Core.SerializedData;
-using DevStatsSystem.Core.Wakatime;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -115,29 +113,27 @@ namespace DevStatsSystem.UI
                 return;
             }
             
-            m_isFetchingData = true;
             OnFetchDataStarted();
             
             StatsData statsData = await DevStats.Backend.GetStats();
             
             if (statsData.Result.Result != CommandResultType.Success)
             {
-                m_isFetchingData = false;
                 Debug.LogError($"Failed to fetch stats! Output: {statsData.Result.Output}");
+                OnFetchDataFinished();
                 return;
             }
             
             if (EditorApplication.isCompiling)
             {
-                m_isFetchingData = false;
                 Debug.LogWarning("Editor is compiling. Stopping Run Everything!");
+                OnFetchDataFinished();
                 return;
             }
             
             // Update data.
             m_data.UpdateData(statsData);
             
-            m_isFetchingData = false;
             OnFetchDataFinished();
         }
 
@@ -151,12 +147,14 @@ namespace DevStatsSystem.UI
 
         private void OnFetchDataStarted()
         {
+            m_isFetchingData = true;
             m_forceUpdateButton.enabledSelf = false;
             m_loadingScreen.style.display = DisplayStyle.Flex;
         }
 
         private void OnFetchDataFinished()
         {
+            m_isFetchingData = false;
             m_forceUpdateButton.enabledSelf = true;
             m_loadingScreen.style.display = DisplayStyle.None;
         }

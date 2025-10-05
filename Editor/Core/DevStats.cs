@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DevStatsSystem.Core.SerializedData;
-using DevStatsSystem.Core.Wakatime;
+using DevStatsSystem.Wakatime;
 using UnityEditor;
 using UnityEngine;
 
@@ -84,7 +84,7 @@ namespace DevStatsSystem.Core
                 Log("Initialized DevStats.");
             }
 
-            Backend = new WakatimeBackend();
+            Backend = new WakatimeBackend(); // Make this not hardcoded if we ever want a different backend.
             CommandResult result = await Backend.Load();
             if (result.Result == CommandResultType.Failure)
             {

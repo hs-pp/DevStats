@@ -1,13 +1,13 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using DevStatsSystem.Core;
 using DevStatsSystem.Core.SerializedData;
-using DevStatsSystem.Core.Wakatime.Payloads;
+using DevStatsSystem.Wakatime.Payloads;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace DevStatsSystem.Core.Wakatime
-{
+namespace DevStatsSystem.Wakatime{
     [Serializable]
     internal struct WebRequestResult
     {

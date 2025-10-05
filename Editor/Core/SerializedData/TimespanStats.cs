@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using DevStatsSystem.Core.Wakatime.Payloads;
-using UnityEngine;
 
 namespace DevStatsSystem.Core.SerializedData
 {
@@ -23,6 +21,5 @@ namespace DevStatsSystem.Core.SerializedData
         public float AssetTime;
         
         public List<TimespanDayStat> DayStats;
-        
     }
 }

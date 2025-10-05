@@ -5,14 +5,15 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using DevStatsSystem.Core;
 using DevStatsSystem.Core.SerializedData;
-using DevStatsSystem.Core.Wakatime.Payloads;
+using DevStatsSystem.Wakatime.Payloads;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
 
-namespace DevStatsSystem.Core.Wakatime
+namespace DevStatsSystem.Wakatime
 {
     internal class WakatimeBackend : IDevStatsBackend
     {
