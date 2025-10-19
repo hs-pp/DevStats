@@ -19,6 +19,11 @@ namespace DevStatsSystem.Wakatime{
     internal static class WakatimeWebRequests
     {
         private static string URL_PREFIX = "https://api.wakatime.com/api/v1/users/current/";
+
+        public static async Task<(WebRequestResult result, UsersPayload payload)> GetUsersRequest()
+        {
+            return await CreateRequest<UsersPayload>("/api/v1/users/current");
+        }
         
         public static async Task<(WebRequestResult result, StatsPayload payload)> GetStatsRequest()
         {

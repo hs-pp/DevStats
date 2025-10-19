@@ -22,15 +22,6 @@ namespace DevStatsSystem.Core
             return $"[{Result.ToString()}] {Output}\nFinished in {MillisecondsWaited} milliseconds.";
         }
     }
-
-    public class StatsData
-    {
-        public CommandResult Result;
-        
-        public TodayStats TodayStats;
-        public TimespanStats WeekStats;
-        public AllTimeStats AllTimeStats;
-    }
     
     public interface IDevStatsBackend
     {

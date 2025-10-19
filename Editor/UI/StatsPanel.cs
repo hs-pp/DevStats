@@ -142,9 +142,9 @@ namespace DevStatsSystem.UI
 
         private void LoadDataToUI()
         {
-            m_todayStatsElement.SetData(in m_data.TodayStats);
-            m_weekStatsElement.SetData(in m_data.WeekStats);
-            m_allTimeStatsElement.SetData(in m_data.AllTimeStats);
+            m_todayStatsElement.SetData(in m_data.StatsData.TodayStats);
+            m_weekStatsElement.SetData(in m_data.StatsData.WeekStats);
+            m_allTimeStatsElement.SetData(in m_data.StatsData.AllTimeStats);
             m_lastUpdatedLabel.text = $"Last Updated: {new DateTime(m_data.LastUpdateTime).ToLocalTime():hh:mm tt MM/dd/yy}";
         }
 

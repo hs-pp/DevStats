@@ -6,16 +6,12 @@ namespace DevStatsSystem.Core.SerializedData
     [IsProjectSpecific]
     internal class CachedStatsPanelData : SavedData<CachedStatsPanelData>
     {
-        public TodayStats TodayStats;
-        public TimespanStats WeekStats;
-        public AllTimeStats AllTimeStats;
+        public StatsData StatsData;
         public long LastUpdateTime;
 
         public void UpdateData(StatsData statsData)
         {
-            TodayStats = statsData.TodayStats;
-            WeekStats = statsData.WeekStats;
-            AllTimeStats = statsData.AllTimeStats;
+            StatsData = statsData;
             LastUpdateTime = DateTime.UtcNow.Ticks;
 
             Save();

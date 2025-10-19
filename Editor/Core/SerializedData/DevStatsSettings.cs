@@ -1,5 +1,4 @@
 using System;
-using DevStatsSystem.UI;
 using UnityEngine;
 
 namespace DevStatsSystem.Core.SerializedData
@@ -46,8 +45,6 @@ namespace DevStatsSystem.Core.SerializedData
     {
         [SerializeField]
         private bool m_isEnabled = true;
-        [NonSerialized]
-        public Action<bool> OnEnabledChanged;
         public bool IsEnabled
         {
             get => m_isEnabled;
@@ -58,8 +55,12 @@ namespace DevStatsSystem.Core.SerializedData
                     return;
                 }
             
+                bool prevRunning = IsRunning();
                 m_isEnabled = value;
-                OnEnabledChanged?.Invoke(m_isEnabled);
+                if (prevRunning != IsRunning())
+                {
+                    OnIsRunningChanged?.Invoke(IsRunning());
+                }
             }
         }
         public StatsRefreshRate StatsRefreshRate = StatsRefreshRate.EveryFifteenMinutes;
@@ -67,12 +68,28 @@ namespace DevStatsSystem.Core.SerializedData
         public SameFileCooldown SameFileCooldown = SameFileCooldown.FiveSeconds;
         
         // Wakatime settings
-        public string APIKey;
+        [SerializeField]
+        private string m_apiKey;
+        public string APIKey
+        {
+            get => m_apiKey;
+            set
+            {
+                bool prevRunning = IsRunning();
+                m_apiKey = value;
+                if (prevRunning != IsRunning())
+                {
+                    OnIsRunningChanged?.Invoke(!prevRunning);
+                }
+            }
+        }
         public KeystrokeTimeout KeystrokeTimeout = KeystrokeTimeout.FiveMinutes;
         
         public bool IsRunning()
         {
             return IsEnabled && !string.IsNullOrEmpty(APIKey);
         }
+        [NonSerialized]
+        public Action<bool> OnIsRunningChanged;
     }
 }

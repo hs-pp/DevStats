@@ -548,5 +548,9 @@ namespace DevStatsSystem.Wakatime
             return allTimeStats;
         }
         #endregion
+        
+        #region Waka Settings
+        
+        #endregion
     }
 }
