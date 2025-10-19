@@ -63,18 +63,13 @@ namespace DevStatsSystem.Core
         {
             if (m_settings.IsEnabled && string.IsNullOrEmpty(m_settings.APIKey))
             {
-                LogError("DevStats is enabled but API key is missing. Open the DevStats window from \"Window/DevStats\" and set the API key!");
-            }
-            else
-            {
-                Log("Initialized DevStats.");
+                Debug.LogError("DevStats is enabled but API key is missing. Open the DevStats window from \"Window/DevStats\" and set the API key!");
             }
 
             Backend = new WakatimeBackend(); // Make this not hardcoded if we ever want a different backend.
             CommandResult result = await Backend.Load();
             if (result.Result == CommandResultType.Failure)
             {
-                LogError("DevStats Backend failed to load.");
                 Backend = null;
                 return;
             }
@@ -93,8 +88,6 @@ namespace DevStatsSystem.Core
             
             m_heartbeatProvider.Deinitialize();
             EditorApplication.update -= OnEditorUpdate;
-            
-            Log("Deinitialized DevStats");
         }
         
         /// <summary>
@@ -117,13 +110,13 @@ namespace DevStatsSystem.Core
                 return;
             }
 
-            long timeSinceStartup = DateTime.Now.Ticks;
+            long nowTime = DateTime.UtcNow.Ticks;
             int sendInterval = (int)m_settings.PostFrequency * 10000000;
-            if (m_state.GetQueuedHeartbeatCount() > 0 && timeSinceStartup > m_state.LastHeartbeatSendTime + sendInterval)
+            if (m_state.GetQueuedHeartbeatCount() > 0 && nowTime > m_state.LastHeartbeatSendTime + sendInterval)
             {
                 SendHeartbeatsToCli(m_state.GetQueuedHeartbeats());
                 m_state.ClearQueuedHeartbeats();
-                m_state.LastHeartbeatSendTime = timeSinceStartup;
+                m_state.LastHeartbeatSendTime = nowTime;
             }
         }
 
@@ -222,36 +215,6 @@ namespace DevStatsSystem.Core
         public static string SecondsToFormattedTimeSinceMidnight(float startTime)
         {
             return DateTime.Today.AddSeconds(startTime).ToString("h:mmtt");
-        }
-
-        public static void Log(string log)
-        {
-            if (!m_settings.PrintDebugLogs)
-            {
-                return;
-            }
-            
-            Debug.Log($"{GetLogHeader()} {log}");
-        }
-
-        public static void LogWarning(string warning)
-        {
-            if (!m_settings.PrintDebugLogs)
-            {
-                return;
-            }
-            
-            Debug.LogWarning($"{GetLogHeader()} {warning}");
-        }
-
-        public static void LogError(string error)
-        {
-            Debug.LogError($"{GetLogHeader()} {error}");
-        }
-
-        private static string GetLogHeader()
-        {
-            return "<b><color=#F37828>[DevStats]</color></b>";
         }
     }
 }

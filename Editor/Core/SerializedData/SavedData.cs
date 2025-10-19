@@ -1,12 +1,15 @@
+using System;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
 namespace DevStatsSystem.Core.SerializedData
 {
-    internal class SavedData<T> where T : new()
+    // Add this to child SavedData classes that should be project-specific.
+    internal class IsProjectSpecificAttribute : Attribute { }
+    
+    internal abstract class SavedData<T> where T : new()
     {
-        private static string SAVEKEY = typeof(T).Name;
-        
         private static T m_instance;
         public static T Instance
         {
@@ -20,12 +23,25 @@ namespace DevStatsSystem.Core.SerializedData
                 return m_instance;
             }
         }
+
+        public static void Reset()
+        {
+            m_instance = new T();
+            string saveKey = GetSaveKey(typeof(T).GetCustomAttribute<IsProjectSpecificAttribute>() != null);
+            EditorPrefs.SetString(saveKey, JsonUtility.ToJson(m_instance));
+        }
+
+        private static string GetSaveKey(bool isProjectSpecific)
+        {
+            return isProjectSpecific ? $"{Application.productName}_{typeof(T).Name}" : typeof(T).Name;
+        }
         
         private static T Load()
         {
-            if (EditorPrefs.HasKey(SAVEKEY))
+            string saveKey = GetSaveKey(typeof(T).GetCustomAttribute<IsProjectSpecificAttribute>() != null);
+            if (EditorPrefs.HasKey(saveKey))
             {
-                return JsonUtility.FromJson<T>(EditorPrefs.GetString(SAVEKEY));
+                return JsonUtility.FromJson<T>(EditorPrefs.GetString(saveKey));
             }
 
             return new T();
@@ -33,7 +49,8 @@ namespace DevStatsSystem.Core.SerializedData
 
         public void Save()
         {
-            EditorPrefs.SetString(SAVEKEY, JsonUtility.ToJson(this));
+            string saveKey = GetSaveKey(GetType().GetCustomAttribute<IsProjectSpecificAttribute>() != null);
+            EditorPrefs.SetString(saveKey, JsonUtility.ToJson(this));
         }
     }
 }

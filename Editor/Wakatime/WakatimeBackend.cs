@@ -68,7 +68,7 @@ namespace DevStatsSystem.Wakatime
                     cliPath = FindCliPath(MAC_CLI_NAME);
                     break;
                 default:
-                    DevStats.LogError("Failed to determine application platform.");
+                    Debug.LogError("DevStats - Failed to determine application platform.");
                     break;
             }
 
@@ -249,9 +249,7 @@ namespace DevStatsSystem.Wakatime
                 args.AddExtraHeartbeats();
             }
 
-            DevStats.Log($"Sending {heartbeats.Count + 1} Heartbeats to Wakatime.");
             CommandResult result = await CallCli(args, stdin);
-            DevStats.Log($"Send Heartbeats Result: {result.ToString()}");
             return result;
         }
         

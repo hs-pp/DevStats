@@ -10,7 +10,7 @@ namespace DevStatsSystem.UI
     [UxmlElement]
     internal partial class TimespanGraphElement : VisualElement
     {
-        private const float MIN_GRAPH_HEIGHT = 3 * 60; // 3 hours
+        private const float MIN_GRAPH_HEIGHT = 2 * 60 * 60; // 2 hours
         private const string UXML_PATH = "DevStats/UXML/TimespanGraphElement";
         private const string GRAPH_CONTAINER_TAG = "graph-container";
 
@@ -37,6 +37,11 @@ namespace DevStatsSystem.UI
                 dayElement.RemoveFromHierarchy();
             }
             m_dayElements.Clear();
+            
+            if (dayStats == null)
+            {
+                return;
+            }
             
             // Calculate graph height
             float graphHeight = MIN_GRAPH_HEIGHT;

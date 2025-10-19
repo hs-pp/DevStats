@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DevStatsSystem.Core.SerializedData;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -55,6 +56,14 @@ namespace DevStatsSystem.UI
         public static void OpenWindow()
         {
             GetWindow<DevStatsWindow>().Show();
+        }
+
+        [MenuItem("Window/Clear DevStats")]
+        public static void ClearStuff()
+        {
+            CachedStatsPanelData.Reset();
+            DevStatsSettings.Reset();
+            DevStatsState.Reset();
         }
 
         public void OnEnable()

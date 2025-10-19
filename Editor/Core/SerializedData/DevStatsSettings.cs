@@ -62,7 +62,6 @@ namespace DevStatsSystem.Core.SerializedData
                 OnEnabledChanged?.Invoke(m_isEnabled);
             }
         }
-        public bool PrintDebugLogs = false;
         public StatsRefreshRate StatsRefreshRate = StatsRefreshRate.EveryFifteenMinutes;
         public PostFrequency PostFrequency = PostFrequency.EveryTwoMinutes;
         public SameFileCooldown SameFileCooldown = SameFileCooldown.FiveSeconds;

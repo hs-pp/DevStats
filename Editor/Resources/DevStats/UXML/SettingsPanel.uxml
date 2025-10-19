@@ -8,7 +8,6 @@
         <ui:EnumField label="Stats Refresh Rate" value="EveryHour" type="DevStatsSystem.Core.SerializedData.StatsRefreshRate, DevStats" name="stats-refresh-rate-enum" tooltip="How often the stats panel should auto refresh." />
         <ui:EnumField label="POST Frequency" value="EveryTwoMinutes" type="DevStatsSystem.Core.SerializedData.PostFrequency, DevStats" name="post-frequency-enum" tooltip="How often DevStats should push the collected heartbeats to the backend(WakatimeCLI)." />
         <ui:EnumField label="Same File Cooldown" value="FiveSeconds" type="DevStatsSystem.Core.SerializedData.SameFileCooldown, DevStats" name="same-file-cooldown-enum" tooltip="The amount of time to wait before we can create another heartbeat for the same file." />
-        <ui:Toggle label="Print Debug Logs" name="debugmode-toggle" enabled="true" tooltip="Toggle to print debug logs to console." />
     </DevStatsSystem.UI.LabeledContainerElement>
     <DevStatsSystem.UI.LabeledContainerElement name="wakatime-settings" title-text="Wakatime">
         <ui:TextField label="API Key" placeholder-text="filler text" name="api-key-field" password="true" tooltip="This one&apos;s pretty important. " />

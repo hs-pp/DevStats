@@ -56,13 +56,13 @@ namespace DevStatsSystem.Wakatime
         {
             if (string.IsNullOrEmpty(newArg.Option))
             {
-                DevStats.LogError("Tried to add an arg with no Option!");
+                // Tried to add an arg with no Option! Ignore.
                 return;
             }
             
             if (m_args.Exists(x => x.Option == newArg.Option))
             {
-                DevStats.LogError($"Tried to add an existing arg! {newArg.Option}");
+                // Tried to add an existing arg! Ignore.
                 return;
             }
             

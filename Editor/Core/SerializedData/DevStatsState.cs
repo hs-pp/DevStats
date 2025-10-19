@@ -7,6 +7,7 @@ using UnityEngine;
 namespace DevStatsSystem.Core.SerializedData
 {
     [Serializable]
+    [IsProjectSpecific]
     internal class DevStatsState : SavedData<DevStatsState>
     {
         #region Queued Heartbeats

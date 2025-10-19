@@ -3,6 +3,7 @@ using System;
 namespace DevStatsSystem.Core.SerializedData
 {
     [Serializable]
+    [IsProjectSpecific]
     internal class CachedStatsPanelData : SavedData<CachedStatsPanelData>
     {
         public TodayStats TodayStats;

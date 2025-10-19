@@ -70,10 +70,11 @@ namespace DevStatsSystem.Core
             if (PrefabStageUtility.GetCurrentPrefabStage() is PrefabStage prefabStage) // Prefab hierarchy has changed.
             {
                 // Actually don't send this heartbeat. Prefabs normally auto-save.
-                //SendHeartbeat(AssetDatabase.LoadAssetAtPath<Object>(prefabStage.assetPath), false);
+                // SendHeartbeat(AssetDatabase.LoadAssetAtPath<Object>(prefabStage.assetPath), false);
             }
             else if (EditorWindow.mouseOverWindow.GetType() == InternalBridgeHelper.GetSceneHierarchyWindowType())
             {
+                // If the mouse is inside the scene hierarchy window, we know the hierarchy change was for the scene.
                 SendHeartbeat(SceneToSceneAsset(EditorSceneManager.GetActiveScene()), false);
             }
             // We don't care for any other scenario... for now.
@@ -93,10 +94,6 @@ namespace DevStatsSystem.Core
                         {
                             SendHeartbeat(changeObject, false);
                         }
-                        else
-                        {
-                            DevStats.LogWarning($"Object change of type {changeObject.GetType()} detected but not converted to heartbeat. Should we?");
-                        }
                         break;
                     case ObjectChangeKind.CreateAssetObject:
                         stream.GetCreateAssetObjectEvent(i, out CreateAssetObjectEventArgs createChange);
@@ -105,10 +102,6 @@ namespace DevStatsSystem.Core
                         {
                             SendHeartbeat(createObject, true);
                         }
-                        else
-                        {
-                            DevStats.LogWarning($"Object create of type {createObject.GetType()} detected but not converted to heartbeat. Should we?");
-                        }
                         break;
                     case ObjectChangeKind.DestroyAssetObject:
                         stream.GetDestroyAssetObjectEvent(i, out DestroyAssetObjectEventArgs destroyChange);
@@ -116,10 +109,6 @@ namespace DevStatsSystem.Core
                         if (destroyObject is ScriptableObject)
                         {
                             SendHeartbeat(destroyObject, true);
-                        }
-                        else
-                        {
-                            DevStats.LogWarning($"Object destroy of type {destroyObject.GetType()} detected but not converted to heartbeat. Should we?");
                         }
                         break;
                 }
@@ -132,10 +121,6 @@ namespace DevStatsSystem.Core
             {
                 SendHeartbeat(asset, true);
             }
-            else
-            {
-                DevStats.LogWarning($"Non-tracked Object saved ({asset.name}). Should DevStats track it?");
-            }
         }
 
         private SceneAsset SceneToSceneAsset(Scene scene)
@@ -147,14 +132,14 @@ namespace DevStatsSystem.Core
         {
             if (asset == null)
             {
-                DevStats.LogWarning("Cannot send heartbeat for null asset!");
+                // Cannot send heartbeat for null asset!
                 return;
             }
 
             string assetPath = AssetDatabase.GetAssetPath(asset);
             if (string.IsNullOrEmpty(assetPath))
             {
-                DevStats.LogWarning($"Change asset doesn't have a file path. Not sending heartbeat. \n {asset.name}({asset.GetType().Name})");
+                // Change asset doesn't have a file path. Not sending heartbeat.
                 return;
             }
             
@@ -173,8 +158,6 @@ namespace DevStatsSystem.Core
             {
                 return;
             }
-
-            DevStats.Log(heartbeat.ToString());
             
             TriggerHeartbeat?.Invoke(heartbeat);
             m_previousHeartbeat = heartbeat;

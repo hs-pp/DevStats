@@ -109,8 +109,8 @@ namespace DevStatsSystem.UI
 
         private void UpdateUntilNextSendLabel()
         {
-            TimeSpan timeRemaining = DateTime.Now - new DateTime(DevStatsState.Instance.LastHeartbeatSendTime);
-            int secondsRemaining = (int)DevStatsSettings.Instance.PostFrequency - (int)timeRemaining.TotalSeconds;
+            long ticksRemaining = DateTime.UtcNow.Ticks - DevStatsState.Instance.LastHeartbeatSendTime;
+            int secondsRemaining = (int)DevStatsSettings.Instance.PostFrequency - (int)new TimeSpan(ticksRemaining).TotalSeconds;
             if (secondsRemaining < 0)
             {
                 secondsRemaining = 0;
