@@ -439,6 +439,14 @@ namespace DevStatsSystem.Wakatime
             return stats;
         }
 
+        public Task<CommandResult> Unload()
+        {
+            return Task.FromResult(new CommandResult()
+            {
+                Result = CommandResultType.Success,
+            });
+        }
+
         private TodayStats CreateTodayStats(in DurationsPayload durationsPayload, in SummariesPayload summariesPayload)
         {
             // Get today summary
@@ -550,7 +558,17 @@ namespace DevStatsSystem.Wakatime
         #endregion
         
         #region Waka Settings
+        public ABackendSettingsWidget CreateSettingsWidgetInstance()
+        {
+            return new WakatimeSettingsElement();
+        }
         
+        public bool CanRun => WakatimeSettings.Instance.CanRun;
+        public Action<bool> OnCanRunChanged
+        {
+            get => WakatimeSettings.Instance.OnCanRunChanged;
+            set => WakatimeSettings.Instance.OnCanRunChanged = value;
+        }
         #endregion
     }
 }

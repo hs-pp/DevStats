@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DevStatsSystem.Core.SerializedData;
+using UnityEngine.UIElements;
 
 namespace DevStatsSystem.Core
 {
@@ -22,11 +24,20 @@ namespace DevStatsSystem.Core
             return $"[{Result.ToString()}] {Output}\nFinished in {MillisecondsWaited} milliseconds.";
         }
     }
+
+    public abstract class ABackendSettingsWidget : VisualElement
+    {
+    }
     
     public interface IDevStatsBackend
     {
         Task<CommandResult> Load();
         Task<CommandResult> SendHeartbeats(List<Heartbeat> heartbeats);
         Task<StatsData> GetStats();
+        Task<CommandResult> Unload();
+
+        ABackendSettingsWidget CreateSettingsWidgetInstance();
+        public bool CanRun { get; }
+        public Action<bool> OnCanRunChanged { get; set; }
     }
 }

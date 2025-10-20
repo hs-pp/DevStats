@@ -52,17 +52,22 @@ namespace DevStatsSystem.UI
         public override void OnShow()
         {
             m_data = CachedStatsPanelData.Instance;
-            DevStats.OnInitializedCallback += TryAutoFetchData;
-            TryAutoFetchData();
+            DevStats.OnIsRunningChanged += TryAutoFetchData;
+            TryAutoFetchData(DevStats.IsRunning());
         }
 
         public override void OnHide()
         {
-            DevStats.OnInitializedCallback -= TryAutoFetchData;
+            DevStats.OnIsRunningChanged -= TryAutoFetchData;
         }
 
-        private async void TryAutoFetchData()
+        private async void TryAutoFetchData(bool isRunning)
         {
+            if (!isRunning)
+            {
+                return;
+            }
+            
             if (ShouldFetchData(DevStatsSettings.Instance.StatsRefreshRate, m_data.LastUpdateTime))
             {
                 await FetchData();
@@ -106,11 +111,6 @@ namespace DevStatsSystem.UI
 
         private async Task FetchData()
         {
-            if (DevStats.Backend == null)
-            {
-                return;
-            }
-            
             if (m_isFetchingData)
             {
                 return;

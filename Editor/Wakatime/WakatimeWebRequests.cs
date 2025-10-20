@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using DevStatsSystem.Core;
-using DevStatsSystem.Core.SerializedData;
 using DevStatsSystem.Wakatime.Payloads;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -22,31 +21,31 @@ namespace DevStatsSystem.Wakatime{
 
         public static async Task<(WebRequestResult result, UsersPayload payload)> GetUsersRequest()
         {
-            return await CreateRequest<UsersPayload>("/api/v1/users/current");
+            return await CreateRequest<UsersPayload>("");
         }
         
         public static async Task<(WebRequestResult result, StatsPayload payload)> GetStatsRequest()
         {
-            return await CreateRequest<StatsPayload>($"stats/all_time?timeout={(int)DevStatsSettings.Instance.KeystrokeTimeout}");
+            return await CreateRequest<StatsPayload>($"stats/all_time?timeout={(int)WakatimeSettings.Instance.KeystrokeTimeout}");
         }
 
         public static async Task<(WebRequestResult result, SummariesPayload payload)> GetSummariesRequest(int numDays)
         {
             string startDate = DateTime.Now.AddDays(-numDays + 1).ToString("yyyy-MM-dd");
             string endDate = DateTime.Now.ToString("yyyy-MM-dd");
-            return await CreateRequest<SummariesPayload>($"summaries?start={startDate}&end={endDate}&project={DevStats.GetProjectName()}&timeout={(int)DevStatsSettings.Instance.KeystrokeTimeout}");
+            return await CreateRequest<SummariesPayload>($"summaries?start={startDate}&end={endDate}&project={DevStats.GetProjectName()}&timeout={(int)WakatimeSettings.Instance.KeystrokeTimeout}");
         }
 
         public static async Task<(WebRequestResult result, DurationsPayload payload)> GetDayDurationRequest()
         {
             string date = DateTime.Now.ToString("yyyy-MM-dd");
-            return await CreateRequest<DurationsPayload>($"durations?date={date}&timeout={(int)DevStatsSettings.Instance.KeystrokeTimeout}"); // Specifying project returns garbage data. Just manually filter!!
+            return await CreateRequest<DurationsPayload>($"durations?date={date}&timeout={(int)WakatimeSettings.Instance.KeystrokeTimeout}"); // Specifying project returns garbage data. Just manually filter!!
         }
         
         private static async Task<(WebRequestResult result, T payload)> CreateRequest<T>(string url) where T : struct
         {
             UnityWebRequest request = UnityWebRequest.Get(URL_PREFIX + url);
-            string auth = Convert.ToBase64String(Encoding.ASCII.GetBytes(DevStatsSettings.Instance.APIKey + ":"));
+            string auth = Convert.ToBase64String(Encoding.ASCII.GetBytes(WakatimeSettings.Instance.APIKey + ":"));
             request.SetRequestHeader("Authorization", "Basic " + auth);
             await request.SendWebRequest();
 

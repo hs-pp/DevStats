@@ -55,41 +55,15 @@ namespace DevStatsSystem.Core.SerializedData
                     return;
                 }
             
-                bool prevRunning = IsRunning();
                 m_isEnabled = value;
-                if (prevRunning != IsRunning())
-                {
-                    OnIsRunningChanged?.Invoke(IsRunning());
-                }
+                OnIsEnabledChanged?.Invoke(m_isEnabled);
             }
         }
+        [NonSerialized]
+        public Action<bool> OnIsEnabledChanged;
+        
         public StatsRefreshRate StatsRefreshRate = StatsRefreshRate.EveryFifteenMinutes;
         public PostFrequency PostFrequency = PostFrequency.EveryTwoMinutes;
         public SameFileCooldown SameFileCooldown = SameFileCooldown.FiveSeconds;
-        
-        // Wakatime settings
-        [SerializeField]
-        private string m_apiKey;
-        public string APIKey
-        {
-            get => m_apiKey;
-            set
-            {
-                bool prevRunning = IsRunning();
-                m_apiKey = value;
-                if (prevRunning != IsRunning())
-                {
-                    OnIsRunningChanged?.Invoke(!prevRunning);
-                }
-            }
-        }
-        public KeystrokeTimeout KeystrokeTimeout = KeystrokeTimeout.FiveMinutes;
-        
-        public bool IsRunning()
-        {
-            return IsEnabled && !string.IsNullOrEmpty(APIKey);
-        }
-        [NonSerialized]
-        public Action<bool> OnIsRunningChanged;
     }
 }

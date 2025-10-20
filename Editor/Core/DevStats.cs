@@ -14,14 +14,28 @@ namespace DevStatsSystem.Core
         private static HeartbeatProvider m_heartbeatProvider;
         private static DevStatsState m_state;
         private static DevStatsSettings m_settings;
+        
+        internal static bool IsRunning()
+        {
+            return m_settings.IsEnabled && Backend.CanRun;
+        }
+        internal static Action<bool> OnIsRunningChanged;
 
-        public static Action OnInitializedCallback;
+        private static void TriggerIsRunningChanged(bool isRunning)
+        {
+            Debug.Log("IsRunningChanged " + IsRunning());
+            OnIsRunningChanged?.Invoke(IsRunning());
+        }
         
         [InitializeOnLoadMethod]
         static void RegisterAssemblyReloadEvents()
         {
+            Backend = new WakatimeBackend(); // Make this not hardcoded if we ever want a different backend. Or just swap it.
+            Backend.OnCanRunChanged += TriggerIsRunningChanged;
+            
             m_settings = DevStatsSettings.Instance;
-            m_settings.OnIsRunningChanged += OnDevStatsIsRunningChanged;
+            m_settings.OnIsEnabledChanged += TriggerIsRunningChanged;
+            OnIsRunningChanged += OnDevStatsIsRunningChanged;
 
             AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
             AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
@@ -31,11 +45,13 @@ namespace DevStatsSystem.Core
 
         private static void OnAfterAssemblyReload()
         {
-            if (m_settings.IsEnabled && string.IsNullOrEmpty(m_settings.APIKey))
+            if (m_settings.IsEnabled && !Backend.CanRun)
             {
+                // This if check makes assumptions for the log but it's helpful so leaving this in here.
                 Debug.LogWarning("DevStats is enabled but API key is missing. Open the DevStats window from \"Window/DevStats\" and set the API key!");
             }
-            if (m_settings.IsRunning())
+            
+            if (IsRunning())
             {
                 Initialize();
             }
@@ -45,7 +61,7 @@ namespace DevStatsSystem.Core
         {
             m_settings.Save();
             
-            if (m_settings.IsRunning())
+            if (IsRunning())
             {
                 Deinitialize();
             }
@@ -55,10 +71,6 @@ namespace DevStatsSystem.Core
         {
             if (newValue)
             {
-                if (m_settings.IsEnabled && string.IsNullOrEmpty(m_settings.APIKey))
-                {
-                    Debug.LogWarning("DevStats is enabled but API key is missing. Open the DevStats window from \"Window/DevStats\" and set the API key!");
-                }
                 Initialize();
             }
             else
@@ -69,7 +81,6 @@ namespace DevStatsSystem.Core
         
         private static async void Initialize()
         {
-            Backend = new WakatimeBackend(); // Make this not hardcoded if we ever want a different backend.
             CommandResult result = await Backend.Load();
             if (result.Result == CommandResultType.Failure)
             {
@@ -81,13 +92,12 @@ namespace DevStatsSystem.Core
 
             m_state = DevStatsState.Instance;
             EditorApplication.update += OnEditorUpdate;
-            
-            OnInitializedCallback?.Invoke();
         }
         
         private static void Deinitialize()
         {
             m_state.Save();
+            Backend.Unload();
             
             m_heartbeatProvider.Deinitialize();
             EditorApplication.update -= OnEditorUpdate;
@@ -98,7 +108,7 @@ namespace DevStatsSystem.Core
         /// </summary>
         public static void TriggerHeartbeat(Heartbeat heartbeat)
         {
-            if (!m_settings.IsRunning())
+            if (!IsRunning())
             {
                 return;
             }
@@ -108,7 +118,7 @@ namespace DevStatsSystem.Core
 
         private static void OnEditorUpdate()
         {
-            if (!m_settings.IsRunning())
+            if (!IsRunning())
             {
                 return;
             }

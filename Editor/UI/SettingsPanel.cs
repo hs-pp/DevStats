@@ -1,3 +1,4 @@
+using DevStatsSystem.Core;
 using DevStatsSystem.Core.SerializedData;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,21 +12,13 @@ namespace DevStatsSystem.UI
         private const string STATS_REFRESH_RATE_ENUM_TAG = "stats-refresh-rate-enum";
         private const string POST_FREQUENCY_ENUM_TAG = "post-frequency-enum";
         private const string SAME_FILE_COOLDOWN_ENUM_TAG = "same-file-cooldown-enum";
-        private const string APIKEY_FIELD_TAG = "api-key-field";
-        private const string API_LINK_FULL_ELEMENT_TAG = "api-link-full-element";
-        private const string API_WEBLINK_LABEL_TAG = "api-weblink-label";
-        private const string KEYSTROKE_TIMEOUT_ENUM_TAG = "keystroke-timeout-enum";
-        
+        private const string BACKEND_WIDGET_AREA_TAG = "backend-widget-area";
+
         private Toggle m_isEnabledToggle;
         private EnumField m_statsRefreshRateEnum;
         private EnumField m_postFrequencyEnum;
         private EnumField m_sameFileCooldownEnum;
-        
-        // If we ever decide to support other backends, we should move these settings out to its own "wakatime" settings.
-        private TextField m_apiKeyField;
-        private VisualElement m_apiLinkFullElement;
-        private Label m_apiWeblinkLabel;
-        private EnumField m_keystrokeTimeoutEnum;
+        private VisualElement m_backendWidgetArea;
 
         public SettingsPanel()
         {
@@ -41,11 +34,8 @@ namespace DevStatsSystem.UI
             m_statsRefreshRateEnum = this.Q<EnumField>(STATS_REFRESH_RATE_ENUM_TAG);
             m_postFrequencyEnum = this.Q<EnumField>(POST_FREQUENCY_ENUM_TAG);
             m_sameFileCooldownEnum = this.Q<EnumField>(SAME_FILE_COOLDOWN_ENUM_TAG);
-            m_apiKeyField = this.Q<TextField>(APIKEY_FIELD_TAG);
-            m_apiLinkFullElement = this.Q<VisualElement>(API_LINK_FULL_ELEMENT_TAG);
-            m_apiWeblinkLabel = this.Q<Label>(API_WEBLINK_LABEL_TAG);
-            m_keystrokeTimeoutEnum = this.Q<EnumField>(KEYSTROKE_TIMEOUT_ENUM_TAG);
-            
+            m_backendWidgetArea = this.Q<VisualElement>(BACKEND_WIDGET_AREA_TAG);
+
             m_isEnabledToggle.value = DevStatsSettings.Instance.IsEnabled;
             m_isEnabledToggle.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.IsEnabled = evt.newValue);
             m_statsRefreshRateEnum.value = DevStatsSettings.Instance.StatsRefreshRate;
@@ -54,19 +44,17 @@ namespace DevStatsSystem.UI
             m_postFrequencyEnum.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.PostFrequency = (PostFrequency)evt.newValue);
             m_sameFileCooldownEnum.value = DevStatsSettings.Instance.SameFileCooldown;
             m_sameFileCooldownEnum.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.SameFileCooldown = (SameFileCooldown)evt.newValue);
-            m_apiKeyField.value = DevStatsSettings.Instance.APIKey;
-            m_apiLinkFullElement.style.display = string.IsNullOrEmpty(DevStatsSettings.Instance.APIKey) ? DisplayStyle.Flex : DisplayStyle.None;
-            m_apiKeyField.RegisterValueChangedCallback(evt =>
+
+            AddBackendSettingsWidget(DevStats.Backend.CreateSettingsWidgetInstance());
+        }
+
+        private void AddBackendSettingsWidget(ABackendSettingsWidget backendSettingsWidget)
+        {
+            m_backendWidgetArea.Clear();
+            if (backendSettingsWidget != null)
             {
-                DevStatsSettings.Instance.APIKey = evt.newValue;
-                m_apiLinkFullElement.style.display = string.IsNullOrEmpty(evt.newValue) ? DisplayStyle.Flex : DisplayStyle.None;
-            });
-            m_apiWeblinkLabel.AddManipulator(new Clickable(() =>
-            {
-                Application.OpenURL("https://wakatime.com/settings/account");
-            }));
-            m_keystrokeTimeoutEnum.value = DevStatsSettings.Instance.KeystrokeTimeout;
-            m_keystrokeTimeoutEnum.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.KeystrokeTimeout = (KeystrokeTimeout)evt.newValue);
+                m_backendWidgetArea.Add(backendSettingsWidget);
+            }
         }
     }
 }

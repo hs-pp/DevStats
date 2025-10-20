@@ -7,7 +7,7 @@ namespace DevStatsSystem.Core.SerializedData
 {
     // Add this to child SavedData classes that should be project-specific.
     internal class IsProjectSpecificAttribute : Attribute { }
-    
+
     internal abstract class SavedData<T> where T : new()
     {
         private static T m_instance;

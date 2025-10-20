@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using DevStatsSystem.Core;
-using DevStatsSystem.Core.SerializedData;
 
 namespace DevStatsSystem.Wakatime
 {
@@ -28,7 +26,7 @@ namespace DevStatsSystem.Wakatime
     {
         private List<Argument> m_args = new();
 
-        public WakatimeCliArguments AddKey() => AddArgument("--key", DevStatsSettings.Instance.APIKey);
+        public WakatimeCliArguments AddKey() => AddArgument("--key", WakatimeSettings.Instance.APIKey);
         public WakatimeCliArguments AddFile(string file) => AddArgument("--entity", file);
         public WakatimeCliArguments AddTimestamp(double timestamp) => AddArgument("--time", timestamp.ToString(CultureInfo.InvariantCulture));
         public WakatimeCliArguments AddIsWrite() => AddArgument("--write");
