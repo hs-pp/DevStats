@@ -17,6 +17,7 @@ namespace DevStatsSystem.UI
         private const string LAST_UPDATED_LABEL_TAG = "last-updated-label";
         private const string FORCE_UPDATE_BUTTON_TAG = "force-update-button";
         private const string LOADING_SCREEN_TAG = "loading-screen";
+        private const string NOT_RUNNING_OVERLAY_TAG = "not-running-overlay";
         
         private TodayStatsElement m_todayStatsElement;
         private TimespanStatsElement m_weekStatsElement;
@@ -24,6 +25,7 @@ namespace DevStatsSystem.UI
         private Label m_lastUpdatedLabel;
         private Button m_forceUpdateButton;
         private VisualElement m_loadingScreen;
+        private VisualElement m_notRunningOverlay;
         
         private CachedStatsPanelData m_data;
         private bool m_isFetchingData = false;
@@ -46,18 +48,29 @@ namespace DevStatsSystem.UI
             m_forceUpdateButton.clicked += ManuallyFetchData;
             m_loadingScreen = this.Q<VisualElement>(LOADING_SCREEN_TAG);
             m_loadingScreen.style.display = DisplayStyle.None;
+            m_notRunningOverlay = this.Q<VisualElement>(NOT_RUNNING_OVERLAY_TAG);
+            m_notRunningOverlay.style.display = DisplayStyle.None;
         }
         
         public override void OnShow()
         {
             m_data = CachedStatsPanelData.Instance;
+            DevStats.OnIsRunningChanged += ToggleNotRunningOverlay;
             DevStats.OnIsRunningChanged += TryAutoFetchData;
+            
+            ToggleNotRunningOverlay(DevStats.IsRunning);
             TryAutoFetchData(DevStats.IsRunning);
         }
 
         public override void OnHide()
         {
+            DevStats.OnIsRunningChanged -= ToggleNotRunningOverlay;
             DevStats.OnIsRunningChanged -= TryAutoFetchData;
+        }
+        
+        private void ToggleNotRunningOverlay(bool isRunning)
+        {
+            m_notRunningOverlay.style.display = isRunning ? DisplayStyle.None : DisplayStyle.Flex;
         }
 
         private async void TryAutoFetchData(bool isRunning)

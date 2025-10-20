@@ -18,4 +18,7 @@
         <ui:Label text="Heartbeats Sent From Unity Editor" />
         <ui:ListView name="sent-history-listview" fixed-item-height="16" show-alternating-row-backgrounds="ContentOnly" show-border="true" selection-type="None" style="max-height: 118px; margin-top: 6px; flex-grow: 1;" />
     </DevStatsSystem.UI.LabeledContainerElement>
+    <ui:VisualElement name="not-running-overlay" style="flex-grow: 1; position: absolute; top: 0; right: 0; left: 0; bottom: 0; background-color: rgba(56, 56, 56, 0.95); display: none;">
+        <ui:Label text="DevStats is not running." style="margin-top: 50px; -unity-font-style: bold; font-size: 16px; -unity-text-align: upper-center;" />
+    </ui:VisualElement>
 </ui:UXML>

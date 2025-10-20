@@ -49,8 +49,17 @@ namespace DevStatsSystem.UI
             m_sameFileCooldownEnum.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.SameFileCooldown = (SameFileCooldown)evt.newValue);
 
             AddBackendSettingsWidget(DevStats.Backend.CreateSettingsWidgetInstance());
+        }
+
+        public override void OnShow()
+        {
             SetStatusLabel(DevStats.IsRunning);
             DevStats.OnIsRunningChanged += SetStatusLabel;
+        }
+
+        public override void OnHide()
+        {
+            DevStats.OnIsRunningChanged -= SetStatusLabel;
         }
 
         private void SetStatusLabel(bool isRunning)

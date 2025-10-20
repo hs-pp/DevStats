@@ -16,7 +16,8 @@ namespace DevStatsSystem.UI
         private const string FAILED_TO_SEND_LISTVIEW_TAG = "failed-to-send-listview";
         private const string FAILED_TO_SEND_RETRY_BUTTON_TAG = "failed-to-send-retry-button";
         private const string SENT_HISTORY_LISTVIEW_TAG = "sent-history-listview";
-        
+        private const string NOT_RUNNING_OVERLAY_TAG = "not-running-overlay";
+
         private Label m_heartbeatsInQueueLabel;
         private Label m_untilNextSendLabel;
         private ListView m_queuedHeartbeatsListView;
@@ -24,7 +25,8 @@ namespace DevStatsSystem.UI
         private ListView m_failedToSendListView;
         private Button m_failedToSendRetryButton;
         private ListView m_sentHistoryListView;
-        
+        private VisualElement m_notRunningOverlay;
+
         private IVisualElementScheduledItem m_untilNextSendSchedule;
 
         public HeartbeatsPanel()
@@ -56,10 +58,14 @@ namespace DevStatsSystem.UI
             m_sentHistoryListView.makeItem += () => new SentHeartbeatsInstanceElement();
             m_sentHistoryListView.bindItem += (element, i) => { (element as SentHeartbeatsInstanceElement).BindSentHeartbeatsInstance((SentHeartbeatsInstance)m_sentHistoryListView.itemsSource[i]); };
             m_sentHistoryListView.unbindItem += (element, i) => { (element as SentHeartbeatsInstanceElement).UnbindSentHeartbeatsInstance(); };
+            
+            m_notRunningOverlay = this.Q<VisualElement>(NOT_RUNNING_OVERLAY_TAG);
+            m_notRunningOverlay.style.display = DisplayStyle.None;
         }
 
         public override void OnShow()
         {
+            DevStats.OnIsRunningChanged += ToggleNotRunningOverlay;
             DevStatsState.Instance.OnQueuedHeartbeatsChanged += OnHeartbeatsInQueueChanged;
             DevStatsState.Instance.OnSentHeartbeatsInstancesChanged += OnSentHeartbeatsInstancesChanged;
             DevStatsState.Instance.OnFailedToSendInstancesChanged += OnFailedToSendInstancesChanged;
@@ -69,6 +75,7 @@ namespace DevStatsSystem.UI
             m_sentHistoryListView.itemsSource = DevStatsState.Instance.GetSentHeartbeatsInstances();
             m_failedToSendListView.itemsSource = DevStatsState.Instance.GetFailedToSendInstances();
             
+            ToggleNotRunningOverlay(DevStats.IsRunning);
             OnHeartbeatsInQueueChanged();
             OnSentHeartbeatsInstancesChanged();
             OnFailedToSendInstancesChanged();
@@ -76,6 +83,7 @@ namespace DevStatsSystem.UI
 
         public override void OnHide()
         {
+            DevStats.OnIsRunningChanged -= ToggleNotRunningOverlay;
             DevStatsState.Instance.OnQueuedHeartbeatsChanged -= OnHeartbeatsInQueueChanged;
             DevStatsState.Instance.OnSentHeartbeatsInstancesChanged -= OnSentHeartbeatsInstancesChanged;
             DevStatsState.Instance.OnFailedToSendInstancesChanged -= OnFailedToSendInstancesChanged;
@@ -86,6 +94,11 @@ namespace DevStatsSystem.UI
             m_failedToSendListView.itemsSource = null;
         }
 
+        private void ToggleNotRunningOverlay(bool isRunning)
+        {
+            m_notRunningOverlay.style.display = isRunning ? DisplayStyle.None : DisplayStyle.Flex;
+        }
+        
         private void OnHeartbeatsInQueueChanged()
         {
             m_heartbeatsInQueueLabel.text = $"In Queue: {DevStatsState.Instance.GetQueuedHeartbeatCount()}";
