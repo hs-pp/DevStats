@@ -16,6 +16,6 @@
     </DevStatsSystem.UI.LabeledContainerElement>
     <DevStatsSystem.UI.LabeledContainerElement name="history-container" title-text="History">
         <ui:Label text="Heartbeats Sent From Unity Editor" />
-        <ui:ListView name="sent-history-listview" fixed-item-height="16" show-alternating-row-backgrounds="ContentOnly" show-border="true" selection-type="None" style="max-height: 86px; margin-top: 6px;" />
+        <ui:ListView name="sent-history-listview" fixed-item-height="16" show-alternating-row-backgrounds="ContentOnly" show-border="true" selection-type="None" style="max-height: 118px; margin-top: 6px; flex-grow: 1;" />
     </DevStatsSystem.UI.LabeledContainerElement>
 </ui:UXML>

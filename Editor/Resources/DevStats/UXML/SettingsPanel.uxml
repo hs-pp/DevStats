@@ -5,7 +5,7 @@
             <ui:Label text="Settings" name="title" style="-unity-font-style: bold; font-size: 24px; -unity-text-align: upper-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-left: 2px;" />
         </ui:VisualElement>
         <ui:VisualElement name="last-updated-container" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; justify-content: flex-end; margin-right: 4px; margin-left: 4px; align-items: flex-end; padding-bottom: 6px; overflow: hidden;">
-            <ui:Label text="Status:&#10;RUNNING" name="status-label" style="-unity-text-align: middle-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; color: rgba(210, 210, 210, 0.31); font-size: 10px; -unity-font-style: italic; flex-shrink: 1; width: 48px; margin-left: 6px;" />
+            <ui:Label text="Status:&#10;RUNNING" name="status-label" style="-unity-text-align: middle-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 10px; -unity-font-style: italic; flex-shrink: 1; width: 48px; margin-left: 6px; margin-right: 6px;" />
         </ui:VisualElement>
     </ui:VisualElement>
     <DevStatsSystem.UI.LabeledContainerElement name="core-settings" title-text="Core">

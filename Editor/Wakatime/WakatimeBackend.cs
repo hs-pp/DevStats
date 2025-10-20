@@ -26,6 +26,13 @@ namespace DevStatsSystem.Wakatime
         private string m_cliPath;
         private string m_gitBranch;
         
+        public bool CanRun => WakatimeSettings.Instance.CanRun;
+        public Action<bool> OnCanRunChanged
+        {
+            get => WakatimeSettings.Instance.OnCanRunChanged;
+            set => WakatimeSettings.Instance.OnCanRunChanged = value;
+        }
+        
         #region Loading CLI
         public async Task<CommandResult> Load()
         {
@@ -559,18 +566,9 @@ namespace DevStatsSystem.Wakatime
         }
         #endregion
         
-        #region Waka Settings
         public ABackendSettingsWidget CreateSettingsWidgetInstance()
         {
             return new WakatimeSettingsElement();
         }
-        
-        public bool CanRun => WakatimeSettings.Instance.CanRun;
-        public Action<bool> OnCanRunChanged
-        {
-            get => WakatimeSettings.Instance.OnCanRunChanged;
-            set => WakatimeSettings.Instance.OnCanRunChanged = value;
-        }
-        #endregion
     }
 }

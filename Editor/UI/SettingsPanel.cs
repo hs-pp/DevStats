@@ -49,7 +49,7 @@ namespace DevStatsSystem.UI
             m_sameFileCooldownEnum.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.SameFileCooldown = (SameFileCooldown)evt.newValue);
 
             AddBackendSettingsWidget(DevStats.Backend.CreateSettingsWidgetInstance());
-            SetStatusLabel(DevStats.IsRunning());
+            SetStatusLabel(DevStats.IsRunning);
             DevStats.OnIsRunningChanged += SetStatusLabel;
         }
 

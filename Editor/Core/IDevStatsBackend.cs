@@ -31,13 +31,14 @@ namespace DevStatsSystem.Core
     
     public interface IDevStatsBackend
     {
+        public bool CanRun { get; }
+        public Action<bool> OnCanRunChanged { get; set; }
+        
         Task<CommandResult> Load();
         Task<CommandResult> SendHeartbeats(List<Heartbeat> heartbeats);
         Task<StatsData> GetStats();
         Task<CommandResult> Unload();
-
+        
         ABackendSettingsWidget CreateSettingsWidgetInstance();
-        public bool CanRun { get; }
-        public Action<bool> OnCanRunChanged { get; set; }
     }
 }

@@ -52,7 +52,7 @@ namespace DevStatsSystem.UI
         {
             m_data = CachedStatsPanelData.Instance;
             DevStats.OnIsRunningChanged += TryAutoFetchData;
-            TryAutoFetchData(DevStats.IsRunning());
+            TryAutoFetchData(DevStats.IsRunning);
         }
 
         public override void OnHide()

@@ -1,9 +1,12 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <DevStatsSystem.UI.LabeledContainerElement name="wakatime-settings" title-text="Wakatime">
-        <ui:TextField label="API Key" placeholder-text="filler text" name="api-key-field" password="true" tooltip="This one&apos;s pretty important. " is-delayed="true" />
-        <ui:VisualElement name="api-link-full-element" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; margin-bottom: 4px; margin-right: 4px;">
-            <ui:Label text="Get your API key " style="font-size: 9px;" />
-            <ui:Label text="here" name="api-weblink-label" style="font-size: 9px; -unity-font-style: italic; color: rgb(0, 141, 255); border-bottom-width: 1px; border-left-color: rgb(2, 139, 250); border-right-color: rgb(2, 139, 250); border-top-color: rgb(2, 139, 250); border-bottom-color: rgb(2, 139, 250); padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+        <ui:TextField label="API Key" name="api-key-field" password="true" tooltip="This one&apos;s pretty important. " is-delayed="true" />
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: flex-start; height: 16px; margin-top: 2px; margin-left: 5px; margin-right: 6px;">
+            <ui:Label text="Username: coolusernamehere" name="username-display-label" style="font-size: 9px; overflow: hidden;" />
+            <ui:VisualElement name="api-link-full-element" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; overflow: hidden; flex-shrink: 0;">
+                <ui:Label text="Get your API key " style="font-size: 9px;" />
+                <ui:Label text="here" name="api-weblink-label" style="font-size: 9px; -unity-font-style: italic; color: rgb(0, 141, 255); border-bottom-width: 1px; border-left-color: rgb(2, 139, 250); border-right-color: rgb(2, 139, 250); border-top-color: rgb(2, 139, 250); border-bottom-color: rgb(2, 139, 250); padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;" />
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:EnumField label="Keystroke Timeout" value="FiveMinutes" type="DevStatsSystem.Core.SerializedData.KeystrokeTimeout, DevStats" name="keystroke-timeout-enum" tooltip="The keystroke timeout preference used when joining heartbeats into durations." />
     </DevStatsSystem.UI.LabeledContainerElement>

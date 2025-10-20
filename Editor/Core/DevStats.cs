@@ -14,16 +14,18 @@ namespace DevStatsSystem.Core
         private static HeartbeatProvider m_heartbeatProvider;
         private static DevStatsState m_state;
         private static DevStatsSettings m_settings;
-        
-        internal static bool IsRunning()
-        { 
-            return m_settings.IsEnabled && Backend.CanRun;
-        }
+
+        public static bool IsRunning { get; private set; }
+        private static bool CanRun() => m_settings.IsEnabled && Backend.CanRun;
         internal static Action<bool> OnIsRunningChanged;
 
         private static void TriggerIsRunningChanged(bool isRunning)
         {
-            OnIsRunningChanged?.Invoke(IsRunning());
+            if (IsRunning != CanRun())
+            {
+                IsRunning = CanRun();
+                OnIsRunningChanged?.Invoke(IsRunning);
+            }
         }
         
         [InitializeOnLoadMethod]
@@ -35,6 +37,12 @@ namespace DevStatsSystem.Core
             m_settings = DevStatsSettings.Instance;
             m_settings.OnIsEnabledChanged += TriggerIsRunningChanged;
             OnIsRunningChanged += OnDevStatsIsRunningChanged;
+            
+            IsRunning = CanRun();
+            
+            m_state = DevStatsState.Instance;
+            
+            m_heartbeatProvider = new(TriggerHeartbeat);
 
             AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
             AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
@@ -44,13 +52,7 @@ namespace DevStatsSystem.Core
 
         private static void OnAfterAssemblyReload()
         {
-            if (m_settings.IsEnabled && !Backend.CanRun)
-            {
-                // This if check makes assumptions for the log but it's helpful so leaving this in here.
-                Debug.LogWarning("DevStats is enabled but API key is missing. Open the DevStats window from \"Window/DevStats\" and set the API key!");
-            }
-            
-            if (IsRunning())
+            if (IsRunning)
             {
                 Initialize();
             }
@@ -60,7 +62,7 @@ namespace DevStatsSystem.Core
         {
             m_settings.Save();
             
-            if (IsRunning())
+            if (IsRunning)
             {
                 Deinitialize();
             }
@@ -86,10 +88,7 @@ namespace DevStatsSystem.Core
                 Backend = null;
                 return;
             }
-            m_heartbeatProvider = new(TriggerHeartbeat);
             m_heartbeatProvider.Initialize();
-
-            m_state = DevStatsState.Instance;
             EditorApplication.update += OnEditorUpdate;
         }
         
@@ -107,7 +106,7 @@ namespace DevStatsSystem.Core
         /// </summary>
         public static void TriggerHeartbeat(Heartbeat heartbeat)
         {
-            if (!IsRunning())
+            if (!IsRunning)
             {
                 return;
             }
@@ -117,7 +116,7 @@ namespace DevStatsSystem.Core
 
         private static void OnEditorUpdate()
         {
-            if (!IsRunning())
+            if (!IsRunning)
             {
                 return;
             }
