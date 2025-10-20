@@ -5,7 +5,6 @@ using DevStatsSystem.Core.SerializedData;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Debug = UnityEngine.Debug;
 
 namespace DevStatsSystem.UI
 {
@@ -122,14 +121,13 @@ namespace DevStatsSystem.UI
             
             if (statsData.Result.Result != CommandResultType.Success)
             {
-                Debug.LogError($"Failed to fetch stats! Output: {statsData.Result.Output}");
                 OnFetchDataFinished();
                 return;
             }
             
             if (EditorApplication.isCompiling)
             {
-                Debug.LogWarning("Editor is compiling. Stopping Run Everything!");
+                // Editor is compiling. Stopping data fetch!
                 OnFetchDataFinished();
                 return;
             }

@@ -16,14 +16,13 @@ namespace DevStatsSystem.Core
         private static DevStatsSettings m_settings;
         
         internal static bool IsRunning()
-        {
+        { 
             return m_settings.IsEnabled && Backend.CanRun;
         }
         internal static Action<bool> OnIsRunningChanged;
 
         private static void TriggerIsRunningChanged(bool isRunning)
         {
-            Debug.Log("IsRunningChanged " + IsRunning());
             OnIsRunningChanged?.Invoke(IsRunning());
         }
         

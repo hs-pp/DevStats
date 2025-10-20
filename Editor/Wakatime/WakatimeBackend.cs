@@ -441,6 +441,8 @@ namespace DevStatsSystem.Wakatime
 
         public Task<CommandResult> Unload()
         {
+            WakatimeSettings.Instance.Save();
+            
             return Task.FromResult(new CommandResult()
             {
                 Result = CommandResultType.Success,

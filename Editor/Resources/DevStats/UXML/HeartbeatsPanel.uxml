@@ -18,5 +18,4 @@
         <ui:Label text="Heartbeats Sent From Unity Editor" />
         <ui:ListView name="sent-history-listview" fixed-item-height="16" show-alternating-row-backgrounds="ContentOnly" show-border="true" selection-type="None" style="max-height: 86px; margin-top: 6px;" />
     </DevStatsSystem.UI.LabeledContainerElement>
-    <ui:Label text="➡ Note: Heartbeats are sent to the Wakatime CLI which then sends it to Wakatime. It may take some time before heartbeats appear on the webpage." style="white-space: normal; color: rgba(210, 210, 210, 0.24); margin-top: 0; margin-right: 8px; margin-left: 8px; font-size: 10px; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-bottom: 8px;" />
 </ui:UXML>

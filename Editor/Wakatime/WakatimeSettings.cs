@@ -41,8 +41,6 @@ namespace DevStatsSystem.Wakatime
             {
                 OnCanRunChanged?.Invoke(CanRun);
             }
-
-            Save();
         }
         
         public KeystrokeTimeout KeystrokeTimeout = KeystrokeTimeout.FiveMinutes;

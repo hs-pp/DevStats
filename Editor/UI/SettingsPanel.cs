@@ -8,12 +8,14 @@ namespace DevStatsSystem.UI
     internal class SettingsPanel : ADevStatsPanel
     {
         private const string UXML_PATH = "DevStats/UXML/SettingsPanel";
+        private const string STATUS_LABEL_TAG = "status-label";
         private const string ISENABLED_TOGGLE_TAG = "isenabled-toggle";
         private const string STATS_REFRESH_RATE_ENUM_TAG = "stats-refresh-rate-enum";
         private const string POST_FREQUENCY_ENUM_TAG = "post-frequency-enum";
         private const string SAME_FILE_COOLDOWN_ENUM_TAG = "same-file-cooldown-enum";
         private const string BACKEND_WIDGET_AREA_TAG = "backend-widget-area";
 
+        private Label m_statusLabel;
         private Toggle m_isEnabledToggle;
         private EnumField m_statsRefreshRateEnum;
         private EnumField m_postFrequencyEnum;
@@ -30,6 +32,7 @@ namespace DevStatsSystem.UI
             VisualTreeAsset uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
             uxmlAsset.CloneTree(this);
             
+            m_statusLabel = this.Q<Label>(STATUS_LABEL_TAG);
             m_isEnabledToggle = this.Q<Toggle>(ISENABLED_TOGGLE_TAG);
             m_statsRefreshRateEnum = this.Q<EnumField>(STATS_REFRESH_RATE_ENUM_TAG);
             m_postFrequencyEnum = this.Q<EnumField>(POST_FREQUENCY_ENUM_TAG);
@@ -46,6 +49,13 @@ namespace DevStatsSystem.UI
             m_sameFileCooldownEnum.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.SameFileCooldown = (SameFileCooldown)evt.newValue);
 
             AddBackendSettingsWidget(DevStats.Backend.CreateSettingsWidgetInstance());
+            SetStatusLabel(DevStats.IsRunning());
+            DevStats.OnIsRunningChanged += SetStatusLabel;
+        }
+
+        private void SetStatusLabel(bool isRunning)
+        {
+            m_statusLabel.text = isRunning ? "Status:\n<b><color=green>RUNNING</color></b>" : "Status:\n<b><color=red>STOPPED</color></b>";
         }
 
         private void AddBackendSettingsWidget(ABackendSettingsWidget backendSettingsWidget)
