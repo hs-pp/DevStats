@@ -106,7 +106,7 @@ namespace DevStatsSystem.UI
             m_dayStat = dayStat;
             m_barElement.style.height = new Length(barFillPercentage, LengthUnit.Percent);
             DateTime day = new DateTime(m_dayStat.Day);
-            tooltip = $"{day:ddd, MMM dd}\n{DevStats.SecondsToFormattedTimePassed(m_dayStat.TotalTime)}";
+            tooltip = $"{day:ddd, MMM dd}\n{day.DayOfWeek.ToString()}\n{DevStats.SecondsToFormattedTimePassed(m_dayStat.TotalTime)}";
         }
     }
 }
