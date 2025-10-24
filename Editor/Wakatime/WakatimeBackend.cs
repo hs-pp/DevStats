@@ -517,7 +517,7 @@ namespace DevStatsSystem.Wakatime
             timespanStats.TimespanName = name;
             
             timespanStats.TotalTime = summariesPayload.cumulative_total.seconds;
-            timespanStats.DailyAverageTime = summariesPayload.daily_average.seconds;
+            timespanStats.DailyAverageTime = summariesPayload.cumulative_total.seconds / summariesPayload.data.Length;
             timespanStats.DayStats = new List<TimespanDayStat>();
             
             // Regular for loops to avoid copying a bunch of structs

@@ -41,7 +41,7 @@ namespace DevStatsSystem.UI
         public void SetData(in TimespanStats timespanStats)
         {
             m_labeledContainerElement.TitleText = timespanStats.TimespanName;
-            m_totalTimeLabel.text = DevStats.SecondsToFormattedTimePassed(timespanStats.TotalTime);
+            m_totalTimeLabel.text = $"Total: {DevStats.SecondsToFormattedTimePassed(timespanStats.TotalTime)}";
             m_dailyAverageLabel.text = $"Average: {DevStats.SecondsToFormattedTimePassed(timespanStats.DailyAverageTime)}";
             m_timespanGraphElement.SetData(timespanStats.DayStats);
             m_codeToAssetPercentageElement.SetData(timespanStats.CodeTime, timespanStats.AssetTime);
