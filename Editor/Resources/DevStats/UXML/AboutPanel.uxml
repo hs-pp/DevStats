@@ -5,7 +5,10 @@
     </ui:VisualElement>
     <ui:VisualElement name="container" style="flex-grow: 0; flex-shrink: 0; overflow: hidden;">
         <ui:Label text="DevStats" name="name" style="-unity-text-align: middle-center; font-size: 38px; -unity-font-style: bold; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
-        <ui:Label text="Powered by Wakatime" name="subtitle" style="-unity-text-align: middle-center; font-size: 18px; -unity-font-style: bold;" />
-        <ui:Label text="By Hyungjin Shin" name="subtitle" style="-unity-text-align: middle-center; font-size: 13px; -unity-font-style: bold;" />
+        <ui:VisualElement style="flex-grow: 0; flex-direction: row; flex-shrink: 0; justify-content: center; margin-top: 2px; margin-bottom: 4px;">
+            <ui:Label text="Powered by" name="subtitle" style="-unity-text-align: middle-center; font-size: 18px; -unity-font-style: bold;" />
+            <ui:VisualElement tooltip="WakaTime" name="wakatime-logo" style="flex-grow: 0; flex-shrink: 0; background-image: resource(&apos;DevStats/Icons/Logo-120-inverted&apos;); width: 24px; height: 24px; margin-left: 4px;" />
+        </ui:VisualElement>
+        <ui:Label text="&lt;u&gt;github.com/hs-pp/DevStats&lt;/u&gt;" name="github-link-label" tooltip="link" style="-unity-text-align: middle-center; font-size: 12px; -unity-font-style: normal; color: rgb(2, 139, 250);" />
     </ui:VisualElement>
 </ui:UXML>

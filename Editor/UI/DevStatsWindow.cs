@@ -58,14 +58,6 @@ namespace DevStatsSystem.UI
             GetWindow<DevStatsWindow>().Show();
         }
 
-        [MenuItem("Window/Clear DevStats")]
-        public static void ClearStuff()
-        {
-            CachedStatsPanelData.Reset();
-            DevStatsSettings.Reset();
-            DevStatsState.Reset();
-        }
-
         public void OnEnable()
         {
             titleContent = new GUIContent("DevStats");

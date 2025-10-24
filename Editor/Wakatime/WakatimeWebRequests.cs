@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using DevStatsSystem.Core;
 using DevStatsSystem.Wakatime.Payloads;
 using UnityEngine;
 using UnityEngine.Networking;

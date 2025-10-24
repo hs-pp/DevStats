@@ -1,9 +1,7 @@
 using System;
 using DevStatsSystem.Core.SerializedData;
 using DevStatsSystem.Wakatime.Payloads;
-using UnityEditor.Overlays;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace DevStatsSystem.Wakatime
 {
