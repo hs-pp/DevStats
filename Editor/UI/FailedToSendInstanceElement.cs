@@ -36,7 +36,7 @@ namespace DevStatsSystem.UI
         {
             m_heartbeatsCountLabel.text = $"{failedToSendInstance.Heartbeats.Count} <color=red>\u2665</color>";
             DateTime dateTime = new DateTime(failedToSendInstance.Timestamp);
-            m_dateTimeLabel.text = $"{dateTime.ToString("H:mm:ss:tt MM/dd/yy")}";
+            m_dateTimeLabel.text = $"{dateTime:G}";
             
             var metaData = DevStatsState.GetHeartbeatsMetaData(failedToSendInstance.Heartbeats);
 
