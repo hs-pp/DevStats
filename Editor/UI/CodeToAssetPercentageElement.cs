@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 namespace DevStatsSystem.UI
 {
     [UxmlElement]
-    public partial class CodeToAssetPercentageElement : VisualElement
+    internal partial class CodeToAssetPercentageElement : VisualElement
     {
         private const string UXML_PATH = "DevStats/UXML/CodeToAssetPercentageElement";
         private const string CODE_PERCENTAGE_ELEMENT_TAG = "code-percentage-element";

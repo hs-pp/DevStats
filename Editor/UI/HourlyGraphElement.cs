@@ -18,16 +18,12 @@ namespace DevStatsSystem.UI
         public HourlyGraphElement()
         {
             CreateLayout();
-            
-            RegisterCallback<GeometryChangedEvent>(evt =>
-            {
-                RedrawTimeSegmentElements();
-            });
+            RegisterCallback<GeometryChangedEvent>(evt => { RedrawTimeSegmentElements(); });
         }
 
         private void CreateLayout()
         {
-            var uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
+            VisualTreeAsset uxmlAsset = Resources.Load<VisualTreeAsset>(UXML_PATH);
             uxmlAsset.CloneTree(this);
             
             m_graphArea = this.Q<VisualElement>(GRAPH_AREA_TAG);

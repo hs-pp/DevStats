@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace DevStatsSystem.UI
 {
-    public class HeartbeatElement : VisualElement
+    internal class HeartbeatElement : VisualElement
     {
         private const string UXML_PATH = "DevStats/UXML/HeartbeatElement";
         private const string FILE_OBJECTFIELD_TAG = "file-objectfield";
