@@ -1,16 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using DevStatsSystem.Core.SerializedData;
 using DevStatsSystem.Wakatime;
 using UnityEditor;
-using UnityEngine;
 
 namespace DevStatsSystem.Core
 {
+    /// <summary>
+    /// The core of the DevStats system. This is the main class that determines whether the system is running and when to
+    /// send out heartbeats back to the backend.
+    /// </summary>
     public static class DevStats
     {
-        internal static IDevStatsBackend Backend;
+        private static IDevStatsBackend Backend;
         private static HeartbeatProvider m_heartbeatProvider;
         private static DevStatsState m_state;
         private static DevStatsSettings m_settings;
@@ -18,20 +22,11 @@ namespace DevStatsSystem.Core
         public static bool IsRunning { get; private set; }
         private static bool CanRun() => m_settings.IsEnabled && Backend.CanRun;
         internal static Action<bool> OnIsRunningChanged;
-
-        private static void TriggerIsRunningChanged(bool isRunning)
-        {
-            if (IsRunning != CanRun())
-            {
-                IsRunning = CanRun();
-                OnIsRunningChanged?.Invoke(IsRunning);
-            }
-        }
         
         [InitializeOnLoadMethod]
         static void RegisterAssemblyReloadEvents()
         {
-            Backend = new WakatimeBackend(); // Make this not hardcoded if we ever want a different backend. Or just swap it.
+            Backend = new WakatimeBackend();
             Backend.OnCanRunChanged += TriggerIsRunningChanged;
             
             m_settings = DevStatsSettings.Instance;
@@ -60,6 +55,7 @@ namespace DevStatsSystem.Core
 
         private static void OnBeforeAssemblyReload()
         {
+            // This is right before the project compiles. Make sure to save first.
             m_settings.Save();
             
             if (IsRunning)
@@ -88,6 +84,7 @@ namespace DevStatsSystem.Core
                 Backend = null;
                 return;
             }
+            
             m_heartbeatProvider.Initialize();
             EditorApplication.update += OnEditorUpdate;
         }
@@ -125,13 +122,13 @@ namespace DevStatsSystem.Core
             int sendInterval = (int)m_settings.PostFrequency * 10000000;
             if (m_state.GetQueuedHeartbeatCount() > 0 && nowTime > m_state.LastHeartbeatSendTime + sendInterval)
             {
-                SendHeartbeatsToCli(m_state.GetQueuedHeartbeats());
+                SendHeartbeatsToBackend(m_state.GetQueuedHeartbeats());
                 m_state.ClearQueuedHeartbeats();
                 m_state.LastHeartbeatSendTime = nowTime;
             }
         }
 
-        private static async void SendHeartbeatsToCli(List<Heartbeat> heartbeats)
+        private static async void SendHeartbeatsToBackend(List<Heartbeat> heartbeats)
         {
             if (Backend == null)
             {
@@ -155,20 +152,7 @@ namespace DevStatsSystem.Core
             }
         }
 
-        /// <summary>
-        /// Mostly for testing.
-        /// </summary>
-        private static void SendToFailed(List<Heartbeat> heartbeats)
-        {
-            if (heartbeats == null || heartbeats.Count == 0)
-            {
-                return;
-            }
-            
-            m_state.AddFailedToSendInstance(new(heartbeats));
-        }
-
-        public static void RetryFailedHeartbeats()
+        internal static void RetryFailedHeartbeats()
         {
             if (m_state.GetFailedToSendInstances().Count == 0)
             {
@@ -180,21 +164,32 @@ namespace DevStatsSystem.Core
             {
                 allFailedHeartbeats.AddRange(instance.Heartbeats);
             }
-            SendHeartbeatsToCli(allFailedHeartbeats);
+            SendHeartbeatsToBackend(allFailedHeartbeats);
             m_state.ClearFailedToSendInstances();
         }
         
-        public static string GetProjectName()
+        private static void TriggerIsRunningChanged(bool isRunning)
         {
-            return Application.productName;
+            if (IsRunning != CanRun())
+            {
+                IsRunning = CanRun();
+                OnIsRunningChanged?.Invoke(IsRunning);
+            }
         }
         
-        public static string GetLanguage()
+        // Exposing Backend functions for panels.
+        internal static ABackendSettingsWidget CreateSettingsWidgetInstance()
         {
-            return "Unity3D Asset";
+            return Backend.CreateSettingsWidgetInstance();
+        }
+
+        internal static Task<StatsData> GetStats()
+        {
+            return Backend.GetStats();
         }
         
-        public static string SecondsToFormattedTimePassed(float seconds)
+        // Nicely formatted time strings.
+        internal static string SecondsToFormattedTimePassed(float seconds)
         {
             if (seconds == 0)
             {
@@ -223,7 +218,7 @@ namespace DevStatsSystem.Core
             return strBuilder.ToString();
         }
         
-        public static string SecondsToFormattedTimeSinceMidnight(float startTime)
+        internal static string SecondsToFormattedTimeSinceMidnight(float startTime)
         {
             return DateTime.Today.AddSeconds(startTime).ToString("h:mmtt");
         }

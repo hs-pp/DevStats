@@ -25,10 +25,12 @@ namespace DevStatsSystem.Core
         }
     }
 
-    public abstract class ABackendSettingsWidget : VisualElement
-    {
-    }
+    public abstract class ABackendSettingsWidget : VisualElement { }
     
+    /// <summary>
+    /// Currently only the Wakatime implementation of the backend exists but it's nicely interfaced in case we ever want
+    /// to build a different backend.
+    /// </summary>
     public interface IDevStatsBackend
     {
         public bool CanRun { get; }

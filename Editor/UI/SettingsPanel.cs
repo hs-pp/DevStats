@@ -48,7 +48,7 @@ namespace DevStatsSystem.UI
             m_sameFileCooldownEnum.value = DevStatsSettings.Instance.SameFileCooldown;
             m_sameFileCooldownEnum.RegisterValueChangedCallback(evt => DevStatsSettings.Instance.SameFileCooldown = (SameFileCooldown)evt.newValue);
 
-            AddBackendSettingsWidget(DevStats.Backend.CreateSettingsWidgetInstance());
+            AddBackendSettingsWidget(DevStats.CreateSettingsWidgetInstance());
         }
 
         public override void OnShow()

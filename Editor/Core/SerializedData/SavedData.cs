@@ -5,9 +5,13 @@ using UnityEngine;
 
 namespace DevStatsSystem.Core.SerializedData
 {
-    // Add this to child SavedData classes that should be project-specific.
+    // Add this to child SavedData classes that should be project-specific. It will create a new saved data file for
+    // every unique project.
     internal class IsProjectSpecificAttribute : Attribute { }
 
+    /// <summary>
+    /// Quick singleton-ification of data that needs to be saved to disk. Saves to EditorPrefs.
+    /// </summary>
     internal abstract class SavedData<T> where T : new()
     {
         private static T m_instance;

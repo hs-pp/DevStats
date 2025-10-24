@@ -48,6 +48,9 @@ namespace DevStatsSystem.Core.SerializedData
         public float DailyAverageTime;
     }
     
+    /// <summary>
+    /// Data properly organized to be shown on the Stats panel.
+    /// </summary>
     [Serializable]
     public class StatsData
     {

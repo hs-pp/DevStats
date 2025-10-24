@@ -130,7 +130,7 @@ namespace DevStatsSystem.UI
             
             OnFetchDataStarted();
             
-            StatsData statsData = await DevStats.Backend.GetStats();
+            StatsData statsData = await DevStats.GetStats();
             
             if (statsData.Result.Result != CommandResultType.Success)
             {

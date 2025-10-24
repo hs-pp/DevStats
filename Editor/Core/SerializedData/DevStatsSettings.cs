@@ -40,6 +40,9 @@ namespace DevStatsSystem.Core.SerializedData
         FifteenMinutes = 15,
     }
     
+    /// <summary>
+    /// The settings data. Values are exposed in the Settings panel.
+    /// </summary>
     [Serializable]
     internal class DevStatsSettings : SavedData<DevStatsSettings>
     {

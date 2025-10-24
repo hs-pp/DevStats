@@ -241,8 +241,8 @@ namespace DevStatsSystem.Wakatime
                 .AddTimestamp(heartbeat.Timestamp)
                 .AddCategory(GetCategory())
                 .AddEntityType(GetEntityType())
-                .AddLanguage(DevStats.GetLanguage())
-                .AddProject(DevStats.GetProjectName())
+                .AddLanguage(GetLanguage())
+                .AddProject(GetProjectName())
                 .AddPlugin();
             if (heartbeat.IsWrite)
             {
@@ -287,8 +287,8 @@ namespace DevStatsSystem.Wakatime
                            $"\"is_write\":{heartbeat.IsWrite.ToString().ToLower()}, " +
                            $"\"category\":\"{GetCategory()}\", " +
                            $"\"entity_type\":\"{GetEntityType()}\", " +
-                           $"\"language\":\"{DevStats.GetLanguage()}\", " +
-                           $"\"project\":\"{DevStats.GetProjectName().Replace("\"", "\\\"")}\"";
+                           $"\"language\":\"{GetLanguage()}\", " +
+                           $"\"project\":\"{GetProjectName().Replace("\"", "\\\"")}\"";
             if (!string.IsNullOrEmpty(m_gitBranch)) // For some reason Wakatime auto-finds the branch for the main heartbeat but not the extras???
             {
                 value += $", \"branch_name\":\"{m_gitBranch}\"";
@@ -480,7 +480,7 @@ namespace DevStatsSystem.Wakatime
             // Regular for loops to avoid copying a bunch of structs
             for (int i = 0; i < durationsPayload.data.Length; i++)
             {
-                if (durationsPayload.data[i].project != DevStats.GetProjectName())
+                if (durationsPayload.data[i].project != GetProjectName())
                 {
                     continue;
                 }
@@ -502,7 +502,7 @@ namespace DevStatsSystem.Wakatime
                 {
                     todayStats.CodeTime = todaySummary.languages[i].total_seconds;
                 }
-                else if (todaySummary.languages[i].name == DevStats.GetLanguage())
+                else if (todaySummary.languages[i].name == GetLanguage())
                 {
                     todayStats.AssetTime = todaySummary.languages[i].total_seconds;
                 }
@@ -530,7 +530,7 @@ namespace DevStatsSystem.Wakatime
                     {
                         timespanStats.CodeTime += summariesPayload.data[i].languages[j].total_seconds;
                     }
-                    else if (summariesPayload.data[i].languages[j].name == DevStats.GetLanguage())
+                    else if (summariesPayload.data[i].languages[j].name == GetLanguage())
                     {
                         timespanStats.AssetTime += summariesPayload.data[i].languages[j].total_seconds;
                     }
@@ -555,7 +555,7 @@ namespace DevStatsSystem.Wakatime
             allTimeStats.DailyAverageTime = statsPayload.data.daily_average;
             for (int i = 0; i < statsPayload.data.projects.Length; i++)
             {
-                if (statsPayload.data.projects[i].name == DevStats.GetProjectName())
+                if (statsPayload.data.projects[i].name == GetProjectName())
                 {
                     allTimeStats.ProjectTotalTime = statsPayload.data.projects[i].total_seconds;
                     break;
@@ -569,6 +569,16 @@ namespace DevStatsSystem.Wakatime
         public ABackendSettingsWidget CreateSettingsWidgetInstance()
         {
             return new WakatimeSettingsElement();
+        }
+        
+        public static string GetProjectName()
+        {
+            return Application.productName;
+        }
+        
+        private static string GetLanguage()
+        {
+            return "Unity3D Asset";
         }
     }
 }

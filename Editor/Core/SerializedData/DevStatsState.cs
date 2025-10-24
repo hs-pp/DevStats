@@ -6,6 +6,10 @@ using UnityEngine;
 
 namespace DevStatsSystem.Core.SerializedData
 {
+    /// <summary>
+    /// Stores queued heartbeats, heartbeat history, and failed to send heartbeats to retry later.
+    /// All data can be viewed in the Heartbeats panel. 
+    /// </summary>
     [Serializable]
     [IsProjectSpecific]
     internal class DevStatsState : SavedData<DevStatsState>
