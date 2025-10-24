@@ -90,15 +90,8 @@ namespace DevStatsSystem.UI
             style.flexGrow = 1;
             m_hoverShaderElement.style.display = DisplayStyle.None;
 
-            RegisterCallback<MouseEnterEvent>(_ =>
-            {
-                m_hoverShaderElement.style.display = DisplayStyle.Flex;
-            });
-
-            RegisterCallback<MouseLeaveEvent>(_ =>
-            {
-                m_hoverShaderElement.style.display = DisplayStyle.None;
-            });
+            RegisterCallback<MouseEnterEvent>(_ => { m_hoverShaderElement.style.display = DisplayStyle.Flex; });
+            RegisterCallback<MouseLeaveEvent>(_ => { m_hoverShaderElement.style.display = DisplayStyle.None; });
         }
 
         private void SetData(TimespanDayStat dayStat, float barFillPercentage)
