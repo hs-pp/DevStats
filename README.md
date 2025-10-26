@@ -34,4 +34,14 @@ DevStats does not run unless both `IsEnabled = true` and the WakaTime API Key is
 
 # Setup
 
+Use Unity's Package Manager to add a package through git URL:
+https://github.com/hs-pp/DevStats.git
+
+Once it's installed, you can find the DevStats editor window at `Window/DevStats`.
+
 <img src="./Images/MenuItem.png" width="256">
+
+In the settings panel, populate the API Key with your unique WakaTime `Secret API Key` which you can get here:
+https://wakatime.com/settings/account
+
+If the status indicator on the top right of the settings page says RUNNING, you're golden!
