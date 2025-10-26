@@ -1,0 +1,15 @@
+{
+  "name": "com.hspp.devstats",
+  "displayName": "DevStats",
+  "version": "1.0.0",
+  "unity": "6000.0",
+  "description": "Time tracking for Unity powered by WakaTime",
+  "keywords": [
+    "unity",
+    "wakatime",
+    "stats",
+    "productivity",
+    "time-tracking",
+    "programming"
+  ],
+}

@@ -2,7 +2,7 @@
 
 Time Tracking for Unity powered by WakaTime.
 
-DevStats is your personal time tracker built into the Unity editor. It automatically triacks how much time you spend editing scenes, prefabs, UI documents, and more.
+DevStats is your personal time tracker built into the Unity editor. It automatically tracks how much time you spend editing scenes, prefabs, UI documents, and more.
 
 Combine it with another WakaTime plugin for your IDE to achieve complete, project-wide tracking and better understand how you spend your development time.
 
