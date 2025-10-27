@@ -11,5 +11,10 @@
     "productivity",
     "time-tracking",
     "programming"
-  ]
+  ],
+  "author": {
+    "name": "hs-pp",
+    "email": "",
+    "url": ""
+  }
 }

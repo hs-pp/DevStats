@@ -15,7 +15,7 @@ Visualize basic stats from the Stats panel. Stats are automatically updated at a
 
 <img src="./Images/StatsPanel.png" width="420">
 
-More detailed stats can be seen at Wakatime.com
+More detailed stats can be found on WakaTime.
 
 ## Heartbeats Panel
 From the <b>Heartbeats Panel</b> you can see your queued heartbeats that have yet to be sent, a history of the most recent heartbeats, and a list of failed-to-send heartbeats that can be reattempted through an easy click of a button.

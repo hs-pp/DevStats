@@ -72,7 +72,7 @@ namespace DevStatsSystem.Core
                 // Actually don't send this heartbeat. Prefabs normally auto-save.
                 // SendHeartbeat(AssetDatabase.LoadAssetAtPath<Object>(prefabStage.assetPath), false);
             }
-            else if (EditorWindow.mouseOverWindow.GetType() == InternalBridgeHelper.GetSceneHierarchyWindowType())
+            else if (EditorWindow.mouseOverWindow != null && EditorWindow.mouseOverWindow.GetType() == InternalBridgeHelper.GetSceneHierarchyWindowType())
             {
                 // If the mouse is inside the scene hierarchy window, we know the hierarchy change was for the scene.
                 SendHeartbeat(SceneToSceneAsset(EditorSceneManager.GetActiveScene()), false);
