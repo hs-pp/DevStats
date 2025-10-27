@@ -28,7 +28,6 @@ namespace DevStatsSystem.Core
         public void Initialize()
         {
             EditorSceneManager.sceneOpened += OnSceneOpened;
-            EditorSceneManager.sceneClosing += OnSceneClosing;
             EditorApplication.hierarchyChanged += OnHierarchyChanged;
             ObjectChangeEvents.changesPublished += OnChangesPublished;
             AssetSaveDetector.OnAssetSaved += OnAssetSaved;
@@ -37,24 +36,12 @@ namespace DevStatsSystem.Core
         public void Deinitialize()
         {
             EditorSceneManager.sceneOpened -= OnSceneOpened;
-            EditorSceneManager.sceneClosing -= OnSceneClosing;
             EditorApplication.hierarchyChanged -= OnHierarchyChanged;
             ObjectChangeEvents.changesPublished -= OnChangesPublished;
             AssetSaveDetector.OnAssetSaved -= OnAssetSaved;
         }
         
         private void OnSceneOpened(Scene scene, OpenSceneMode mode)
-        {
-            SceneAsset sceneAsset = SceneToSceneAsset(scene);
-            if (sceneAsset == null)
-            {
-                return;
-            }
-            
-            SendHeartbeat(sceneAsset, false);
-        }
-        
-        private void OnSceneClosing(Scene scene, bool removingScene)
         {
             SceneAsset sceneAsset = SceneToSceneAsset(scene);
             if (sceneAsset == null)
