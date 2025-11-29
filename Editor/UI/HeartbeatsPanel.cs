@@ -124,7 +124,7 @@ namespace DevStatsSystem.UI
         {
             long ticksRemaining = DateTime.UtcNow.Ticks - DevStatsState.Instance.LastHeartbeatSendTime;
             int secondsRemaining = (int)DevStatsSettings.Instance.PostFrequency - (int)new TimeSpan(ticksRemaining).TotalSeconds;
-            if (secondsRemaining < 0)
+            if (secondsRemaining < 0 || DevStatsState.Instance.LastHeartbeatSendTime == 0)
             {
                 secondsRemaining = 0;
             }
