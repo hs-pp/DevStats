@@ -193,7 +193,7 @@ namespace DevStatsSystem.Core
         {
             if (seconds == 0)
             {
-                return "<b><size=16>0</size></b>sec";
+                return "<b><size=140%>0</size></b>sec";
             }
             
             bool hasHours = false;
@@ -202,17 +202,17 @@ namespace DevStatsSystem.Core
             StringBuilder strBuilder = new StringBuilder();
             if (time.Hours > 0 || time.Days > 0)
             {
-                strBuilder.AppendFormat($"<b><size=16>{time.Days * 24 + time.Hours}</size></b>hr ");
+                strBuilder.AppendFormat($"<b><size=140%>{time.Days * 24 + time.Hours}</size></b>hr ");
                 hasHours = true;
             }
             if (time.Minutes > 0 || hasHours)
             {
-                strBuilder.AppendFormat($"<b><size=16>{time.Minutes}</size></b>min ");
+                strBuilder.AppendFormat($"<b><size=140%>{time.Minutes}</size></b>min ");
                 hasMinutes = true;
             }
             if (time.Seconds > 0 || hasHours || hasMinutes)
             {
-                strBuilder.AppendFormat($"<b><size=16>{time.Seconds}</size></b>sec");
+                strBuilder.AppendFormat($"<b><size=140%>{time.Seconds}</size></b>sec");
             }
             
             return strBuilder.ToString();
