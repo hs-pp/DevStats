@@ -76,7 +76,7 @@ namespace DevStatsSystem.Core
                 {
                     case ObjectChangeKind.ChangeAssetObjectProperties:
                         stream.GetChangeAssetObjectPropertiesEvent(i, out ChangeAssetObjectPropertiesEventArgs propChange);
-                        Object changeObject = EditorUtility.InstanceIDToObject(propChange.instanceId);
+                        Object changeObject = EditorUtility.EntityIdToObject(propChange.entityId);
                         if (changeObject is ScriptableObject)
                         {
                             SendHeartbeat(changeObject, false);
@@ -84,7 +84,7 @@ namespace DevStatsSystem.Core
                         break;
                     case ObjectChangeKind.CreateAssetObject:
                         stream.GetCreateAssetObjectEvent(i, out CreateAssetObjectEventArgs createChange);
-                        Object createObject = EditorUtility.InstanceIDToObject(createChange.instanceId);
+                        Object createObject = EditorUtility.EntityIdToObject(createChange.entityId);
                         if (createObject is ScriptableObject)
                         {
                             SendHeartbeat(createObject, true);
@@ -92,7 +92,7 @@ namespace DevStatsSystem.Core
                         break;
                     case ObjectChangeKind.DestroyAssetObject:
                         stream.GetDestroyAssetObjectEvent(i, out DestroyAssetObjectEventArgs destroyChange);
-                        Object destroyObject = EditorUtility.InstanceIDToObject(destroyChange.instanceId);
+                        Object destroyObject = EditorUtility.EntityIdToObject(destroyChange.entityId);
                         if (destroyObject is ScriptableObject)
                         {
                             SendHeartbeat(destroyObject, true);
