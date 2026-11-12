@@ -359,7 +359,18 @@ namespace DevStatsSystem.Wakatime
                 };
                 return stats;
             }
-            
+
+            if (!WakatimeSettings.Instance.CanFetchStats)
+            {
+                stats.Result = new CommandResult()
+                {
+                    Result = CommandResultType.Failure,
+                    MillisecondsWaited = 0,
+                    Output = "WakatimeBackend: No valid OAuth token. Add one in the settings panel to fetch stats.",
+                };
+                return stats;
+            }
+
             var durationsPayload = await WakatimeWebRequests.GetDayDurationRequest();
             if (durationsPayload.result.Result != UnityWebRequest.Result.Success)
             {

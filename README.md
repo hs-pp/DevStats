@@ -30,7 +30,7 @@ Settings are very straightforward.
 
 <img src="./Images/SettingsPanel.png" width="420">
 
-DevStats does not run unless both `IsEnabled = true` and the WakaTime API Key is valid.
+DevStats does not run unless both `IsEnabled = true` and the WakaTime API Key is valid. The Stats Panel also needs a valid OAuth Token.
 
 # Setup
 
@@ -41,7 +41,8 @@ Once it's installed, you can find the DevStats editor window at `Window/DevStats
 
 <img src="./Images/MenuItem.png" width="256">
 
-In the settings panel, populate the API Key with your unique WakaTime `Secret API Key` which you can get here:
-https://wakatime.com/settings/account
+In the settings panel, fill in two values from WakaTime:
+- **API Key:** your WakaTime `Secret API Key`, from https://wakatime.com/api-key. WakaTime API keys are write-only, so DevStats only uses this one to send heartbeats.
+- **OAuth Token:** your personal OAuth token, from https://wakatime.com/oauth. DevStats uses this one to read your stats.
 
 If the status indicator on the top right of the settings page says RUNNING, you're golden!

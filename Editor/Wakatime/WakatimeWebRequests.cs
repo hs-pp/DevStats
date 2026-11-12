@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using System.Threading.Tasks;
 using DevStatsSystem.Wakatime.Payloads;
 using UnityEngine;
@@ -44,8 +43,7 @@ namespace DevStatsSystem.Wakatime{
         private static async Task<(WebRequestResult result, T payload)> CreateRequest<T>(string url) where T : struct
         {
             UnityWebRequest request = UnityWebRequest.Get(URL_PREFIX + url);
-            string auth = Convert.ToBase64String(Encoding.ASCII.GetBytes(WakatimeSettings.Instance.APIKey + ":"));
-            request.SetRequestHeader("Authorization", "Basic " + auth);
+            request.SetRequestHeader("Authorization", "Bearer " + WakatimeSettings.Instance.OAuthToken); // API keys are write-only, so reads need the OAuth token.
             await request.SendWebRequest();
 
             T responseDto = JsonUtility.FromJson<T>(request.downloadHandler.text);

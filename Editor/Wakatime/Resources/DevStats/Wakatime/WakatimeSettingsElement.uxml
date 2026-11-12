@@ -1,16 +1,26 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <DevStatsSystem.UI.LabeledContainerElement name="wakatime-settings" title-text="WakaTime">
         <ui:VisualElement name="api-key-container" style="flex-grow: 1; flex-direction: row; align-items: center;">
-            <ui:TextField label="API Key" name="api-key-field" password="true" tooltip="This one&apos;s pretty important. " is-delayed="true" style="flex-grow: 1;" />
-            <ui:VisualElement name="green-dot-image" tooltip="CONNECTED" style="flex-grow: 0; width: 16px; height: 16px; background-image: resource(&apos;DevStats/Icons/greendot_img&apos;); flex-shrink: 0; margin-right: 2px; display: none;" />
-            <ui:VisualElement name="yellow-dot-image" tooltip="NO KEY" style="flex-grow: 0; width: 16px; height: 16px; background-image: resource(&apos;DevStats/Icons/yellowdot_img&apos;); flex-shrink: 0; margin-right: 2px; display: none;" />
-            <ui:VisualElement name="red-dot-image" tooltip="FAILED TO CONNECT" style="flex-grow: 0; width: 16px; height: 16px; background-image: resource(&apos;DevStats/Icons/reddot_img&apos;); flex-shrink: 0; margin-right: 2px; display: none;" />
+            <ui:TextField label="API Key" name="api-key-field" password="true" tooltip="Write-only. Used to send your heartbeats." is-delayed="true" value="" style="flex-grow: 1; flex-shrink: 1;"/>
+            <ui:VisualElement name="api-key-green-dot-image" tooltip="VALID KEY" style="flex-grow: 0; width: 16px; height: 16px; background-image: resource(&quot;DevStats/Icons/greendot_img&quot;); flex-shrink: 0; margin-right: 2px; display: none;"/>
+            <ui:VisualElement name="api-key-yellow-dot-image" tooltip="NO KEY" style="flex-grow: 0; width: 16px; height: 16px; background-image: resource(&quot;DevStats/Icons/yellowdot_img&quot;); flex-shrink: 0; margin-right: 2px; display: none;"/>
+            <ui:VisualElement name="api-key-red-dot-image" tooltip="INVALID KEY FORMAT" style="flex-grow: 0; width: 16px; height: 16px; background-image: resource(&quot;DevStats/Icons/reddot_img&quot;); flex-shrink: 0; margin-right: 2px; display: none;"/>
         </ui:VisualElement>
         <ui:VisualElement name="api-link-full-element" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; overflow: hidden; flex-shrink: 0;">
-            <ui:Label text="Get your API key " style="font-size: 9px;" />
-            <ui:Label text="&lt;u&gt;here&lt;/u&gt;" name="api-weblink-label" style="font-size: 9px; -unity-font-style: italic; color: rgb(0, 141, 255); padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;" />
+            <ui:Label text="Get your API key " style="font-size: 9px;"/>
+            <ui:Label text="&lt;u&gt;here&lt;/u&gt;" name="api-weblink-label" style="font-size: 9px; -unity-font-style: italic; color: rgb(0, 141, 255); padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;"/>
         </ui:VisualElement>
-        <ui:EnumField label="Keystroke Timeout" value="FiveMinutes" type="DevStatsSystem.Core.SerializedData.KeystrokeTimeout, DevStats" name="keystroke-timeout-enum" tooltip="The keystroke timeout preference used when joining heartbeats into durations." />
+        <ui:VisualElement name="oauth-token-container" style="flex-grow: 1; flex-direction: row; align-items: center;">
+            <ui:TextField label="OAuth Token" name="oauth-token-field" password="true" tooltip="Read access. Used to fetch your stats." is-delayed="true" style="flex-grow: 1; flex-shrink: 1;"/>
+            <ui:VisualElement name="oauth-token-green-dot-image" tooltip="CONNECTED" style="flex-grow: 0; width: 16px; height: 16px; background-image: resource(&quot;DevStats/Icons/greendot_img&quot;); flex-shrink: 0; margin-right: 2px; display: none;"/>
+            <ui:VisualElement name="oauth-token-yellow-dot-image" tooltip="NO TOKEN" style="flex-grow: 0; width: 16px; height: 16px; background-image: resource(&quot;DevStats/Icons/yellowdot_img&quot;); flex-shrink: 0; margin-right: 2px; display: none;"/>
+            <ui:VisualElement name="oauth-token-red-dot-image" tooltip="FAILED TO CONNECT" style="flex-grow: 0; width: 16px; height: 16px; background-image: resource(&quot;DevStats/Icons/reddot_img&quot;); flex-shrink: 0; margin-right: 2px; display: none;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="oauth-link-full-element" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; overflow: hidden; flex-shrink: 0;">
+            <ui:Label text="Get your OAuth token " style="font-size: 9px;"/>
+            <ui:Label text="&lt;u&gt;here&lt;/u&gt;" name="oauth-weblink-label" style="font-size: 9px; -unity-font-style: italic; color: rgb(0, 141, 255); padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 4px;"/>
+        </ui:VisualElement>
+        <ui:EnumField label="Keystroke Timeout" value="FiveMinutes" type="DevStatsSystem.Core.SerializedData.KeystrokeTimeout, DevStats" name="keystroke-timeout-enum" tooltip="The keystroke timeout preference used when joining heartbeats into durations."/>
     </DevStatsSystem.UI.LabeledContainerElement>
-    <ui:Label text="➡ Note: Don&apos;t forget to add the Wakatime plugin to your IDE to get full coverage!" style="white-space: normal; color: rgba(210, 210, 210, 0.24); margin-top: 0; margin-right: 8px; margin-left: 8px; font-size: 10px; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-bottom: 8px;" />
+    <ui:Label text="➡ Note: Don&apos;t forget to add the Wakatime plugin to your IDE to get full coverage!" style="white-space: normal; color: rgba(210, 210, 210, 0.24); margin-top: 0; margin-right: 8px; margin-left: 8px; font-size: 10px; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-bottom: 8px;"/>
 </ui:UXML>
