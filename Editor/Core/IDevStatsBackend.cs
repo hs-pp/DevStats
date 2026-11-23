@@ -13,6 +13,7 @@ namespace DevStatsSystem.Core
         Timeout,
     }
     
+    [Serializable]
     public struct CommandResult
     {
         public CommandResultType Result;
