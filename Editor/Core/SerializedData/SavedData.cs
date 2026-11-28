@@ -12,6 +12,7 @@ namespace DevStatsSystem.Core.SerializedData
     /// <summary>
     /// Quick singleton-ification of data that needs to be saved to disk. Saves to EditorPrefs.
     /// </summary>
+    [Serializable]
     internal abstract class SavedData<T> where T : new()
     {
         private static T m_instance;
